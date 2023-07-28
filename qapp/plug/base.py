@@ -1,4 +1,3 @@
-import re
 import sys
 import zmq
 
@@ -7,6 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from plugin import Plug as BasePlug
+
 from ..utils import ZMQListener, KeyListener
 
 class Plug(BasePlug):
@@ -38,18 +38,6 @@ class Plug(BasePlug):
 
         self.setShortcuts()
         self.registerActions()
-        self.setOSShortcuts()
-
-    def setOSShortcuts(self):
-
-        if self.config.has_section('OSShortcut'):
-            self.setOSListener()
-            config=dict(self.config['OSShortcut'])
-            for func_name, key in config.items():
-                print(func_name, key)
-                func=getattr(self, func_name, None)
-                key=re.sub(r'(Shift|Alt|Ctrl)', r'<\1>', key).lower() 
-                if func: self.os_listener.listen(key, func)
 
     def addLeader(self, leader):
 
@@ -161,10 +149,3 @@ class Plug(BasePlug):
         self.command_activated=True
         if hasattr(self, 'ui') and hasattr(self.ui, 'commands'):
             self.ui.show(self.ui.commands)
-
-    def toggle(self):
-
-        if not self.activated:
-            self.activate()
-        else:
-            self.deactivate()

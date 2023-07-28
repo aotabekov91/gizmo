@@ -4,12 +4,11 @@ from .base import Plug
 
 class PlugWidget(Plug, QtWidgets.QWidget):
 
-    def activate(self, focus=True):
+    def activate(self):
 
         if not self.activated:
             self.activated=True
             self.show()
-            self.setFocus()
 
     def deactivate(self):
 

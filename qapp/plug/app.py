@@ -21,7 +21,3 @@ class PlugApp(Plug, QtWidgets.QApplication):
 
         self.running=False
         sys.exit()
-
-if __name__=='__main__':
-    app=PlugApp(port=33333)
-    app.run()

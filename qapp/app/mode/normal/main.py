@@ -1,5 +1,5 @@
 from ..base import Mode
-from plugin import register
+from ....utils  import register
 
 class Normal(Mode):
 

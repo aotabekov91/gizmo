@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from ..base import Plugin
-from plugin import register
+from ....utils import register
 from ....widget import InputTree
 
 class TreePlugin(Plugin):
