@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from .dock import Dock
-from ..utils import register
+from plugin import register
 from ..plugin import Configure
 
 class Docks(QObject):

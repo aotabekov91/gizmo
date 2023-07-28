@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from ..utils import register
+from plugin import register
 from ..plugin import Configure
 
 class StatusBar(QStatusBar):

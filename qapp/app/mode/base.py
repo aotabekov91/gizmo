@@ -5,7 +5,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from ..plugin import Plugin
-from ..utils import register
+from plugin import register
 from ...widget import ListWidget, BaseCommandStack
 
 class Mode(Plugin):
