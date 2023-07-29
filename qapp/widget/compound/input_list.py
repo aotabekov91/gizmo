@@ -14,7 +14,7 @@ class InputList (QWidget):
     listReturnPressed=pyqtSignal()
 
     def __init__(self, 
-                 list_class=ListWidget,
+             list_class=ListWidget,
                  input_class=InputLabelWidget, 
                  **kwargs): 
 

@@ -19,11 +19,14 @@ class StackWidget(QStackedWidget):
         self.main=None
         self.current=None
         self.previous=None
+        self.centered=False
 
         self.listener=None
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
+
+    def setCentered(self, cond=False): self.centered=cond
 
     def installEventFilter(self, listener):
 
@@ -86,6 +89,7 @@ class StackWidget(QStackedWidget):
             self.current.show()
             if focus: self.setFocus()
 
+        if self.centered: self.setLocation('center')
         self.showWanted.emit()
 
     def setFocus(self):
@@ -106,7 +110,6 @@ class StackWidget(QStackedWidget):
         super().adjustSize()
         for i in range(self.count()): self.widget(i).adjustSize()
 
-
     def setLocation(self, kind='center'):
 
         if kind=='center':
@@ -116,3 +119,8 @@ class StackWidget(QStackedWidget):
             point=frame.topLeft()
             point.setY(150)
             self.move(point)
+
+    def hide(self):
+
+        super().hide()
+        if self.centered: self.setLocation('center')

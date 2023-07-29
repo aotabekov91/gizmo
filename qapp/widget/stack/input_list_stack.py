@@ -8,7 +8,10 @@ from ..base import IconUpDown, ListWidget, InputLabelWidget
 
 class InputListStack(CommandStack):
 
-    def __init__(self, list_class=ListWidget, input_class=InputLabelWidget, **kwargs): 
+    def __init__(self, 
+                 list_class=ListWidget, 
+                 input_class=InputLabelWidget, 
+                 **kwargs): 
 
         super(InputListStack, self).__init__()
 

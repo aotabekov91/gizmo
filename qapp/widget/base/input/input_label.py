@@ -21,8 +21,8 @@ class InputLabelWidget (QWidget):
             QWidget{
                 color: black;
                 background-color: white;
-                border-color: red;
-                border-width: 2px;
+                border-color: green;
+                border-width: 3px;
                 border-radius: 10px;
                 border-style: outset;
                 }
