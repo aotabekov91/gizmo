@@ -25,17 +25,20 @@ class Modes(QObject):
         mode.listenWanted.connect(self.setMode)
         mode.delistenWanted.connect(self.setMode)
 
-        if mode.listen_leader: self.leaders[mode.listen_leader]=mode
+        if mode.listen_leader: 
+            self.leaders[mode.listen_leader]=mode
 
-    def delisten(self):
+    def delisten(self): 
 
-        for mode in self.modes: mode.listening=False
+        for m in self.modes: m.delisten()
 
-    def setMode(self, mode_name=None):
+    def setMode(self, mode='normal'):
 
-        for mode in self.modes: mode.delisten()
+        self.delisten()
 
-        if not mode_name: mode_name='normal'
-        current=getattr(self, mode_name, None)
-
-        if current: current.listen()
+        if mode!='normal':
+            if self.current and self.current.name==mode:
+                mode='normal'
+                
+        self.current=getattr(self, mode, None)
+        if self.current: self.current.listen()

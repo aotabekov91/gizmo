@@ -93,19 +93,16 @@ class Mode(Plug):
         super().setUI()
 
         mode=ListWidget(exact_match=True, check_fields=['down'])
-
         self.ui.addWidget(mode, 'mode')
 
         self.ui.mode.returnPressed.connect(self.confirm)
         self.ui.mode.hideWanted.connect(self.deactivate)
-
         self.ui.focusGained.connect(self.activate)
         self.ui.installEventFilter(self)
 
     def activate(self):
 
         self.app.modes.delisten()
-
         self.app.main.bar.setData(self.data)
         self.listening=True
 
@@ -126,7 +123,7 @@ class Mode(Plug):
     def eventFilter(self, widget, event):
 
         if self.listening and event.type()==QtCore.QEvent.KeyPress:
-            
+
             c1=True 
             if self.listen_widget:
                 if not widget in self.listen_widget: c1=False
@@ -159,7 +156,7 @@ class Mode(Plug):
                         event.accept()
                         return True
 
-                if event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
+                elif event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
 
                     self.confirm()
                     event.accept()
@@ -181,7 +178,9 @@ class Mode(Plug):
 
                 else:
 
-                    if not self.checkMode(event):
+                    mode=self.checkMode(event)
+
+                    if not mode:
 
                         self.addKeys(event)
                         event.accept()
@@ -189,27 +188,25 @@ class Mode(Plug):
 
                     else:
 
+                        self.app.modes.setMode(mode.name)
+                        self._onExecuteMatch()
+                        event.accept()
                         return True
-                
+
         elif event.type()==QtCore.QEvent.KeyPress:
 
-            if self.checkMode(event): return True
+            mode=self.checkMode(event)
+            if mode:
+                self.app.modes.setMode(mode.name)
+                event.accept()
+                return True
 
         return super().eventFilter(widget, event)
 
     def checkMode(self, event):
 
         for mode in self.app.modes.getModes():
-            if mode.activateCheck(event):
-                self.app.modes.setMode(mode.name)
-                event.accept()
-                return True 
-
-        # mode=self.app.modes.leaders.get(event.text(), None)
-        # if mode and mode.activateCheck(event): 
-        #     self.app.modes.setMode(mode.name)
-        #     event.accept()
-        #     return True 
+            if mode.activateCheck(event): return mode
 
     def activateCheck(self, event):
 
@@ -252,7 +249,6 @@ class Mode(Plug):
 
     def registerKey(self, event):
         
-
         # modifiers=QtWidgets.QApplication.keyboardModifiers()
         # if not text and moddies & Qt.ShiftModifier: 
         #     text='Shift'
@@ -328,13 +324,10 @@ class Mode(Plug):
                 else:
                     match()
 
-    def _getFunc(self, data):
-
-        return data['id'].func
+    def _getFunc(self, data): return data['id'].func
 
     def _onExecuteMatch(self):
 
-        # self.app.modes.setMode(self.delisten_wanted)
         self.delistenWanted.emit(self.delisten_wanted)
 
     def toggleCommands(self):

@@ -12,13 +12,13 @@ class Normal(Mode):
                  **kwargs,
                  ):
 
-        super(Normal, self).__init__(app=app, 
-                                     name=name,
-                                     listen_leader=listen_leader,
-                                     show_commands=show_commands,
-                                     delisten_on_exec=delisten_on_exec,
-                                     **kwargs,
-                                    )
+        super(Normal, self).__init__(
+                app=app, 
+                name=name, 
+                listen_leader=listen_leader,
+                show_commands=show_commands,
+                delisten_on_exec=delisten_on_exec, 
+                **kwargs,)
 
     def incrementUp(self, digit=1): 
 
@@ -141,22 +141,36 @@ class Normal(Mode):
         if view: view.save()
 
     @register('fc')
-    def focusCurrentView(self): self.app.main.display.focusCurrentView()
+    def focusCurrentView(self): 
+
+        self.app.main.display.focusCurrentView()
 
     @register(key='fx')
-    def closeCurrentView(self): self.app.main.display.closeView()
+    def closeCurrentView(self): 
+
+        self.app.main.display.closeView()
 
     @register('fk')
-    def focusUpView(self): self.app.main.display.focus(-1)
+    def focusUpView(self): 
+
+        self.app.main.display.focus(-1)
 
     @register('fj')
-    def focusDownView(self): self.app.main.display.focus(+1)
+    def focusDownView(self): 
+
+        self.app.main.display.focus(+1)
 
     @register('fi')
-    def incrementFold(self): self.app.main.display.incrementFold()
+    def incrementFold(self): 
+
+        self.app.main.display.incrementFold()
 
     @register('fd')
-    def decrementFold(self): self.app.main.display.decrementFold()
+    def decrementFold(self): 
+
+        self.app.main.display.decrementFold()
 
     @register(key='tc')
-    def toggleCursor(self): self.app.main.display.toggleCursor()
+    def toggleCursor(self): 
+
+        self.app.main.display.toggleCursor()
