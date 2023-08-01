@@ -6,6 +6,10 @@ from .base import Plug
 
 class PlugApp(Plug, QtWidgets.QApplication):
 
+    def __init__(self, **kwargs):
+
+        super(PlugApp, self).__init__(argv=[], **kwargs)
+
     def setName(self):
 
         super().setName()
