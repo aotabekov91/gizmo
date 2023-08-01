@@ -29,7 +29,10 @@ class Plugs(QtCore.QObject):
 
     def addPlug(self, plug_class, action_register=False):
 
-        plug=plug_class(self.app)
-        self.plugs[plug.name]=plug
-        setattr(self, plug.name, plug)
-        if action_register: self.app.actionRegistered.emit()
+        try:
+            plug=plug_class(self.app)
+            self.plugs[plug.name]=plug
+            setattr(self, plug.name, plug)
+            if action_register: self.app.actionRegistered.emit()
+        except:
+            print('Could not not plug: ', plug_class.__name__)
