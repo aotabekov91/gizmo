@@ -21,4 +21,4 @@ dependencies=[
 
 [tools.setuptools.packages.find]
 
-wherr=["src"]
+where=["src"]

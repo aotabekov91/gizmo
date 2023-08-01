@@ -1,12 +1,12 @@
-from ..base import Mode 
+from .base import Mode 
 
-class Hint(Mode):
+class Visual(Mode):
 
     def __init__(self, 
                  app,
-                 listen_leader='f',
+                 listen_leader='v',
                  show_statusbar=True,
-                 delisten_on_exec=True,
+                 delisten_on_exec=False,
                  ):
 
         super().__init__(app, 
@@ -16,6 +16,7 @@ class Hint(Mode):
                          )
 
         self.hints=None
+        self.hinting=False
 
     def activateCheck(self, event):
 

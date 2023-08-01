@@ -1,5 +1,5 @@
-from ..base import Mode
-from ....utils  import register
+from .base import Mode
+from ...utils  import register
 
 class Normal(Mode):
 

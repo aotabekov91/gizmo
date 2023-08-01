@@ -1,4 +1,4 @@
-from ..base import Plug 
+from .base import Plug 
 
 from types import MethodType, BuiltinFunctionType
 

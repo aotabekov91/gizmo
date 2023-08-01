@@ -1,9 +1,7 @@
 import sys
 import zmq
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
 from plug import Plug as BasePlug
 
@@ -13,25 +11,12 @@ class Plug(BasePlug):
 
     def __init__(self, 
                  app=None,
-                 name=None, 
-                 config=None, 
-                 port=None, 
-                 parent_port=None,
-                 umay_port=19999,
-                 keyword=None,
-                 argv=[],
                  command_leader=['.'],
                  command_activated=False,
+                 **kwargs,
                  ):
 
-        super(Plug, self).__init__(
-                name=name, 
-                config=config, 
-                port=port, 
-                parent_port=parent_port,
-                umay_port=umay_port,
-                keyword=keyword,
-                argv=argv)
+        super(Plug, self).__init__(**kwargs)
 
         self.app=app
         self.command_leader=command_leader
@@ -50,20 +35,20 @@ class Plug(BasePlug):
 
     def setListener(self):
 
-        self.listener = QThread()
+        self.listener = QtCore.QThread()
         self.zeromq_listener=ZMQListener(self)
         self.zeromq_listener.moveToThread(self.listener)
         self.listener.started.connect(self.zeromq_listener.loop)
         self.zeromq_listener.request.connect(self.handle)
-        QTimer.singleShot(0, self.listener.start)
+        QtCore.QTimer.singleShot(0, self.listener.start)
 
     def setOSListener(self):
 
-        self.os_thread = QThread()
+        self.os_thread = QtCore.QThread()
         self.os_listener=KeyListener(self)
         self.os_listener.moveToThread(self.os_thread)
         self.os_thread.started.connect(self.os_listener.loop)
-        QTimer.singleShot(0, self.os_thread.start)
+        QtCore.QTimer.singleShot(0, self.os_thread.start)
 
     def setConnection(self, exit=True, kind=zmq.PULL):
 
@@ -127,7 +112,7 @@ class Plug(BasePlug):
 
     def eventFilter(self, widget, event):
 
-        if event.type()==QEvent.KeyPress:
+        if event.type()==QtCore.QEvent.KeyPress:
 
             if self.command_leader:
                 if event.text() in self.command_leader and not self.command_activated:

@@ -11,7 +11,9 @@ class Buffer(QObject):
     def __init__(self, app):
 
         super().__init__()
+
         self.app=app
+        self.buffers={}
 
         self.watch=QFileSystemWatcher()
         self.watch.fileChanged.connect(self.on_fileChanged)

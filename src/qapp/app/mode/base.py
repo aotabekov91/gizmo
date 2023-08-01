@@ -1,21 +1,18 @@
 import inspect
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
-from ...plug import Plug
+from ..plug import Plug
 from ...utils import register
 from ...widget import ListWidget 
 
 class Mode(Plug):
 
-    returnPressed=pyqtSignal()
-    listenWanted=pyqtSignal(str)
-    delistenWanted=pyqtSignal(str)
+    returnPressed=QtCore.pyqtSignal()
+    listenWanted=QtCore.pyqtSignal(str)
+    delistenWanted=QtCore.pyqtSignal(str)
 
     def __init__(self, app, 
-
                  wait_time=250,
                  listening=False,
                  position='bottom',
@@ -45,7 +42,7 @@ class Mode(Plug):
         super(Mode, self).__init__(
                 app, position=position, command_leader=[], **kwargs)
 
-        self.timer=QTimer()
+        self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.delisten)
 
         self.setUI()
@@ -130,7 +127,7 @@ class Mode(Plug):
 
     def eventFilter(self, widget, event):
 
-        if self.listening and event.type()==QEvent.KeyPress:
+        if self.listening and event.type()==QtCore.QEvent.KeyPress:
             
             cond1=True 
             if self.listen_widget:
@@ -153,39 +150,39 @@ class Mode(Plug):
 
                 if event.modifiers() and self.ui.isVisible():
 
-                    if event.key() in [Qt.Key_N, Qt.Key_J]:
+                    if event.key() in [QtCore.Qt.Key_N, QtCore.Qt.Key_J]:
                         self.ui.mode.move(crement=1)
                         event.accept()
                         return True
 
-                    elif event.key() in [Qt.Key_P, Qt.Key_K]:
+                    elif event.key() in [QtCore.Qt.Key_P, QtCore.Qt.Key_K]:
                         self.ui.mode.move(crement=-1)
                         event.accept()
                         return True
 
-                    elif event.key() in  [Qt.Key_M, Qt.Key_L]: 
+                    elif event.key() in  [QtCore.Qt.Key_M, QtCore.Qt.Key_L]: 
                         self.confirm()
                         event.accept()
                         return True
                         
-                    elif event.key() in  [Qt.Key_Enter, Qt.Key_Return]: 
+                    elif event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
                         self.confirm()
                         event.accept()
                         return True
 
-                if event.key() in  [Qt.Key_Enter, Qt.Key_Return]: 
+                if event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
 
                     self.confirm()
                     event.accept()
                     return True
                         
-                elif event.key()==Qt.Key_Backspace:
+                elif event.key()==QtCore.Qt.Key_Backspace:
 
                     self.clearKeys()
                     event.accept()
                     return True
 
-                elif event.key()==Qt.Key_Escape or event.text() == self.listen_leader:
+                elif event.key()==QtCore.Qt.Key_Escape or event.text() == self.listen_leader:
 
                     if self.name!='normal':
 
@@ -205,7 +202,7 @@ class Mode(Plug):
 
                         return True
                 
-        elif event.type()==QEvent.KeyPress:
+        elif event.type()==QtCore.QEvent.KeyPress:
 
             if self.checkMode(event): return True
 
@@ -266,15 +263,14 @@ class Mode(Plug):
 
     def registerKey(self, event):
         
-        moddies=QApplication.keyboardModifiers()
 
-        text=event.text()
-
+        # modifiers=QtWidgets.QApplication.keyboardModifiers()
         # if not text and moddies & Qt.ShiftModifier: 
         #     text='Shift'
         # if not text and moddies & Qt.ControlModifier: 
         #     text='Ctrl'
         
+        text=event.text()
         if text: self.keys_pressed+=[text]
 
         return text

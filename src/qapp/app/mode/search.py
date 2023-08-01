@@ -1,10 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-
-from plug.app import register
-from plug.app.mode import Mode
-from plug.widget import ListWidget, Item
+from .base import Mode
+from ...utils import register
+from ...widget import ListWidget, Item
 
 class Search(Mode):
 

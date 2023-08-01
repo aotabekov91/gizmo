@@ -1,14 +1,12 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
-from .mode import Modes
-from .buffer import Buffer
-from .plug import Plugs
+from .modes import Modes
+from .plugs import Plugs
+from .buffers import Buffer
 
-class Manager(QObject):
+class Manager(QtCore.QObject):
 
-    bufferCreated=pyqtSignal(object)
+    bufferCreated=QtCore.pyqtSignal(object)
 
     def __init__(self, app, buffer=None, mode=None, plug=None):
 

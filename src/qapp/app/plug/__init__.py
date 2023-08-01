@@ -1,3 +1,3 @@
 from .base import Plug
-from .tree_plugin import *
 from .configure import Configure
+from .tree import TreePlug, FileBrowser

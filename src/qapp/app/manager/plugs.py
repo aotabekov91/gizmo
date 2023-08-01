@@ -2,13 +2,9 @@ import os
 import sys
 import importlib
 
-from ast import literal_eval
+from PyQt5 import QtCore
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-
-class Plugs(QObject):
+class Plugs(QtCore.QObject):
 
     def __init__(self, app):
 
@@ -19,10 +15,8 @@ class Plugs(QObject):
 
     def load(self):
 
-        # if self.app.config.has_section('Manager'):
-            # self.manager_path=self.app.config.get('Manager', 'plugs_path') 
-
         self.plugs_path=os.path.join(self.app.path, 'plugs')
+
         if os.path.exists(self.plugs_path):
             sys.path.append(self.plugs_path)
             for p_name in os.listdir(self.plugs_path):
@@ -33,13 +27,9 @@ class Plugs(QObject):
 
         self.app.actionRegistered.emit()
 
-    def loadPlug(self, plug_class):
-
-        self.addPlug(plug_class)
-        self.app.actionRegistered.emit()
-
-    def addPlug(self, plug_class):
+    def addPlug(self, plug_class, action_register=False):
 
         plug=plug_class(self.app)
         self.plugs[plug.name]=plug
         setattr(self, plug.name, plug)
+        if action_register: self.app.actionRegistered.emit()

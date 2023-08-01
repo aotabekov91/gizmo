@@ -1,32 +1,38 @@
 import os
-import sys
 import inspect
 import argparse
 import configparser
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
 from ..manager import Manager
 from ..window import StackWindow
 
-class BaseApp(QApplication):
+class BaseApp(QtWidgets.QApplication):
 
-    actionRegistered=pyqtSignal()
+    actionRegistered=QtCore.pyqtSignal()
 
     def __init__(self):
 
         super().__init__([])
 
         self.setConfig()
+        self.setParser()
         self.setUI()
         self.initiate()
 
+    def setParser(self):
+
+        self.parser = argparse.ArgumentParser()
+        self.parser.add_argument(
+                'file', nargs='?', default=None, type=str)
+
     def setConfig(self):
 
-        file_path=os.path.abspath(inspect.getfile(self.__class__))
-        self.path=os.path.dirname(file_path).replace('\\', '/')
+        file_path=os.path.abspath(
+                inspect.getfile(self.__class__))
+        self.path=os.path.dirname(
+                file_path).replace('\\', '/')
         self.configPath=f'{self.path}/config.ini'
         self.config=configparser.RawConfigParser()
         self.config.optionxform=str
@@ -55,6 +61,7 @@ class BaseApp(QApplication):
         self.loadPlugs()
         self.loadModes()
         self.parse()
+
         self.stack.show()
 
     def loadPlugs(self): self.plugs.load()
@@ -63,11 +70,5 @@ class BaseApp(QApplication):
 
     def parse(self):
 
-        parser = argparse.ArgumentParser()
-        parser.add_argument('file', nargs='?', default=None, type=str)
-        parsed_args, unparsed_args = parser.parse_known_args()
-        self.main.open(filePath=parsed_args.file)
-
-if __name__ == "__main__":
-    app = BaseApp()
-    sys.exit(app.exec_())
+        args, unkw = self.parser.parse_known_args()
+        self.main.open(filePath=args.file)
