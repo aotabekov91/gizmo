@@ -2,12 +2,21 @@ from .base import Mode
 
 class Input(Mode):
 
-    def __init__(self, app):
+    def __init__(self, 
+                 app, 
+                 name='input',
+                 listen_leader='i', 
+                 show_statusbar=True, 
+                 delisten_on_exec=False,
+                 **kwargs,
+                 ):
 
         super().__init__(app=app, 
-                         listen_leader='i', 
-                         show_statusbar=True,
-                         delisten_on_exec=False,
+                         name=name,
+                         listen_leader=listen_leader, 
+                         show_statusbar=show_statusbar,
+                         delisten_on_exec=delisten_on_exec,
+                         **kwargs,
                          )
 
     def activateCheck(self, event):

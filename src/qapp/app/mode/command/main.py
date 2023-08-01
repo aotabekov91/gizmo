@@ -3,14 +3,23 @@ from .widget import CommandWindow
 
 class Command(Mode):
 
-    def __init__(self, app):
+    def __init__(self, 
+                 app, 
+                 name='command',
+                 listen_leader=',',
+                 show_statusbar=True, 
+                 show_commands=False, 
+                 **kwargs,
+                 ):
 
-        super(Command, self).__init__(app=app, 
-                                      name='command',
-                                      listen_leader=',',
-                                      show_commands=False, 
-                                      show_statusbar=True,
-                                      )
+        super(Command, self).__init__(
+                app=app, 
+                name=name, 
+                listen_leader=listen_leader,
+                show_commands=show_commands, 
+                show_statusbar=show_statusbar, 
+                **kwargs,
+                )
 
     def setUI(self):
         

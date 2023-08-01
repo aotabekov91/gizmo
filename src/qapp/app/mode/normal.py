@@ -3,13 +3,21 @@ from ...utils  import register
 
 class Normal(Mode):
 
-    def __init__(self, app):
+    def __init__(self, 
+                 app,
+                 name='normal',
+                 listen_leader='@',
+                 show_commands=False,
+                 delisten_on_exec=False,
+                 **kwargs,
+                 ):
 
         super(Normal, self).__init__(app=app, 
-                                     name='normal',
-                                     listen_leader='@',
-                                     show_commands=False,
-                                     delisten_on_exec=False,
+                                     name=name,
+                                     listen_leader=listen_leader,
+                                     show_commands=show_commands,
+                                     delisten_on_exec=delisten_on_exec,
+                                     **kwargs,
                                     )
 
     def incrementUp(self, digit=1): 

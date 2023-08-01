@@ -12,7 +12,6 @@ class Mode(Plug):
     listenWanted=QtCore.pyqtSignal(str)
     delistenWanted=QtCore.pyqtSignal(str)
 
-
     def __init__(self, 
                  wait_time=250,
                  listening=False,
@@ -128,24 +127,15 @@ class Mode(Plug):
 
         if self.listening and event.type()==QtCore.QEvent.KeyPress:
             
-            cond1=True 
+            c1=True 
             if self.listen_widget:
-                if not widget in self.listen_widget: cond1=False
+                if not widget in self.listen_widget: c1=False
 
-            cond2=True
+            c2=True
             if self.exclude_widget:
-                if widget in self.exclude_widget: cond2=False
+                if widget in self.exclude_widget: c2=False
 
-            if cond1 and cond2:
-
-                # if self.name=='normal':
-                #     mode=self.app.modes.leaders.get(
-                #             event.text(), None)
-                #     for mode in self.app.modes.getModes():
-                #         if mode.activateCheck(event):
-                #             self.app.modes.setMode(mode.name)
-                #             event.accept()
-                #             return True 
+            if c1 and c2:
 
                 if event.modifiers() and self.ui.isVisible():
 
