@@ -14,9 +14,9 @@ class BaseApp(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
-    def __init__(self, argv=[], **kwargs):
+    def __init__(self, **kwargs):
 
-        super().__init__(argv=[], **kwargs)
+        super().__init__(**kwargs)
 
         self.setConfig()
         self.setParser()
