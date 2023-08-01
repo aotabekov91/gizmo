@@ -1,7 +1,6 @@
-import sys
 import zmq
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtWidgets
 
 from plug import Plug as BasePlug
 
@@ -10,20 +9,23 @@ from ..utils import ZMQListener, KeyListener
 class Plug(BasePlug):
 
     def __init__(self, 
-                 app=None,
+                 app=None, 
+                 listen_port=True,
                  command_leader=['.'],
                  command_activated=False,
                  **kwargs,
                  ):
 
-        super(Plug, self).__init__(**kwargs)
-
         self.app=app
-        self.command_leader=command_leader
-        self.command_activated=command_activated
 
         self.actions={}
         self.commandKeys={}
+
+        self.listen_port=listen_port
+        self.command_leader=command_leader
+        self.command_activated=command_activated
+
+        super(Plug, self).__init__(**kwargs)
 
         self.setShortcuts()
         self.registerActions()
@@ -52,21 +54,16 @@ class Plug(BasePlug):
 
     def setConnection(self, exit=True, kind=zmq.PULL):
 
-        try:
-            self.socket = zmq.Context().socket(kind)
-            if self.port:
-                self.socket.bind(f'tcp://*:{self.port}')
-            else:
-                self.port=self.socket.bind_to_random_port('tcp://*')
-        except:
-            if self.port:
-                socket = zmq.Context().socket(zmq.PUSH)
-                socket.connect(f'tcp://localhost:{self.port}')
-                socket.send_json({'command':'show'})
-                if exit:
-                    sys.exit()
-                else:
-                    return socket
+        if self.port or self.listen_port:
+
+            try:
+                self.socket = zmq.Context().socket(kind)
+                if self.port:
+                    self.socket.bind(f'tcp://*:{self.port}')
+                elif self.listen_port:
+                    self.port=self.socket.bind_to_random_port('tcp://*')
+            except:
+                self.socket=None
 
     def setShortcuts(self):
 
@@ -75,7 +72,7 @@ class Plug(BasePlug):
             for func_name, key in config.items():
                 func=getattr(self, func_name, None)
                 if func:
-                    shortcut=QShortcut(key)
+                    shortcut=QtWidgets.QShortcut(key)
                     shortcut.activated.connect(func)
                     self.action[(key, func_name)]=func
 

@@ -9,7 +9,7 @@ class Visual(Mode):
                  delisten_on_exec=False,
                  ):
 
-        super().__init__(app, 
+        super().__init__(app=app, 
                          listen_leader=listen_leader,
                          show_statusbar=show_statusbar,
                          delisten_on_exec=delisten_on_exec,

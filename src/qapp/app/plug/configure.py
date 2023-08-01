@@ -6,13 +6,11 @@ class Configure(Plug):
 
     def __init__(self, app, name, parent, **kwargs): 
 
-        self.app=app
-        self.name=name
+        super().__init__(app=app, name=name, **kwargs)
+
         self.parent=parent
         self.parent.modeKey=self.modeKey
         self.setSettings()
-
-        super().__init__(app, name, argv=None, **kwargs)
 
     def getSettings(self): return self.settings
 

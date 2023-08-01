@@ -5,22 +5,18 @@ from ...widget import BaseCommandStack
 
 class Plug(PlugWidget):
 
-    def __init__(self, app, name=None, mode_keys={}, position=None, **kwargs):
+    def __init__(self, mode_keys={}, position=None, **kwargs):
 
         self.position=position
         self.mode_keys=mode_keys
 
-        if not 'argv' in kwargs: 
-            kwargs['argv']=app.main
-
-        super(Plug, self).__init__(app=app, name=name, **kwargs)
+        super(Plug, self).__init__(**kwargs)
 
         self.registerActions()
 
     def setUI(self): 
 
         self.ui=BaseCommandStack(self, self.position)
-
         self.ui.focusGained.connect(self.actOnFocus)
         self.ui.focusLost.connect(self.actOnDefocus)
 

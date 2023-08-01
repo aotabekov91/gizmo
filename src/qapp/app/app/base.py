@@ -3,18 +3,20 @@ import inspect
 import argparse
 import configparser
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtCore
 
 from ..manager import Manager
 from ..window import StackWindow
 
-class BaseApp(QtWidgets.QApplication):
+from ...plug import PlugApp
+
+class BaseApp(PlugApp):
 
     actionRegistered=QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, argv=[], **kwargs):
 
-        super().__init__([])
+        super().__init__(argv=[], **kwargs)
 
         self.setConfig()
         self.setParser()

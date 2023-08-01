@@ -1,6 +1,6 @@
 import inspect
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore 
 
 from ..plug import Plug
 from ...utils import register
@@ -12,10 +12,10 @@ class Mode(Plug):
     listenWanted=QtCore.pyqtSignal(str)
     delistenWanted=QtCore.pyqtSignal(str)
 
-    def __init__(self, app, 
+
+    def __init__(self, 
                  wait_time=250,
                  listening=False,
-                 position='bottom',
                  listen_leader=None,
                  show_commands=False,
                  show_statusbar=False,
@@ -39,8 +39,7 @@ class Mode(Plug):
         self.delisten_wanted=delisten_wanted
         self.delisten_on_exec=delisten_on_exec
 
-        super(Mode, self).__init__(
-                app, position=position, command_leader=[], **kwargs)
+        super(Mode, self).__init__(command_leader=[], **kwargs)
 
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.delisten)

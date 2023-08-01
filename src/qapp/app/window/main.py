@@ -16,8 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.app=app
-        self.configure=Configure(app, 'Window', self)
-
+        self.configure=Configure(app=app, name='Window', parent=self)
         self.setUI(display_class, view_class)
 
     def setDisplay(self, display_class, view_class=None):
