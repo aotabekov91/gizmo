@@ -10,10 +10,10 @@ class PlugApp(Plug, QtWidgets.QApplication):
 
     actionRegistered=QtCore.pyqtSignal()
 
-    def __init__(self, **kwargs):
+    def __init__(self, initiate_stack=False, **kwargs):
 
         super(PlugApp, self).__init__(argv=[], **kwargs)
-        self.initiate()
+        if initiate_stack: self.initiate()
 
     def initiate(self):
 
