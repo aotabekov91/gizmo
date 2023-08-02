@@ -132,12 +132,10 @@ class StatusBar(QStatusBar):
         else:
             super().hide()
 
-    def hide(self):
-
-        data=self.clients.get('prev', {})
-        self.setData(data)
-
-        if not getattr(data, 'visible', False): super().hide()
+    # def hide(self):
+    #     data=self.clients.get('prev', {})
+    #     self.setData(data)
+    #     if not getattr(data, 'visible', False): super().hide()
 
     def keyPressEvent(self, event):
 

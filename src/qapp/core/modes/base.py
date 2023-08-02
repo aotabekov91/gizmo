@@ -11,12 +11,12 @@ class Mode(PlugObj):
     returnPressed=QtCore.pyqtSignal()
     listenWanted=QtCore.pyqtSignal(str)
     delistenWanted=QtCore.pyqtSignal(str)
+    keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__(self, 
                  wait_time=250,
                  listening=False,
                  listen_leader=None,
-                 show_commands=False,
                  show_statusbar=False,
                  delisten_on_exec=True,
                  delisten_wanted='normal',
@@ -29,7 +29,6 @@ class Mode(PlugObj):
         self.wait_time=wait_time
         self.listening=listening
 
-        self.show_commands=show_commands
         self.listen_widget=listen_widget
         self.listen_leader=listen_leader
         self.exclude_widget=exclude_widget
@@ -68,9 +67,6 @@ class Mode(PlugObj):
         #own actions
         self.setPlugData(self, self.app.manager.actions[self])
 
-        self.commands=sorted(self.commands, key=lambda x: x['plug'])
-        self.ui.mode.setList(self.commands)
-
     def setPlugData(self, plug, actions, mname=None):
 
         for (pname, fname), method in actions.items():
@@ -87,35 +83,13 @@ class Mode(PlugObj):
                     data['down']=key
                 self.commands+=[data]
 
-    def setUI(self):
-        
-        super().setUI()
-
-        mode=ListWidget(exact_match=True, check_fields=['down'])
-        self.ui.addWidget(mode, 'mode')
-
-        self.ui.mode.returnPressed.connect(self.confirm)
-        self.ui.mode.hideWanted.connect(self.deactivate)
-        self.ui.focusGained.connect(self.activate)
-        self.ui.installEventFilter(self)
-
     def activate(self):
 
         self.app.modes.delisten()
         self.app.main.bar.setData(self.data)
         self.listening=True
 
-    def confirm(self):
-        
-        self.returnPressed.emit()
-
-        if self.ui.mode.isVisible():
-
-            item=self.ui.mode.item(self.ui.mode.currentRow())
-            if item:
-                matches=[item.itemData]
-                self.reportMatches(matches, [])
-                self.runMatches(matches, [], None, None)
+    def confirm(self): self.returnPressed.emit()
 
     def checkListenWanted(self, widget, event): return True
 
@@ -133,29 +107,7 @@ class Mode(PlugObj):
 
             if c1 and c2:
 
-                if event.modifiers() and self.ui.isVisible():
-
-                    if event.key() in [QtCore.Qt.Key_N, QtCore.Qt.Key_J]:
-                        self.ui.mode.move(crement=1)
-                        event.accept()
-                        return True
-
-                    elif event.key() in [QtCore.Qt.Key_P, QtCore.Qt.Key_K]:
-                        self.ui.mode.move(crement=-1)
-                        event.accept()
-                        return True
-
-                    elif event.key() in  [QtCore.Qt.Key_M, QtCore.Qt.Key_L]: 
-                        self.confirm()
-                        event.accept()
-                        return True
-                        
-                    elif event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
-                        self.confirm()
-                        event.accept()
-                        return True
-
-                elif event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
+                if event.key() in  [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]: 
 
                     self.confirm()
                     event.accept()
@@ -216,14 +168,12 @@ class Mode(PlugObj):
         self.timer.stop()
         self.keys_pressed=[]
         self.app.main.bar.detail.clear()
-        self.ui.mode.unfilter()
 
     def delisten(self):
 
         self.clearKeys()
         if self.listening:
             self.listening=False
-            if self.ui.activated: self.ui.deactivate()
             if self.show_statusbar: self.app.main.bar.setData()
 
     def listen(self):
@@ -233,15 +183,12 @@ class Mode(PlugObj):
         self.clearKeys()
         self.app.main.bar.setData(self.data)
 
-        if self.show_commands: 
-            self.ui.activate()
-            self.ui.show(self.ui.mode)
-
     def addKeys(self, event):
 
         self.timer.stop()
         if self.registerKey(event):
             key, digit = self.getKeys()
+            self.keyPressed.emit(digit, key)
             matches, partial=self.getMatches(key, digit)
             self.reportMatches(matches, partial)
             self.runMatches(matches, partial, key, digit)
@@ -261,7 +208,6 @@ class Mode(PlugObj):
 
     def reportMatches(self, matches, partial):
 
-        if self.ui.isVisible(): self.ui.mode.setFilterList(matches+partial)
         self.app.main.bar.detail.setText(
                 f'{"".join(self.keys_pressed)}')
 
@@ -328,14 +274,6 @@ class Mode(PlugObj):
     def _onExecuteMatch(self):
 
         self.delistenWanted.emit(self.delisten_wanted)
-
-    def toggleCommands(self):
-
-        if self.ui.mode.isVisible():
-            self.ui.deactivate()
-        else:
-            self.ui.activate()
-            self.ui.show(self.ui.mode)
 
     @register('q')
     def exit(self): self.app.exit()

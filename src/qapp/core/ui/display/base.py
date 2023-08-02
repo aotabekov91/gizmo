@@ -33,6 +33,7 @@ class Display(QSplitter):
 
         self.app=app
         self.win=window
+        self.name='display'
         self.view_class=view_class
 
         self.count=-1

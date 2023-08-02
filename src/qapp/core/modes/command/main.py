@@ -8,7 +8,6 @@ class Command(Mode):
                  name='command',
                  listen_leader=',',
                  show_statusbar=True, 
-                 show_commands=False, 
                  **kwargs,
                  ):
 
@@ -16,7 +15,6 @@ class Command(Mode):
                 app=app, 
                 name=name, 
                 listen_leader=listen_leader,
-                show_commands=show_commands, 
                 show_statusbar=show_statusbar, 
                 **kwargs,
                 )

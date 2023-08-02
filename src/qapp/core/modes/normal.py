@@ -7,7 +7,6 @@ class Normal(Mode):
                  app,
                  name='normal',
                  listen_leader='@',
-                 show_commands=False,
                  delisten_on_exec=False,
                  **kwargs,
                  ):
@@ -16,7 +15,6 @@ class Normal(Mode):
                 app=app, 
                 name=name, 
                 listen_leader=listen_leader,
-                show_commands=show_commands,
                 delisten_on_exec=delisten_on_exec, 
                 **kwargs,)
 

@@ -9,6 +9,7 @@ class Dock(QDockWidget):
         super().__init__(docks.window)
 
         self.loc=loc
+        self.name=loc
         self.widgets=[]
         self.docks=docks
 

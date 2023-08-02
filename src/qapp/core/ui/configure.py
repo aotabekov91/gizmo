@@ -18,6 +18,8 @@ class Configure(Plug):
         self.setSettings()
         self.register()
 
+    def setActions(self): super().setActions(obj=self.object)
+
     def modeKey(self, mode): return self.mode_keys.get(mode, '')
 
     def getSettings(self): return self.settings
