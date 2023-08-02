@@ -17,7 +17,7 @@ class PlugObj(Plug, QtCore.QObject):
 
         self.position=position
         self.mode_keys=mode_keys
-        self.registerActions()
+        self.register()
 
     def setUI(self): 
 
@@ -86,9 +86,8 @@ class PlugObj(Plug, QtCore.QObject):
                     shortcut.setContext(context)
                     shortcut.activated.connect(func)
 
-    def registerActions(self):
+    def register(self):
 
-        self.setActions()
         self.app.manager.register(self, self.actions)
 
     def keyPressEvent(self, event):

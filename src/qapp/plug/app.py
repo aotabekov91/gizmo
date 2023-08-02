@@ -1,14 +1,12 @@
 import sys
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 
 from .base import Plug
 from ..core.ui import StackWindow
 from ..core.manager import Manager
 
 class PlugApp(Plug, QtWidgets.QApplication):
-
-    actionRegistered=QtCore.pyqtSignal()
 
     def __init__(self, initiate_stack=False, **kwargs):
 

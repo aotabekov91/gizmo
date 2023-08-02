@@ -8,6 +8,8 @@ from ..utils import ZMQListener, KeyListener
 
 class Plug(BasePlug):
 
+    respond=QtCore.pyqtSignal(dict)
+
     def __init__(self, 
                  app=None, 
                  command_leader=['.'],
@@ -22,7 +24,6 @@ class Plug(BasePlug):
         super(Plug, self).__init__(**kwargs)
 
         self.setShortcuts()
-        self.registerActions()
 
     def addLeader(self, leader):
 
@@ -34,16 +35,25 @@ class Plug(BasePlug):
         self.listener = QtCore.QThread()
         self.zeromq_listener=ZMQListener(self)
         self.zeromq_listener.moveToThread(self.listener)
-        self.listener.started.connect(self.zeromq_listener.loop)
-        self.zeromq_listener.request.connect(self.handle)
+        self.listener.started.connect(
+                self.zeromq_listener.loop)
+        self.zeromq_listener.request.connect(self.act)
         QtCore.QTimer.singleShot(0, self.listener.start)
+
+    def act(self, request):
+
+        response=self.handle(request)
+        if self.respond_port:
+            self.socket.send_json(response)
+        self.zeromq_listener.acted=True
 
     def setOSListener(self):
 
         self.os_thread = QtCore.QThread()
         self.os_listener=KeyListener(self)
         self.os_listener.moveToThread(self.os_thread)
-        self.os_thread.started.connect(self.os_listener.loop)
+        self.os_thread.started.connect(
+                self.os_listener.loop)
         QtCore.QTimer.singleShot(0, self.os_thread.start)
 
     def setConnection(self, kind=zmq.PULL):
@@ -66,33 +76,33 @@ class Plug(BasePlug):
     def registerActions(self):
 
         if hasattr(self, 'ui'):
-            for name in self.ui.__dir__():
-                method=getattr(self.ui, name)
-                if hasattr(method, 'key'):
-                    if not method.info: method.info=name
-                    if not method.key or not method.key in self.commandKeys:
-                        self.actions[(method.key, method.info)]=method
+            for f in self.ui.__dir__():
+                m=getattr(self.ui, f)
+                if hasattr(m, 'key'):
+                    if not m.info: m.info=f
+                    if not m.key or not m.key in self.commandKeys:
+                        self.actions[(m.key, m.info)]=m
 
-        for name in self.__dir__():
-            method=getattr(self, name)
-            if hasattr(method, 'key'):
-                if not getattr(method, 'info', None): 
-                    method.__func__.info=name
-                    if not method.key or not method.key in self.commandKeys:
-                        self.commandKeys[method.key]=method
+        for f in self.__dir__():
+            m=getattr(self, f)
+            if hasattr(m, 'key'):
+                if not getattr(m, 'info', None): 
+                    m.__func__.info=f
+                    if not m.key or not m.key in self.commandKeys:
+                        self.commandKeys[m.key]=m
                         # self.actions[(method.key, method.info)]=method.__func__
-                        self.actions[(method.key, method.info)]=method 
+                        self.actions[(m.key, m.info)]=m 
 
         if self.config.has_section('Keys'):
             config=dict(self.config['Keys'])
-            for name, key in config.items():
-                method=getattr(self, name, None)
-                if method:
-                    setattr(method.__func__, 'key', key)
-                    setattr(method.__func__, 'info', name)
-                    if not method.key or not method.key in self.commandKeys:
-                        self.commandKeys[method.key]=method
-                        self.actions[(method.key, method.info)]=method 
+            for f, key in config.items():
+                m=getattr(self, f, None)
+                if m:
+                    setattr(m.__func__, 'key', key)
+                    setattr(m.__func__, 'info', f)
+                    if not m.key or not m.key in self.commandKeys:
+                        self.commandKeys[m.key]=m
+                        self.actions[(m.key, m.info)]=m 
 
     def eventFilter(self, widget, event):
 

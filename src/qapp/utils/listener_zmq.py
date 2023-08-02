@@ -1,3 +1,4 @@
+import time
 from PyQt5 import QtCore
 
 class ZMQListener(QtCore.QObject):
@@ -13,7 +14,8 @@ class ZMQListener(QtCore.QObject):
 
         while self.parent.running:
             request = self.parent.socket.recv_json()
-            response=self.parent.handle(request)
-            if self.parent.respond_port:
-                self.parent.socket.send_json(response)
+            self.acted=False
             self.request.emit(request)
+            while not self.acted:
+                time.sleep(1)
+

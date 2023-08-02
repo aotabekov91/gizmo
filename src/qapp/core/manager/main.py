@@ -8,12 +8,17 @@ class Manager(QtCore.QObject):
 
     bufferCreated=QtCore.pyqtSignal(object)
 
-    def __init__(self, app, buffer=None, mode=None, plug=None):
+    def __init__(self, 
+                 app, 
+                 buffer=None, 
+                 mode=None, 
+                 plug=None):
 
         super(Manager, self).__init__(app)
 
         self.app=app
         self.actions={}
+        self.all_actions={}
 
         self.setModeManager(mode)
         self.setBufferManager(buffer)
@@ -22,7 +27,10 @@ class Manager(QtCore.QObject):
     def register(self, plug, actions): 
 
         self.actions[plug]=actions
-        self.app.actionRegistered.emit()
+
+        for n, a in actions.items():
+            name='_'.join(n)
+            self.all_actions[name]=a
 
     def setModeManager(self, mode):
 
@@ -38,4 +46,5 @@ class Manager(QtCore.QObject):
 
         if not buffer: buffer=Buffman
         self.app.buffer=buffer(self.app)
-        self.app.buffer.bufferCreated.connect(self.bufferCreated)
+        self.app.buffer.bufferCreated.connect(
+                self.bufferCreated)

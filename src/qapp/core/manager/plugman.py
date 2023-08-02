@@ -19,11 +19,11 @@ class Plugman(QtCore.QObject):
 
         if os.path.exists(self.plugs_path):
             sys.path.append(self.plugs_path)
-            for p_name in os.listdir(self.plugs_path):
-                if not p_name.startswith('__'):
-                    plug_module=importlib.import_module(p_name)
-                    if hasattr(plug_module, 'get_plug_class'):
-                        self.addPlug(plug_module.get_plug_class())
+            for n in os.listdir(self.plugs_path):
+                if not n.startswith('__'):
+                    pmod=importlib.import_module(n)
+                    if hasattr(pmod, 'get_plug_class'):
+                        self.addPlug(pmod.get_plug_class())
 
         self.app.actionRegistered.emit()
 

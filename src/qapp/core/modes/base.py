@@ -71,15 +71,14 @@ class Mode(PlugObj):
         self.commands=sorted(self.commands, key=lambda x: x['plug'])
         self.ui.mode.setList(self.commands)
 
-    def setPlugData(self, plug, actions, mode_name=None):
+    def setPlugData(self, plug, actions, mname=None):
 
-        for (plug_name, func_name), method in actions.items():
-            if not mode_name or  mode_name in method.modes:
-            # if not mode_name or plug_name==self.name or  mode_name in method.modes:
+        for (pname, fname), method in actions.items():
+            if not mname or  mname in method.modes:
                 method_name=getattr(method, 'info', None)
-                if method_name: func_name=method_name
-                name=f'[{plug_name}] {func_name}'
-                data={'id': method, 'up': name, 'plug': plug_name}
+                if method_name: fname=method_name
+                name=f'[{pname}] {fname}'
+                data={'id': method, 'up': name, 'plug': pname}
                 if method.key: 
                     key=method.key
                     if hasattr(plug, 'modeKey'): 
