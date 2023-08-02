@@ -26,9 +26,14 @@ class PlugApp(Plug, QtWidgets.QApplication):
         self.parse()
         self.stack.show()
 
-    def setStack(self, display_class=None, view_class=None):
+    def setStack(self, 
+                 display_class=None, 
+                 view_class=None):
 
-        self.stack=StackWindow(self, display_class, view_class)
+        self.stack=StackWindow(
+                self, 
+                display_class, 
+                view_class)
 
     def setManager(self, 
                    manager=None, 
