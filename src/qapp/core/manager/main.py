@@ -1,8 +1,8 @@
 from PyQt5 import QtCore
 
-from .modes import Modes
-from .plugs import Plugs
-from .buffers import Buffer
+from .modeman import Modeman
+from .plugman import Plugman
+from .buffman import Buffman
 
 class Manager(QtCore.QObject):
 
@@ -26,16 +26,16 @@ class Manager(QtCore.QObject):
 
     def setModeManager(self, mode):
 
-        if not mode: mode=Modes
+        if not mode: mode=Modeman
         self.app.modes=mode(self.app)
 
     def setPlugManager(self, plug):
 
-        if not plug: plug=Plugs
+        if not plug: plug=Plugman
         self.app.plugs=plug(self.app)
 
     def setBufferManager(self, buffer): 
 
-        if not buffer: buffer=Buffer
+        if not buffer: buffer=Buffman
         self.app.buffer=buffer(self.app)
         self.app.buffer.bufferCreated.connect(self.bufferCreated)

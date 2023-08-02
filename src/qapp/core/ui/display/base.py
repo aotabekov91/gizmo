@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from ..plug import Configure
+from ..configure import Configure
 
 class Display(QSplitter):
 
@@ -39,7 +39,10 @@ class Display(QSplitter):
         self.views={}
         self.view=None
 
-        self.configure=Configure(app, 'Display', self, mode_keys={'command': 'w'})
+        self.configure=Configure(app=app, 
+                                 name='Display', 
+                                 parent=self, 
+                                 mode_keys={'command': 'w'})
 
         self.setUI()
 

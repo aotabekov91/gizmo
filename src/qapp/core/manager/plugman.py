@@ -4,11 +4,11 @@ import importlib
 
 from PyQt5 import QtCore
 
-class Plugs(QtCore.QObject):
+class Plugman(QtCore.QObject):
 
     def __init__(self, app):
 
-        super(Plugs, self).__init__(app)
+        super(Plugman, self).__init__(app)
 
         self.app=app
         self.plugs={}

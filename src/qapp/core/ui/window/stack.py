@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 
 from .main import MainWindow
 from ..display import Display
-from ...widget import StackWidget
+from ....widget import StackWidget
 
 class StackWindow(QMainWindow):
 

@@ -2,8 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from ..plug import Configure
-from ...utils import register
+from ..configure import Configure
+from ....utils import register
 
 class StatusBar(QStatusBar):
 
@@ -18,9 +18,9 @@ class StatusBar(QStatusBar):
 
         self.window=window
         self.configure=Configure(
-                window.app, 
-                'Statusbar', 
-                self, 
+                app=window.app, 
+                name='Statusbar', 
+                parent=self, 
                 mode_keys={'command': 's'})
 
         self.setUI()

@@ -1,12 +1,10 @@
 import os
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
-class Buffer(QObject):
+class Buffman(QtCore.QObject):
 
-    bufferCreated=pyqtSignal(object)
+    bufferCreated=QtCore.pyqtSignal(object)
 
     def __init__(self, app):
 
@@ -15,7 +13,7 @@ class Buffer(QObject):
         self.app=app
         self.buffers={}
 
-        self.watch=QFileSystemWatcher()
+        self.watch=QtCore.QFileSystemWatcher()
         self.watch.fileChanged.connect(self.on_fileChanged)
 
     def load(self, filePath): pass 

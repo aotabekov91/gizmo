@@ -3,8 +3,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from .dock import Dock
-from ...utils import register
-from ..plug import Configure
+from ..configure import Configure
+from ....utils import register
 
 class Docks(QObject):
 
@@ -23,8 +23,11 @@ class Docks(QObject):
 
         self.createDocks()
 
-        self.configure=Configure(window.app, 'Docks', self,
-                                 mode_keys={'command':'d', 'normal':'d'})
+        self.configure=Configure(
+                app=window.app, 
+                name='Docks', 
+                parent=self, 
+                mode_keys={'command':'d', 'normal':'d'})
 
     def createDocks(self):
 

@@ -1,4 +1,4 @@
-from ...widget import ListWidget, CommandStack
+from ....widget import ListWidget, CommandStack
 
 class CommandWindow(CommandStack):
 

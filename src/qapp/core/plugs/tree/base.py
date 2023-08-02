@@ -2,11 +2,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from ..base import Plug
 from ....utils import register
+from ....plug import PlugObj
 from ....widget import InputTree
 
-class TreePlug(Plug):
+class TreePlug(PlugObj):
 
     def __init__(self, *args, **kwargs):
 

@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
+from PyQt5 import QtCore
 
-class Modes(QObject):
+class Modeman(QtCore.QObject):
 
     def __init__(self, app):
 

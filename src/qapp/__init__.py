@@ -1,4 +1,4 @@
-from . import app
+from . import core
 from . import plug
 from . import utils
-from . import widget 
+from . import widget

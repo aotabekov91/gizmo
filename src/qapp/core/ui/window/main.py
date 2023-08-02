@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import *
 
 from ..docks import Docks
 from ..display import Display
-from ..plug import Configure
 from ..statusbar import StatusBar
+from ..configure import Configure
 
 class MainWindow(QMainWindow):
 

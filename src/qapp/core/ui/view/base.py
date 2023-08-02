@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 from ..scene import Scene
-from ..plug import Configure
+from ..configure import Configure
 
 class View(QGraphicsView):
 
@@ -50,7 +50,10 @@ class View(QGraphicsView):
         self.zoomOutFactor=0.75
         self.zoomRange=[-10, 10]
 
-        self.configure=Configure(app, 'View', self)
+        self.configure=Configure(
+                app=app, 
+                name='View', 
+                parent=self)
         self.s_settings=self.configure.getSettings()
 
         self.setup(scene_class, layout)

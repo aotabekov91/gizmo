@@ -2,11 +2,11 @@ import inspect
 
 from PyQt5 import QtCore 
 
-from ..plug import Plug
+from ...plug import PlugObj
 from ...utils import register
 from ...widget import ListWidget 
 
-class Mode(Plug):
+class Mode(PlugObj):
 
     returnPressed=QtCore.pyqtSignal()
     listenWanted=QtCore.pyqtSignal(str)

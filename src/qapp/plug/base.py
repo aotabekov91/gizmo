@@ -16,8 +16,6 @@ class Plug(BasePlug):
                  ):
 
         self.app=app
-        self.actions={}
-        self.commandKeys={}
         self.command_leader=command_leader
         self.command_activated=command_activated
 
