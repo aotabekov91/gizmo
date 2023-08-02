@@ -11,7 +11,7 @@ class FileBrowser(TreePlug):
         super().__init__(*args, **kwargs)
         self.setPath()
 
-    def path(self, index=None):
+    def getPath(self, index=None):
 
         if not index: index=self.ui.main.tree.currentIndex()
 
@@ -32,7 +32,7 @@ class FileBrowser(TreePlug):
     def open(self, how='reset', focus=True):
 
         index=self.ui.main.tree.currentIndex()
-        path=self.path(index)
+        path=self.getPath(index)
         if path:
             if os.path.isdir(path): 
                 self.ui.main.tree.expand(self.ui.main.tree.currentIndex())
