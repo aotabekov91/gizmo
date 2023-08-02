@@ -1,8 +1,3 @@
-import os
-import inspect
-import argparse
-import configparser
-
 from PyQt5 import QtCore
 
 from ..manager import Manager
@@ -18,27 +13,14 @@ class BaseApp(PlugApp):
 
         super().__init__(**kwargs)
 
-        self.setConfig()
-        self.setParser()
         self.setUI()
         self.initiate()
 
     def setParser(self):
 
-        self.parser = argparse.ArgumentParser()
+        super().setParser()
         self.parser.add_argument(
                 'file', nargs='?', default=None, type=str)
-
-    def setConfig(self):
-
-        file_path=os.path.abspath(
-                inspect.getfile(self.__class__))
-        self.path=os.path.dirname(
-                file_path).replace('\\', '/')
-        self.configPath=f'{self.path}/config.ini'
-        self.config=configparser.RawConfigParser()
-        self.config.optionxform=str
-        self.config.read(self.configPath)
 
     def setUI(self):
 
@@ -60,15 +42,10 @@ class BaseApp(PlugApp):
 
     def initiate(self):
 
-        self.loadPlugs()
-        self.loadModes()
+        self.plugs.load()
+        self.modes.load()
         self.parse()
-
         self.stack.show()
-
-    def loadPlugs(self): self.plugs.load()
-
-    def loadModes(self): self.modes.load()
 
     def parse(self):
 

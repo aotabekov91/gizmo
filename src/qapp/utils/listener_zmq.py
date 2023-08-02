@@ -1,10 +1,8 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
-class ZMQListener(QObject):
+class ZMQListener(QtCore.QObject):
 
-    request = pyqtSignal(dict)
+    request = QtCore.pyqtSignal(dict)
 
     def __init__(self, parent):
 

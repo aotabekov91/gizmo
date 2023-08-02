@@ -5,7 +5,10 @@ from ...widget import BaseCommandStack
 
 class Plug(PlugWidget):
 
-    def __init__(self, mode_keys={}, position=None, **kwargs):
+    def __init__(self, 
+                 mode_keys={}, 
+                 position=None, 
+                 **kwargs):
 
         self.position=position
         self.mode_keys=mode_keys

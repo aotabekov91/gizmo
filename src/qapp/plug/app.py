@@ -18,7 +18,6 @@ class PlugApp(Plug, QtWidgets.QApplication):
     def run(self):
 
         self.running=True
-        self.setListener()
         sys.exit(self.exec_())
 
     def exit(self): 

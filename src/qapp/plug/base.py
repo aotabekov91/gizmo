@@ -10,18 +10,14 @@ class Plug(BasePlug):
 
     def __init__(self, 
                  app=None, 
-                 listen_port=True,
                  command_leader=['.'],
                  command_activated=False,
                  **kwargs,
                  ):
 
         self.app=app
-
         self.actions={}
         self.commandKeys={}
-
-        self.listen_port=listen_port
         self.command_leader=command_leader
         self.command_activated=command_activated
 
@@ -52,18 +48,11 @@ class Plug(BasePlug):
         self.os_thread.started.connect(self.os_listener.loop)
         QtCore.QTimer.singleShot(0, self.os_thread.start)
 
-    def setConnection(self, exit=True, kind=zmq.PULL):
+    def setConnection(self, kind=zmq.PULL):
 
+        super().setConnection(kind)
         if self.port or self.listen_port:
-
-            try:
-                self.socket = zmq.Context().socket(kind)
-                if self.port:
-                    self.socket.bind(f'tcp://*:{self.port}')
-                elif self.listen_port:
-                    self.port=self.socket.bind_to_random_port('tcp://*')
-            except:
-                self.socket=None
+            self.setListener()
 
     def setShortcuts(self):
 
