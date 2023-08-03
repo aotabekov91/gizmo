@@ -22,6 +22,15 @@ class Visual(Mode):
         self.hints=None
         self.hinting=False
 
+    def delisten(self):
+
+        super().delisten()
+        self.hints=False
+        if self.hinting:
+            self.app.main.display.view.update()
+        self.hinting=False
+
+
     def activateCheck(self, event):
 
         leaderPressed=super().activateCheck(event)

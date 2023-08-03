@@ -1,16 +1,14 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets, QtGui
 
-class TreeWidget(QTreeView):
+class TreeWidget(QtWidgets.QTreeView):
 
-    openWanted=pyqtSignal()
-    hideWanted=pyqtSignal()
-    returnPressed=pyqtSignal()
+    openWanted=QtCore.pyqtSignal()
+    hideWanted=QtCore.pyqtSignal()
+    returnPressed=QtCore.pyqtSignal()
 
-    itemChanged=pyqtSignal(object)
-    indexChanged=pyqtSignal(object)
-    keyPressEventOccurred=pyqtSignal(object)
+    itemChanged=QtCore.pyqtSignal(object)
+    indexChanged=QtCore.pyqtSignal(object)
+    keyPressEventOccurred=QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs): 
 
@@ -18,8 +16,8 @@ class TreeWidget(QTreeView):
 
         self.setHeaderHidden(True)
 
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
         self.setUI()
 
@@ -38,13 +36,12 @@ class TreeWidget(QTreeView):
                 color: white;
                 border-color: transparent;
                 background-color: transparent;
-                border-radius: 10px;
-                border-style: outset;
+                border-radius: 0px;
                 padding: 5px 5px 5px 10px;
                 }
             QTreeView::item:selected:active {
-                border-color: red;
-                border-width: 2px;
+                color: black;
+                background-color: yellow;
                 }
                 '''
 
@@ -53,11 +50,11 @@ class TreeWidget(QTreeView):
     def currentItem(self):
 
         if self.model():
-            if type(self.model())==QStandardItemModel:
+            if type(self.model())==QtGui.QStandardItemModel:
                 return self.model().itemFromIndex(self.currentIndex())
             elif hasattr(self.model(), 'itemFromIndex'):
                 return self.model().itemFromIndex(self.currentIndex())
-            elif type(self.model())==QSortFilterProxyModel:
+            elif type(self.model())==QtCore.QSortFilterProxyModel:
                 index=self.model().mapToSource(self.currentIndex())
                 return self.model().itemFromIndex(index)
 
@@ -138,8 +135,8 @@ class TreeWidget(QTreeView):
 
     def customMove(self, direction):
 
-        action=getattr(QAbstractItemView, direction)
-        ind=self.moveCursor(action, Qt.NoModifier)
+        action=getattr(QtWidgets.QAbstractItemView, direction)
+        ind=self.moveCursor(action, QtCore.Qt.NoModifier)
         self.setCurrentIndex(ind)
 
     def gotoStart(self):
@@ -176,43 +173,43 @@ class TreeWidget(QTreeView):
 
         self.keyPressEventOccurred.emit(event)
 
-        if event.key()==Qt.Key_J:
+        if event.key()==QtCore.Qt.Key_J:
             self.moveDown()
         elif event.text()=='G':
             self.gotoEnd()
-        elif event.key()==Qt.Key_G:
+        elif event.key()==QtCore.Qt.Key_G:
             self.gotoStart()
-        elif event.key()==Qt.Key_BracketLeft:
+        elif event.key()==QtCore.Qt.Key_BracketLeft:
             self.gotoSibling(kind='up')
-        elif event.key()==Qt.Key_BracketRight:
+        elif event.key()==QtCore.Qt.Key_BracketRight:
             self.gotoSibling(kind='down')
-        elif event.key()==Qt.Key_P:
+        elif event.key()==QtCore.Qt.Key_P:
             self.gotoParent()
-        elif event.key()==Qt.Key_K:
+        elif event.key()==QtCore.Qt.Key_K:
             self.moveUp()
-        elif event.key()==Qt.Key_L:
+        elif event.key()==QtCore.Qt.Key_L:
             self.expand()
-        elif event.key()==Qt.Key_H:
+        elif event.key()==QtCore.Qt.Key_H:
             self.collapse()
-        elif event.key()==Qt.Key_U:
+        elif event.key()==QtCore.Qt.Key_U:
             self.rootUp()
-        elif event.key()==Qt.Key_Z:
+        elif event.key()==QtCore.Qt.Key_Z:
             self.update()
-        elif event.key()==Qt.Key_D:
+        elif event.key()==QtCore.Qt.Key_D:
             self.rootDown()
-        elif event.key()==Qt.Key_Semicolon:
+        elif event.key()==QtCore.Qt.Key_Semicolon:
             self.moveToParent()
-        elif event.key()==Qt.Key_B:
+        elif event.key()==QtCore.Qt.Key_B:
             self.moveToBottom()
-        elif event.key()==Qt.Key_X:
+        elif event.key()==QtCore.Qt.Key_X:
             self.expandAllInside()
-        elif event.key()==Qt.Key_T:
+        elif event.key()==QtCore.Qt.Key_T:
             self.collapseAllInside()
-        elif event.key()==Qt.Key_O:
+        elif event.key()==QtCore.Qt.Key_O:
             self.openWanted.emit()
-        elif event.key()==Qt.Key_Escape:
+        elif event.key()==QtCore.Qt.Key_Escape:
             self.hideWanted.emit()
-        elif event.key()==Qt.Key_Return:
+        elif event.key()==QtCore.Qt.Key_Return:
             self.returnPressed.emit()
         else:
             super().keyPressEvent(event)
@@ -227,7 +224,7 @@ class TreeWidget(QTreeView):
 
     def event(self, event):
 
-        if event.type()==QEvent.Enter:
+        if event.type()==QtCore.QEvent.Enter:
             item=self.currentItem()
             if item: self.itemChanged.emit(item)
         return super().event(event)

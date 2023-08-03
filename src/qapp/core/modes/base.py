@@ -131,6 +131,8 @@ class Mode(PlugObj):
 
                     mode=self.checkMode(event)
 
+                    print(mode, event.text())
+
                     if not mode:
 
                         self.addKeys(event)
@@ -139,9 +141,9 @@ class Mode(PlugObj):
 
                     else:
 
-                        self.app.modes.setMode(mode.name)
                         self._onExecuteMatch()
                         event.accept()
+                        self.app.modes.setMode(mode.name)
                         return True
 
         elif event.type()==QtCore.QEvent.KeyPress:

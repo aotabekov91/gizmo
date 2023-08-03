@@ -1,5 +1,4 @@
-from ..base import Mode
-from .widget import CommandWindow
+from .base import Mode
 
 class Command(Mode):
 
@@ -8,6 +7,7 @@ class Command(Mode):
                  name='command',
                  listen_leader=',',
                  show_statusbar=True, 
+                 delisten_wanted='normal',
                  **kwargs,
                  ):
 
@@ -18,14 +18,6 @@ class Command(Mode):
                 show_statusbar=show_statusbar, 
                 **kwargs,
                 )
-
-    def setUI(self):
-        
-        self.ui=CommandWindow(self.app)
-
-        self.ui.mode.hideWanted.connect(self.deactivate)
-        self.ui.mode.returnPressed.connect(self.confirm)
-        self.ui.mode.installEventFilter(self)
 
     def _onExecuteMatch(self):
 
