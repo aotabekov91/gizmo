@@ -130,22 +130,17 @@ class Mode(PlugObj):
                 else:
 
                     mode=self.checkMode(event)
+                    event.accept()
 
                     if not mode:
-
                         self.addKeys(event)
-                        event.accept()
-                        return True
-
                     else:
-
                         self._onExecuteMatch()
-                        event.accept()
                         self.app.modes.setMode(mode.name)
-                        return True
+
+                    return True
 
         elif event.type()==QtCore.QEvent.KeyPress:
-
             mode=self.checkMode(event)
             if mode:
                 self.app.modes.setMode(mode.name)
@@ -203,7 +198,6 @@ class Mode(PlugObj):
         
         text=event.text()
         if text: self.keys_pressed+=[text]
-
         return text
 
     def reportMatches(self, matches, partial):
