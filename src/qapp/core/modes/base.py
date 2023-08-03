@@ -131,8 +131,6 @@ class Mode(PlugObj):
 
                     mode=self.checkMode(event)
 
-                    print(mode, event.text())
-
                     if not mode:
 
                         self.addKeys(event)

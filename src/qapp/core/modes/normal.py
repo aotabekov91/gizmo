@@ -168,7 +168,7 @@ class Normal(Mode):
 
         self.app.main.display.decrementFold()
 
-    @register(key='tc')
+    @register(key='tc', modes=['normal', 'command'])
     def toggleCursor(self): 
 
         self.app.main.display.toggleCursor()
