@@ -22,11 +22,16 @@ class View(QtWidgets.QGraphicsView):
     mouseReleaseOccured = QtCore.pyqtSignal([object, object])
     mouseDoubleClickOccured = QtCore.pyqtSignal([object, object])
 
-    itemHoverMoveOccured = QtCore.pyqtSignal([object, object, object])
-    itemMouseMoveOccured = QtCore.pyqtSignal([object, object, object])
-    itemMousePressOccured = QtCore.pyqtSignal([object, object, object])
-    itemMouseReleaseOccured = QtCore.pyqtSignal([object, object, object])
-    itemMouseDoubleClickOccured = QtCore.pyqtSignal([object, object, object])
+    itemHoverMoveOccured = QtCore.pyqtSignal(
+            [object, object, object])
+    itemMouseMoveOccured = QtCore.pyqtSignal(
+            [object, object, object])
+    itemMousePressOccured = QtCore.pyqtSignal(
+            [object, object, object])
+    itemMouseReleaseOccured = QtCore.pyqtSignal(
+            [object, object, object])
+    itemMouseDoubleClickOccured = QtCore.pyqtSignal(
+            [object, object, object])
 
     def __init__(self, app, layout, scene_class=None):
 

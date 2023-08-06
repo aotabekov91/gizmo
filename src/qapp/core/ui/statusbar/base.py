@@ -21,8 +21,6 @@ class StatusBar(QtWidgets.QStatusBar):
 
         self.window.display.viewChanged.connect(
                 self.on_viewChanged)
-        self.window.display.itemChanged.connect(
-                self.on_itemChanged)
 
     def setUI(self):
 
@@ -45,7 +43,6 @@ class StatusBar(QtWidgets.QStatusBar):
         self.mode=QtWidgets.QLabel()
 
         self.info=QtWidgets.QLabel()
-        self.page=QtWidgets.QLabel()
         self.edit=QtWidgets.QLineEdit(self)
         self.detail=QtWidgets.QLabel()
         self.model=QtWidgets.QLabel()
@@ -58,7 +55,6 @@ class StatusBar(QtWidgets.QStatusBar):
         self.addPermanentWidget(self.detail)
 
         self.addPermanentWidget(self.model)
-        self.addPermanentWidget(self.page, 0)
 
         self.info.hide()
         self.edit.hide()
@@ -71,7 +67,6 @@ class StatusBar(QtWidgets.QStatusBar):
 
         super().installEventFilter(listener)
         self.info.installEventFilter(listener)
-        self.page.installEventFilter(listener)
         self.detail.installEventFilter(listener)
         self.model.installEventFilter(listener)
 
@@ -80,17 +75,12 @@ class StatusBar(QtWidgets.QStatusBar):
         super().removeEventFilter(listener)
         self.info.removeEventFilter(listener)
         self.edit.removeEventFilter(listener)
-        self.page.removeEventFilter(listener)
         self.detail.removeEventFilter(listener)
         self.model.removeEventFilter(listener)
 
     def on_viewChanged(self, view): 
 
         if view.name(): self.model.setText(str(view.name()))
-
-    def on_itemChanged(self, view, item): 
-
-        if item.name(): self.page.setText(str(item.name()))
 
     @register('i', modes=['normal', 'command'])
     def toggle(self):

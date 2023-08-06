@@ -67,15 +67,17 @@ class TreePlug(PlugObj):
 
         if not self.m_follow_index:
             self.m_follow_index=True
-            self.ui.main.tree.indexChanged.disconnect(self.on_outlineClicked)
+            self.ui.main.tree.indexChanged.disconnect(
+                    self.on_outlineClicked)
         else:
             self.m_follow_index=False
-            self.ui.main.tree.indexChanged.connect(self.on_outlineClicked)
+            self.ui.main.tree.indexChanged.connect(
+                    self.on_outlineClicked)
 
     def open(self, how, focus, *args, **kwargs): 
 
         if focus:
-            self.modeWanted('normal')
+            self.delistenWanted.emit()
         else:
             self.ui.show()
 
@@ -98,11 +100,13 @@ class TreePlug(PlugObj):
         root=model.invisibleRootItem()
 
         if root.rowCount()>0: 
-            if not parent: parent=model.indexFromItem(root.child(0,0))
+            if not parent: 
+                parent=model.indexFromItem(root.child(0,0))
 
             for row in range(model.rowCount(parent)):
                 index=model.index(row, 0, parent)
-                if index==model.indexFromItem(item): return index
+                if index==model.indexFromItem(item): 
+                    return index
 
             for row in range(model.rowCount(parent)):
                 index=model.index(row, 0, parent)

@@ -7,6 +7,7 @@ from .base import TreePlug
 class FileBrowser(TreePlug):
 
     def __init__(self, **kwargs):
+
         super().__init__(**kwargs)
         self.setPath()
 
@@ -34,7 +35,8 @@ class FileBrowser(TreePlug):
         path=self.getPath(index)
         if path:
             if os.path.isdir(path): 
-                self.ui.main.tree.expand(self.ui.main.tree.currentIndex())
+                self.ui.main.tree.expand(
+                        self.ui.main.tree.currentIndex())
             else:
                 self.app.main.open(path, how=how, focus=focus)
             super().open(how, focus)

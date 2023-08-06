@@ -84,8 +84,8 @@ class PlugObj(Plug, QtCore.QObject):
                     self.modeWanted.emit(mode)
                 event.accept()
                 return True
-
-        return super().eventFilter(widget, event)
+            return super().eventFilter(widget, event)
+        return False
 
     def checkListen(self, event):
 
@@ -120,7 +120,7 @@ class PlugObj(Plug, QtCore.QObject):
             elif self.position=='window':
                 pass
             elif self.position=='overlay':
-                pass
+                self.ui.show()
 
     def deactivate(self):
 
@@ -131,7 +131,7 @@ class PlugObj(Plug, QtCore.QObject):
             elif self.position=='window':
                 pass
             elif self.position=='overlay':
-                pass
+                self.ui.hide()
 
     def setShortcuts(self):
 
