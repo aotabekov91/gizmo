@@ -9,7 +9,7 @@ class Mode(PlugObj):
     returnPressed=QtCore.pyqtSignal()
 
     def __init__(self, 
-                 wait_run=5,
+                 wait_run=2,
                  wait_time=100,
                  report_keys=True,
                  delisten_on_exec=True,

@@ -6,6 +6,7 @@ from ....utils import register
 class StatusBar(QtWidgets.QStatusBar):
 
     hideWanted=QtCore.pyqtSignal()
+    toggled=QtCore.pyqtSignal(bool)
     keyPressEventOccurred=QtCore.pyqtSignal(object)
 
     def __init__(self, window):
@@ -21,6 +22,9 @@ class StatusBar(QtWidgets.QStatusBar):
 
         self.window.display.viewChanged.connect(
                 self.on_viewChanged)
+
+        self.window.display.itemChanged.connect(
+                self.on_itemChanged)
 
     def setUI(self):
 
@@ -46,6 +50,7 @@ class StatusBar(QtWidgets.QStatusBar):
         self.edit=QtWidgets.QLineEdit(self)
         self.detail=QtWidgets.QLabel()
         self.model=QtWidgets.QLabel()
+        self.page=QtWidgets.QLabel()
 
         self.setFixedHeight(25)
 
@@ -55,6 +60,7 @@ class StatusBar(QtWidgets.QStatusBar):
         self.addPermanentWidget(self.detail)
 
         self.addPermanentWidget(self.model)
+        self.addPermanentWidget(self.page, 0)
 
         self.info.hide()
         self.edit.hide()
@@ -82,6 +88,12 @@ class StatusBar(QtWidgets.QStatusBar):
 
         if view.name(): self.model.setText(str(view.name()))
 
+    def on_itemChanged(self, view, item=None): 
+
+        cpage=view.currentPage()
+        pages=view.totalPages()
+        self.page.setText(f'[{cpage}/{pages}]')
+
     @register('i', modes=['normal', 'command'])
     def toggle(self):
 
@@ -89,6 +101,8 @@ class StatusBar(QtWidgets.QStatusBar):
             self.hide()
         else:
             self.show()
+
+        self.toggled.emit(self.isVisible())
 
     def clear(self, fields=['info', 'edit', 'detail']):
 

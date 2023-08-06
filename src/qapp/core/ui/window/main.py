@@ -30,8 +30,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setDisplay(display_class, view_class)
         self.docks=Docks(self)
         self.bar=StatusBar(self)
-
         self.setStatusBar(self.bar)
+        self.bar.hide()
 
         stl='''
             QWidget {
