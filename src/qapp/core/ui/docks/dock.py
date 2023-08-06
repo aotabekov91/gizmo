@@ -1,8 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
-class Dock(QDockWidget):
+class Dock(QtWidgets.QDockWidget):
 
     def __init__(self, docks, loc):
 
@@ -28,15 +26,14 @@ class Dock(QDockWidget):
                 }
                 '''
         self.setStyleSheet(self.style_sheet)
-
         self.setContentsMargins(0, 0, 0, 0)
 
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
     def createTab(self):
 
-        self.tab = QStackedWidget(self)
+        self.tab = QtWidgets.QStackedWidget(self)
         self.setWidget(self.tab)
 
     def setFocus(self, widget=None):
@@ -73,7 +70,8 @@ class Dock(QDockWidget):
 
     def deactivate(self, widget, restore=False):
 
-        if widget in self.widgets: self.widgets.pop(self.widgets.index(widget))
+        if widget in self.widgets: 
+            self.widgets.pop(self.widgets.index(widget))
 
         if restore and self.widgets:
             prev=self.widgets[-1]
@@ -88,10 +86,10 @@ class Dock(QDockWidget):
 
     def event(self, event):
 
-        if event.type()==QEvent.Enter:
+        if event.type()==QtCore.QEvent.Enter:
             current=self.current()
             if current: current.focusGained.emit()
-        if event.type()==QEvent.Leave:
+        if event.type()==QtCore.QEvent.Leave:
             current=self.current()
             if current: current.focusLost.emit()
         return super().event(event)
@@ -122,9 +120,9 @@ class Dock(QDockWidget):
             else:
                 w, h=widget.prev_size.width(), widget.prev_size.height()
                 if self.loc in ['left', 'right']:
-                    size=QSize(round(w*factor), h)
+                    size=QtCore.QSize(round(w*factor), h)
                 else:
-                    size=QSize(w, round(h*factor))
+                    size=QtCore.QSize(w, round(h*factor))
                 widget.dock.tab.setFixedSize(size)
                 widget.setFixedSize(size)
                 widget.prev_size=widget.dock.tab.size()

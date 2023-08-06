@@ -1,35 +1,33 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
 from ..configure import Configure
 
-class Display(QSplitter):
+class Display(QtWidgets.QSplitter):
 
-    viewCreated=pyqtSignal(object)
-    viewChanged=pyqtSignal(object)
+    viewCreated=QtCore.pyqtSignal(object)
+    viewChanged=QtCore.pyqtSignal(object)
 
-    itemChanged = pyqtSignal(object, object)
-    itemPainted = pyqtSignal(object, object, object, object, object)
+    itemChanged = QtCore.pyqtSignal(object, object)
+    itemPainted = QtCore.pyqtSignal(object, object, object, object, object)
 
-    itemKeyPressOccured=pyqtSignal([object, object, object])
-    itemHoverMoveOccured=pyqtSignal([object, object, object])
-    itemMouseMoveOccured=pyqtSignal([object, object, object])
-    itemMousePressOccured=pyqtSignal([object, object, object])
-    itemMouseReleaseOccured=pyqtSignal([object, object, object])
-    itemMouseDoubleClickOccured=pyqtSignal([object, object, object])
+    itemKeyPressOccured=QtCore.pyqtSignal([object, object, object])
+    itemHoverMoveOccured=QtCore.pyqtSignal([object, object, object])
+    itemMouseMoveOccured=QtCore.pyqtSignal([object, object, object])
+    itemMousePressOccured=QtCore.pyqtSignal([object, object, object])
+    itemMouseReleaseOccured=QtCore.pyqtSignal([object, object, object])
+    itemMouseDoubleClickOccured=QtCore.pyqtSignal([object, object, object])
 
-    viewSelection=pyqtSignal([object, object])
-    viewKeyPressOccurred=pyqtSignal([object, object])
-    viewHoverMoveOccured=pyqtSignal([object, object])
-    viewMouseMoveOccured=pyqtSignal([object, object])
-    viewMousePressOccured=pyqtSignal([object, object])
-    viewMouseReleaseOccured=pyqtSignal([object, object])
-    viewMouseDoubleClickOccured=pyqtSignal([object, object])
+    viewSelection=QtCore.pyqtSignal([object, object])
+    viewKeyPressOccurred=QtCore.pyqtSignal([object, object])
+    viewHoverMoveOccured=QtCore.pyqtSignal([object, object])
+    viewMouseMoveOccured=QtCore.pyqtSignal([object, object])
+    viewMousePressOccured=QtCore.pyqtSignal([object, object])
+    viewMouseReleaseOccured=QtCore.pyqtSignal([object, object])
+    viewMouseDoubleClickOccured=QtCore.pyqtSignal([object, object])
 
     def __init__(self, app, window, view_class=None):
 
-        super().__init__(Qt.Vertical, parent=window)
+        super().__init__(QtCore.Qt.Vertical, parent=window)
 
         self.app=app
         self.win=window
@@ -49,10 +47,10 @@ class Display(QSplitter):
 
     def setUI(self):
 
-        self.m_hlayout=QVBoxLayout(self)#.m_hsplit)
+        self.m_hlayout=QtWidgets.QVBoxLayout(self)#.m_hsplit)
         self.m_hlayout.setSpacing(0)
         self.m_hlayout.setContentsMargins(0,0,0,0)
-        self.setContextMenuPolicy(Qt.NoContextMenu)
+        self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
 
     def setViewClass(self, view_class): self.view_class=view_class
 
@@ -179,7 +177,7 @@ class Display(QSplitter):
 
     def keyPressEvent(self, event):
 
-        if event.key()==Qt.Key_Escape:
+        if event.key()==QtCore.Qt.Key_Escape:
             if self.view: self.view.cleanUp()
         else:
             super().keyPressEvent(event)

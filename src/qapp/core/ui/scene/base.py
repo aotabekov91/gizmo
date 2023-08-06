@@ -1,11 +1,9 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
-class Scene(QGraphicsScene):
+class Scene(QtWidgets.QGraphicsScene):
 
-    itemAdded=pyqtSignal(object)
-    backgroundDrawn=pyqtSignal(object, object)
+    itemAdded=QtCore.pyqtSignal(object)
+    backgroundDrawn=QtCore.pyqtSignal(object, object)
 
     def drawBackground(self, painter, rect):
 

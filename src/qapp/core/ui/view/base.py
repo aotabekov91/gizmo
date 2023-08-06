@@ -1,34 +1,32 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from ..scene import Scene
 from ..configure import Configure
 
-class View(QGraphicsView):
+class View(QtWidgets.QGraphicsView):
 
-    resized=pyqtSignal(object, object)
+    resized=QtCore.pyqtSignal(object, object)
 
-    modelModified = pyqtSignal(object)
-    layoutModeChanged = pyqtSignal(object)
+    modelModified = QtCore.pyqtSignal(object)
+    layoutModeChanged = QtCore.pyqtSignal(object)
 
-    selection=pyqtSignal(object, object)
-    itemChanged = pyqtSignal(object, object)
-    itemPainted = pyqtSignal(object, object, object, object, object)
+    selection=QtCore.pyqtSignal(object, object)
+    itemChanged = QtCore.pyqtSignal(object, object)
+    itemPainted = QtCore.pyqtSignal(object, object, object, object, object)
 
-    keyPressOccurred=pyqtSignal([object, object])
+    keyPressOccurred=QtCore.pyqtSignal([object, object])
 
-    hoverMoveOccured = pyqtSignal([object, object])
-    mouseMoveOccured = pyqtSignal([object, object])
-    mousePressOccured = pyqtSignal([object, object])
-    mouseReleaseOccured = pyqtSignal([object, object])
-    mouseDoubleClickOccured = pyqtSignal([object, object])
+    hoverMoveOccured = QtCore.pyqtSignal([object, object])
+    mouseMoveOccured = QtCore.pyqtSignal([object, object])
+    mousePressOccured = QtCore.pyqtSignal([object, object])
+    mouseReleaseOccured = QtCore.pyqtSignal([object, object])
+    mouseDoubleClickOccured = QtCore.pyqtSignal([object, object])
 
-    itemHoverMoveOccured = pyqtSignal([object, object, object])
-    itemMouseMoveOccured = pyqtSignal([object, object, object])
-    itemMousePressOccured = pyqtSignal([object, object, object])
-    itemMouseReleaseOccured = pyqtSignal([object, object, object])
-    itemMouseDoubleClickOccured = pyqtSignal([object, object, object])
+    itemHoverMoveOccured = QtCore.pyqtSignal([object, object, object])
+    itemMouseMoveOccured = QtCore.pyqtSignal([object, object, object])
+    itemMousePressOccured = QtCore.pyqtSignal([object, object, object])
+    itemMouseReleaseOccured = QtCore.pyqtSignal([object, object, object])
+    itemMouseDoubleClickOccured = QtCore.pyqtSignal([object, object, object])
 
     def __init__(self, app, layout, scene_class=None):
 
@@ -43,7 +41,7 @@ class View(QGraphicsView):
         self.m_selected=[]
 
         self.m_foldlevel=0
-        self.m_cursor=Qt.ArrowCursor
+        self.m_cursor=QtCore.Qt.ArrowCursor
 
         self.zoom=1
         self.zoomInFactor=1.25
@@ -68,12 +66,12 @@ class View(QGraphicsView):
 
         self.setScene(self.m_scene)
         self.m_layout = layout(self)
-        self.scene().setBackgroundBrush(QColor('black'))
+        self.scene().setBackgroundBrush(QtGui.QColor('black'))
 
         self.setAcceptDrops(False)
-        self.setDragMode(QGraphicsView.ScrollHandDrag)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
     def setId(self, vid): self.m_id=vid
 
@@ -265,17 +263,17 @@ class View(QGraphicsView):
 
     def toggleCursor(self):
 
-        if self.m_cursor==Qt.BlankCursor:
-            self.m_cursor=Qt.ArrowCursor
+        if self.m_cursor==QtCore.Qt.BlankCursor:
+            self.m_cursor=QtCore.Qt.ArrowCursor
         else:
-            self.m_cursor=Qt.BlankCursor
+            self.m_cursor=QtCore.Qt.BlankCursor
         self.setCursor(self.m_cursor)
 
     def name(self): return id(self)
 
     def event(self, event):
 
-        if event.type()==QEvent.Enter:
+        if event.type()==QtCore.QEvent.Enter:
             self.setFocus()
             self.app.main.display.setCurrentView(self)
             self.app.modes.setMode('normal')
@@ -283,4 +281,4 @@ class View(QGraphicsView):
 
     def visibleItems(self): return self.items(self.viewport().rect())
 
-    def paint(self): raise
+    def paint(self): pass

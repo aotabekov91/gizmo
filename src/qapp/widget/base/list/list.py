@@ -102,7 +102,7 @@ class ListWidget(QListWidget):
         self.setCurrentRow(crow)
         self.scrollToItem(
                 self.currentItem(), 
-                hint=QAbstractItemView.PositionAtTop)
+                hint=QAbstractItemView.PositionAtCenter)
 
         self.itemChanged.emit(self.currentItem())
 

@@ -1,15 +1,13 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
 from ..docks import Docks
 from ..display import Display
 from ..statusbar import StatusBar
 from ..configure import Configure
 
-class MainWindow(QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
 
-    viewCreated=pyqtSignal(object)
+    viewCreated=QtCore.pyqtSignal(object)
     
     def __init__(self, app, display_class=None, view_class=None):
 
@@ -45,8 +43,8 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(stl)
         self.setAcceptDrops(True)
         self.setContentsMargins(2, 2, 2, 2)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
     def close(self): self.app.exit()
 

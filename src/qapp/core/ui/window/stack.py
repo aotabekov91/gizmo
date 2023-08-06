@@ -1,12 +1,10 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 
 from .main import MainWindow
 from ..display import Display
 from ....widget import StackWidget
 
-class StackWindow(QMainWindow):
+class StackWindow(QtWidgets.QMainWindow):
 
     def __init__(self, app, display_class=None, view_class=None):
 

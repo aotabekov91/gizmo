@@ -1,14 +1,12 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
 from .dock import Dock
 from ..configure import Configure
 from ....utils import register
 
-class Docks(QObject):
+class Docks(QtCore.QObject):
 
-    keyPressEventOccurred=pyqtSignal(object)
+    keyPressEventOccurred=QtCore.pyqtSignal(object)
 
     def __init__(self, window):
 
@@ -32,25 +30,25 @@ class Docks(QObject):
     def createDocks(self):
 
         self.window.setCorner(
-                Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+                QtCore.Qt.TopLeftCorner, QtCore.Qt.LeftDockWidgetArea)
         self.window.setCorner(
-                Qt.TopRightCorner, Qt.RightDockWidgetArea)
+                QtCore.Qt.TopRightCorner, QtCore.Qt.RightDockWidgetArea)
         self.window.setCorner(
-                Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+                QtCore.Qt.BottomLeftCorner, QtCore.Qt.LeftDockWidgetArea)
         self.window.setCorner(
-                Qt.BottomRightCorner, Qt.RightDockWidgetArea)
+                QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
 
         locs = {
-                'top': Qt.TopDockWidgetArea,
-                'bottom': Qt.BottomDockWidgetArea,
-                'left': Qt.LeftDockWidgetArea,
-                'right': Qt.RightDockWidgetArea,
+                'top': QtCore.Qt.TopDockWidgetArea,
+                'bottom': QtCore.Qt.BottomDockWidgetArea,
+                'left': QtCore.Qt.LeftDockWidgetArea,
+                'right': QtCore.Qt.RightDockWidgetArea,
                 }
 
         for loc, area in locs.items():
 
             dock = Dock(self, loc)
-            dock.setTitleBarWidget(QWidget())
+            dock.setTitleBarWidget(QtWidgets.QWidget())
 
             if loc in ['right', 'left']:
                 dock.tab.setFixedWidth(300)
@@ -64,7 +62,7 @@ class Docks(QObject):
 
     def eventFilter(self, widget, event):
 
-        if event.type()==QEvent.Resize:
+        if event.type()==QtCore.QEvent.Resize:
             self.adjustDocks()
             return True
         else:
@@ -104,7 +102,6 @@ class Docks(QObject):
                 self.window.display.show()
                 self.current.resize(restore=True)
 
-            # self.current.current().focusGained.emit()
             self.focus(self.current.loc)
 
     def adjustDocks(self): 
