@@ -31,10 +31,14 @@ class Docks(QObject):
 
     def createDocks(self):
 
-        self.window.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
-        self.window.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
-        self.window.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
-        self.window.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
+        self.window.setCorner(
+                Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+        self.window.setCorner(
+                Qt.TopRightCorner, Qt.RightDockWidgetArea)
+        self.window.setCorner(
+                Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+        self.window.setCorner(
+                Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
         locs = {
                 'top': Qt.TopDockWidgetArea,
@@ -47,13 +51,6 @@ class Docks(QObject):
 
             dock = Dock(self, loc)
             dock.setTitleBarWidget(QWidget())
-
-            # if loc=='left':
-            #     dock.setAllowedAreas(Qt.LeftDockWidgetArea)
-            # elif loc=='right':
-            #     dock.setAllowedAreas(Qt.RightDockWidgetArea)
-            # elif loc=='bottom':
-            #     dock.setAllowedAreas(Qt.BottomDockWidgetArea)
 
             if loc in ['right', 'left']:
                 dock.tab.setFixedWidth(300)
@@ -73,7 +70,9 @@ class Docks(QObject):
         else:
             return super().eventFilter(widget, event)
 
-    def focus(self, position): getattr(self, f'{position}').setFocus()
+    def focus(self, position): 
+
+        getattr(self, f'{position}').setFocus()
 
     def resize(self, ratio): 
 
@@ -117,8 +116,6 @@ class Docks(QObject):
         if self.right.isVisible():
             width-=self.right.size().width()
 
-        # print(self.window.size().width(), width)
-
         for position in ['top', 'bottom']: 
             dock=getattr(self, f'{position}')
             if dock.isVisible():
@@ -129,22 +126,10 @@ class Docks(QObject):
                     widget.setFixedSize(size)
                     widget.adjustSize()
 
-    #             area=self.window.corner(Qt.BottomLeftCorner)
-    #             dock.tab.setFixedWidth(self.window.display.view.size().width())
-    #             # if position in ['top', 'bottom']:
-    #             #     tab_size=dock.tab.size()
-    #             #     tab_size.setHeight(self.window.display.size().height())
-    #             #     height=tab_size.height()
-    #             #     if self.bottom.isVisible():
-    #             #         height-=self.bottom.size().height()
-    #             #     if self.top.isVisible():
-    #             #         height-=self.top.size().height()
-    #             #     tab_size.setHeight(height)
-    #             #     dock.tab.setFixedSize(tab_size)
-
     def hideAll(self):
 
-        for dock in ['right', 'top', 'bottom', 'left']: getattr(self, f'{dock}').hide()
+        for dock in ['right', 'top', 'bottom', 'left']:
+            getattr(self, f'{dock}').hide()
 
     def setCurrent(self, dock):
 

@@ -1,44 +1,39 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
 from ..configure import Configure
 from ....utils import register
 
-class StatusBar(QStatusBar):
+class StatusBar(QtWidgets.QStatusBar):
 
-    hideWanted=pyqtSignal()
-    keyPressEventOccurred=pyqtSignal(object)
+    hideWanted=QtCore.pyqtSignal()
+    keyPressEventOccurred=QtCore.pyqtSignal(object)
 
     def __init__(self, window):
 
         super(StatusBar, self).__init__()
 
-        self.clients={}
-
         self.window=window
         self.configure=Configure(
                 app=window.app, 
-                name='Statusbar', 
-                parent=self, 
-                mode_keys={'command': 's'})
+                parent=self)
 
         self.setUI()
-        self.hide()
 
-        self.window.display.viewChanged.connect(self.on_viewChanged)
-        self.window.display.itemChanged.connect(self.on_itemChanged)
+        self.window.display.viewChanged.connect(
+                self.on_viewChanged)
+        self.window.display.itemChanged.connect(
+                self.on_itemChanged)
 
     def setUI(self):
 
         self.style_sheet='''
-            QLineEdit {
+            QtWidgets.QLineEdit {
                 background-color: transparent;
                 border-color: transparent;
                 border-width: 0px;
                 border-radius: 0px;
                 }
-            QLabel{
+            QtWidgets.QLabel{
                 background-color: transparent;
                 }
                 '''
@@ -47,17 +42,20 @@ class StatusBar(QStatusBar):
         layout.setContentsMargins(0,0,0,0)
         self.setLayout(layout)
 
-        self.info=QLabel('Info')
-        self.page=QLabel('Page')
-        self.edit=QLineEdit(self)
-        self.detail=QLabel('Detail')
-        self.model=QLabel('Document')
+        self.mode=QtWidgets.QLabel()
+
+        self.info=QtWidgets.QLabel()
+        self.page=QtWidgets.QLabel()
+        self.edit=QtWidgets.QLineEdit(self)
+        self.detail=QtWidgets.QLabel()
+        self.model=QtWidgets.QLabel()
 
         self.setFixedHeight(25)
 
-        self.addWidget(self.info)
-        self.addWidget(self.edit, 1)
-        self.addWidget(self.detail)
+        self.addPermanentWidget(self.mode, 1)
+        self.addPermanentWidget(self.info)
+        self.addPermanentWidget(self.edit, 1)
+        self.addPermanentWidget(self.detail)
 
         self.addPermanentWidget(self.model)
         self.addPermanentWidget(self.page, 0)
@@ -109,41 +107,25 @@ class StatusBar(QStatusBar):
             field.setText('')
             field.hide()
 
-    def setData(self, data=None):
+    def setData(self, data={}):
 
         self.clear()
 
-        if not data: data=self.clients.get('prev', {})
-
-        self.clients['prev']=self.clients.get('current', {})
-        if 'client' in self.clients['prev']:
-            self.clients['prev']['visible']=self.isVisible()
-        self.clients['current']=data
-
         for f, v in data.items():
-            if f in ['edit', 'info', 'detail', 'page', 'model']:
-                field=getattr(self, f, None)
-                if field:
-                    field.setText(v)
-                    field.show()
 
-        if data.get('visible', False): 
-            self.show()
-        else:
-            super().hide()
-
-    # def hide(self):
-    #     data=self.clients.get('prev', {})
-    #     self.setData(data)
-    #     if not getattr(data, 'visible', False): super().hide()
+            if f=='mode': v=f"[{v}]"
+            field=getattr(self, f, None)
+            if field:
+                field.setText(v)
+                field.show()
 
     def keyPressEvent(self, event):
 
         self.keyPressEventOccurred.emit(event)
-        if event.key()==Qt.Key_Escape:
-            self.hide()
+        if event.key()==QtCore.Qt.Key_Escape:
             self.hideWanted.emit()
-        elif event.key()==Qt.Key_I and self.edit.isVisible():
-            self.edit.setFocus()
+        elif self.edit.isVisible():
+            if event.key()==QtCore.Qt.Key_I: 
+                self.edit.setFocus()
         else:
             super().keyPressEvent(event)

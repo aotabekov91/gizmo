@@ -90,9 +90,7 @@ class InputBrowser(QWidget):
         super().show()
         self.input.setFocus()
 
-    def hide(self):
-        self.hideWanted.emit()
-        super().hide()
+    def hide(self): self.hideWanted.emit()
 
     def setFocus(self):
 

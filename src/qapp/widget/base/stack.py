@@ -1,16 +1,14 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
 
-class StackWidget(QStackedWidget):
+class StackWidget(QtWidgets.QStackedWidget):
 
-    hideWanted=pyqtSignal()
-    showWanted=pyqtSignal()
+    hideWanted=QtCore.pyqtSignal()
+    showWanted=QtCore.pyqtSignal()
+    focusLost=QtCore.pyqtSignal()
+    focusGained=QtCore.pyqtSignal()
 
-    resizeEventOccurred=pyqtSignal()
-
-    focusLost=pyqtSignal()
-    focusGained=pyqtSignal()
+    resizeEventOccurred=QtCore.pyqtSignal()
+    keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__ (self):
 
@@ -23,8 +21,8 @@ class StackWidget(QStackedWidget):
 
         self.listener=None
 
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
     def setCentered(self, cond=False): self.centered=cond
 
@@ -32,23 +30,27 @@ class StackWidget(QStackedWidget):
 
         self.listener=listener
         super().installEventFilter(listener)
-        for i in range(self.count()): self.widget(i).installEventFilter(listener)
+        for i in range(self.count()): 
+            self.widget(i).installEventFilter(listener)
 
     def setFixedWidth(self, width):
 
         print(width)
         super().setFixedWidth(width)
-        for i in range(self.count()): self.widget(i).setFixedWidth(width)
+        for i in range(self.count()): 
+            self.widget(i).setFixedWidth(width)
 
     def setFixedHeight(self, height):
 
         super().setFixedHeight(height)
-        for i in range(self.count()): self.widget(i).setFixedHeight(height)
+        for i in range(self.count()): 
+            self.widget(i).setFixedHeight(height)
 
     def setFixedSize(self, size):
 
         super().setFixedSize(size)
-        for i in range(self.count()): self.widget(i).setFixedSize(size)
+        for i in range(self.count()): 
+            self.widget(i).setFixedSize(size)
 
     def addWidget(self, widget, name, main=False):
 
@@ -56,11 +58,13 @@ class StackWidget(QStackedWidget):
         setattr(self, name, widget)
         if main: self.main=widget
         if hasattr(widget, 'hideWanted'):
-            widget.hideWanted.connect(self.hide)
             widget.hideWanted.connect(self.hideWanted)
         if hasattr(widget, 'showWanted'):
             widget.showWanted.connect(self.showWanted)
-        if self.listener: widget.installEventFilter(self.listener)
+        if hasattr(widget, 'keyPressed'):
+            widget.keyPressed.connect(self.keyPressed)
+        if self.listener: 
+            widget.installEventFilter(self.listener)
         return widget.sid
 
     def removeWidget(self, widget):
@@ -68,11 +72,11 @@ class StackWidget(QStackedWidget):
         setattr(self, widget.name, None)
         if self.main==widget: setattr(self, 'main', None)
         if hasattr(widget, 'hideWanted'):
-            widget.hideWanted.disconnect(self.hide)
             widget.hideWanted.disconnect(self.hideWanted)
         if hasattr(widget, 'showWanted'):
             widget.showWanted.disconnect(self.showWanted)
-        if self.listener: widget.removeEventFilter(self.listener)
+        if self.listener: 
+            widget.removeEventFilter(self.listener)
         widget.sid=None
 
     def show(self, widget=None, focus=True):
@@ -83,7 +87,8 @@ class StackWidget(QStackedWidget):
         if widget:
             if self.current!=widget:
                 self.previous=self.current
-                if not self.previous: self.previous=self.current
+                if not self.previous: 
+                    self.previous=self.current
                 self.current=widget
             self.setCurrentIndex(widget.sid)
             self.current.show()
@@ -99,24 +104,25 @@ class StackWidget(QStackedWidget):
 
     def event(self, event):
 
-        if event.type()==QEvent.Enter: 
+        if event.type()==QtCore.QEvent.Enter: 
             self.setFocus()
-        elif event.type()==QEvent.Resize:
+        elif event.type()==QtCore.QEvent.Resize:
             self.resizeEventOccurred.emit()
         return super().event(event)
 
     def adjustSize(self):
         
         super().adjustSize()
-        for i in range(self.count()): self.widget(i).adjustSize()
+        for i in range(self.count()): 
+            self.widget(i).adjustSize()
 
     def setLocation(self, kind='center'):
 
         if kind=='center':
-            frame=self.frameGeometry()
-            desktop_center=QDesktopWidget().availableGeometry().center()
-            frame.moveCenter(desktop_center)
-            point=frame.topLeft()
+            f=self.frameGeometry()
+            c=QtWidgets.QDesktopWidget().availableGeometry().center()
+            f.moveCenter(c)
+            point=f.topLeft()
             point.setY(150)
             self.move(point)
 

@@ -1,68 +1,137 @@
 from PyQt5 import QtWidgets, QtCore
 
 from .base import Plug
-from ..widget import BaseCommandStack 
+from ..widget import CommandStack 
 
 class PlugObj(Plug, QtCore.QObject):
 
+    delistenWanted=QtCore.pyqtSignal()
+    listenWanted=QtCore.pyqtSignal(object)
+
+    modeWanted=QtCore.pyqtSignal(object)
+    keyPressed=QtCore.pyqtSignal(object, object)
+
     def __init__(self,
-                 mode_keys={},
                  position=None,
                  listen_port=False, 
+                 listen_leader=None,
+                 follow_mouse=True,
                  **kwargs):
+
+        self.listening=False
+        self.position=position
+        self.follow_mouse=follow_mouse
+        self.listen_leader=self.setKey(listen_leader)
 
         super(PlugObj, self).__init__(
                 listen_port=listen_port,
                 **kwargs)
 
-        self.position=position
-        self.mode_keys=mode_keys
         self.register()
+
+    def setup(self):
+
+        super().setup()
+        if self.app: 
+            self.app.modes.addMode(self)
+            self.app.installEventFilter(self)
 
     def setUI(self): 
 
-        self.ui=BaseCommandStack(self, self.position)
-        self.ui.focusGained.connect(self.actOnFocus)
-        self.ui.focusLost.connect(self.actOnDefocus)
+        self.ui=CommandStack()
+        self.ui.hideWanted.connect(self.on_uiHideWanted)
+        self.ui.focusGained.connect(self.on_uiFocusGained)
 
-    def actOnDefocus(self): 
+        self.ui.keyPressed
+        self.locateUI()
 
-        self.deactivateCommandMode()
-        self.app.modes.setMode('normal')
+    def locateUI(self):
 
-    def actOnFocus(self):
+        if hasattr(self, 'ui'):
 
-        self.setStatusbarData()
-        self.app.modes.setMode('me')
+            dock=['left', 'right', 'top', 'bottom']
+            if self.position=='window':
+                self.app.stack.add(self.ui, self.name) 
+            elif self.position=='overlay':
+                pass
+            elif self.position in dock:
+                self.app.main.docks.setTab(
+                        self.ui, self.position)
 
-    def setStatusbarData(self):
+    def delocateUI(self):
 
-        self.data={
-                'detail': '',
-                'client': self,
-                'visible': True, 
-                'info': self.name.title()
-                }
-        self.app.main.bar.setData(self.data)
+        if self.position=='window':
+            self.app.stack.remove(self.ui)
+        if self.position=='dock':
+            self.app.main.docks.delTab(self.ui)
 
-    def modeKey(self, mode): return self.mode_keys.get(mode, '')
+    def relocateUI(self, position):
 
-    def toggle(self):
+        self.position=position
+        self.delocateUI()
+        self.locateUI()
 
-        if not self.activated:
-            self.activate()
-        else:
-            self.deactivate()
+    def eventFilter(self, widget, event):
+
+        c1=event.type()==QtCore.QEvent.KeyPress
+        if self.listening and c1: 
+
+            mode=self.checkListen(event)
+            if mode:
+                if mode==self:
+                    self.delistenWanted.emit()
+                else:
+                    self.modeWanted.emit(mode)
+                event.accept()
+                return True
+
+        return super().eventFilter(widget, event)
+
+    def checkListen(self, event):
+
+        for mode in self.app.modes.getModes():
+            if mode.checkKey(event, mode.listen_leader): 
+                return mode
+
+    def on_uiFocusGained(self):
+
+        if self.follow_mouse: self.modeWanted.emit(self)
+
+    def on_uiHideWanted(self):
+
+        self.delistenWanted.emit('normal')
+        self.deactivate()
+
+    def listen(self): 
+
+        self.listening=True
+        if hasattr(self, 'ui') and self.activated: 
+            self.ui.setFocus()
+
+    def delisten(self): self.listening=False
 
     def activate(self):
 
         self.activated=True
-        if hasattr(self, 'ui'): self.ui.activate()
+        self.listenWanted.emit(self)
+        if hasattr(self, 'ui'): 
+            if hasattr(self.ui, 'dock'):
+                self.ui.dock.activate(self.ui)
+            elif self.position=='window':
+                pass
+            elif self.position=='overlay':
+                pass
 
     def deactivate(self):
 
         self.activated=False
-        if hasattr(self, 'ui'): self.ui.deactivate()
+        if hasattr(self, 'ui'): 
+            if hasattr(self.ui, 'dock'):
+                self.ui.dock.deactivate(self.ui)
+            elif self.position=='window':
+                pass
+            elif self.position=='overlay':
+                pass
 
     def setShortcuts(self):
 
@@ -78,9 +147,10 @@ class PlugObj(Plug, QtCore.QObject):
                     else:
                         setattr(func, 'key', key)
                         continue
-                    context=getattr(func, 
-                                    'context', 
-                                    QtCore.Qt.WidgetWithChildrenShortcut)
+                    context=getattr(
+                            func, 
+                            'context', 
+                            QtCore.Qt.WidgetWithChildrenShortcut)
                     shortcut=QtWidgets.QShortcut(widget)
                     shortcut.setKey(key)
                     shortcut.setContext(context)
@@ -88,11 +158,5 @@ class PlugObj(Plug, QtCore.QObject):
 
     def register(self):
 
-        self.app.manager.register(self, self.actions)
-
-    def keyPressEvent(self, event):
-
-        if event.key()==QtCore.Qt.Key_Escape:
-            self.deactivate()
-        else:
-            super().keyPressEvent(event)
+        if self.app: 
+            self.app.manager.register(self, self.actions)

@@ -4,7 +4,7 @@ from ...utils  import register
 class Normal(Mode):
 
     def __init__(self, 
-                 app,
+                 app=None,
                  name='normal',
                  listen_leader='@',
                  delisten_on_exec=False,
@@ -17,6 +17,11 @@ class Normal(Mode):
                 listen_leader=listen_leader,
                 delisten_on_exec=delisten_on_exec, 
                 **kwargs,)
+
+    def listen(self):
+
+        super().listen()
+        self.app.main.setFocus()
 
     def incrementUp(self, digit=1): 
 

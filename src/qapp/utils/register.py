@@ -1,8 +1,12 @@
+from functools import wraps
+
 def register(key=None, info=None, modes=[], command=True):
 
     def _register(func):
 
-        def inner(self, *args, **kwargs): return func(self, *args, **kwargs)
+        @wraps(func)
+        def inner(self, *args, **kwargs): 
+            return func(self, *args, **kwargs)
 
         inner.key=key
         inner.info=info

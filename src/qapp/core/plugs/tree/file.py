@@ -6,9 +6,8 @@ from .base import TreePlug
 
 class FileBrowser(TreePlug):
 
-    def __init__(self, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.setPath()
 
     def getPath(self, index=None):

@@ -3,10 +3,10 @@ from .base import Mode
 class Visual(Mode):
 
     def __init__(self, 
-                 app,
+                 app=None,
                  name='visual',
-                 listen_leader='v',
                  show_statusbar=True,
+                 listen_leader='Ctrl+v',
                  delisten_on_exec=False,
                  **kwargs,
                  ):
@@ -30,9 +30,7 @@ class Visual(Mode):
             self.app.main.display.view.update()
         self.hinting=False
 
+    def listen(self):
 
-    def activateCheck(self, event):
-
-        leaderPressed=super().activateCheck(event)
-        if leaderPressed:
-            return self.app.modes.normal.listening
+        super().listen()
+        self.app.main.setFocus()

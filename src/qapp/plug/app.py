@@ -8,9 +8,12 @@ from ..core.manager import Manager
 
 class PlugApp(Plug, QtWidgets.QApplication):
 
-    def __init__(self, initiate_stack=False, **kwargs):
+    def __init__(self, 
+                 initiate_stack=False, 
+                 argv=[],
+                 **kwargs):
 
-        super(PlugApp, self).__init__(argv=[], **kwargs)
+        super(PlugApp, self).__init__(argv=argv, **kwargs)
         if initiate_stack: self.initiate()
 
     def initiate(self):
@@ -22,7 +25,6 @@ class PlugApp(Plug, QtWidgets.QApplication):
         self.loadModes()
 
         self.parse()
-        self.stack.show()
 
     def setStack(self, 
                  display_class=None, 
@@ -62,6 +64,7 @@ class PlugApp(Plug, QtWidgets.QApplication):
     def run(self):
 
         self.running=True
+        if hasattr(self, 'stack'): self.stack.show()
         sys.exit(self.exec_())
 
     def exit(self): 

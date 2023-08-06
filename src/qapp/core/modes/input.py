@@ -3,10 +3,10 @@ from .base import Mode
 class Input(Mode):
 
     def __init__(self, 
-                 app, 
+                 app=None, 
                  name='input',
-                 listen_leader='i', 
                  show_statusbar=True, 
+                 listen_leader='Ctrl+i', 
                  delisten_on_exec=False,
                  **kwargs,
                  ):
@@ -19,9 +19,9 @@ class Input(Mode):
                          **kwargs,
                          )
 
-    def activateCheck(self, event):
+    def checkListen(self, event):
 
-        leaderPressed=super().activateCheck(event)
+        leaderPressed=super().checkListen(event)
         if leaderPressed: 
             if self.app.modes.normal.listening:
                 return len(self.app.modes.normal.keys_pressed)==0

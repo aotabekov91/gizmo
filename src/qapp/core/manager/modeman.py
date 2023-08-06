@@ -7,38 +7,46 @@ class Modeman(QtCore.QObject):
         super().__init__(app)
 
         self.app=app
-        self.current=None
-
         self.modes=[]
-        self.leaders={}
+        self.current=None
 
     def load(self): pass
 
     def getModes(self): return self.modes
 
+    def reportToBar(self, digit=None, key=None):
+
+        if self.current:
+            if getattr(self.current, 'report_keys', False):
+                data={'mode':self.current.name.title(), 
+                      'detail':''.join(
+                          self.current.keys_pressed)}
+                self.app.main.bar.setData(data)
+
     def addMode(self, mode):
 
-        mode.setData()
+        if hasattr(mode, 'setPlugData'): mode.setPlugData()
+
         self.modes+=[mode]
         setattr(self, mode.name, mode) 
 
-        mode.listenWanted.connect(self.setMode)
+        mode.modeWanted.connect(self.setMode)
         mode.delistenWanted.connect(self.setMode)
-
-        if mode.listen_leader: 
-            self.leaders[mode.listen_leader]=mode
-
-    def delisten(self): 
-
-        for m in self.modes: m.delisten()
+        mode.keyPressed.connect(self.reportToBar)
 
     def setMode(self, mode='normal'):
 
-        self.delisten()
+        if self.current: self.current.delisten()
 
-        if mode!='normal':
-            if self.current and self.current.name==mode:
-                mode='normal'
-                
-        self.current=getattr(self, mode, None)
-        if self.current: self.current.listen()
+        if type(mode)==str:
+            mode=getattr(self, mode, 'normal')
+
+        self.current=mode
+        self.reportToBar()
+
+        self.current.listen()
+        if self.current.name=='normal':
+            self.app.main.setFocus()
+
+        data={'mode':self.current.name.title()} 
+        self.app.main.bar.setData(data)

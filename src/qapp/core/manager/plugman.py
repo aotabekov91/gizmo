@@ -1,7 +1,6 @@
 import os
 import sys
 import importlib
-
 from PyQt5 import QtCore
 
 class Plugman(QtCore.QObject):

@@ -28,7 +28,6 @@ class Search(Mode):
         self.setUI()
 
     def setUI(self):
-        
         super().setUI()
         self.ui.addWidget(
                 ListWidget(item_widget=Item, check_fields=['up']), 

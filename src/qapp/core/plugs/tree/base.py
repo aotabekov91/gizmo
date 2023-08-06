@@ -4,9 +4,8 @@ from ....widget import InputTree
 
 class TreePlug(PlugObj):
 
-    def __init__(self, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.setUI()
         self.m_follow_index=True
@@ -17,26 +16,22 @@ class TreePlug(PlugObj):
 
         self.ui.addWidget(InputTree(), 'main', main=True)
 
-        self.ui.main.tree.clicked.connect(self.on_outlineClicked)
-        self.ui.main.tree.itemChanged.connect(self.on_itemChanged)
-        self.ui.main.tree.expanded.connect(self.on_outlineExpanded)
-        self.ui.main.tree.openWanted.connect(self.on_outlineClicked)
-        self.ui.main.tree.indexChanged.connect(self.on_indexChanged)
-        self.ui.main.tree.collapsed.connect(self.on_outlineCollapsed)
-        self.ui.main.tree.returnPressed.connect(self.on_outlineClicked)
+        self.ui.main.tree.clicked.connect(
+                self.on_outlineClicked)
+        self.ui.main.tree.itemChanged.connect(
+                self.on_itemChanged)
+        self.ui.main.tree.expanded.connect(
+                self.on_outlineExpanded)
+        self.ui.main.tree.openWanted.connect(
+                self.on_outlineClicked)
+        self.ui.main.tree.indexChanged.connect(
+                self.on_indexChanged)
+        self.ui.main.tree.collapsed.connect(
+                self.on_outlineCollapsed)
+        self.ui.main.tree.returnPressed.connect(
+                self.on_outlineClicked)
 
-        self.ui.hideWanted.connect(self.deactivate)
         self.ui.installEventFilter(self)
-
-    def activate(self):
-
-        self.activated=True
-        self.ui.activate()
-
-    def deactivate(self):
-
-        self.activated=False
-        self.ui.deactivate()
 
     @register('t', modes=['command'])
     def toggle(self): super().toggle()
@@ -80,7 +75,7 @@ class TreePlug(PlugObj):
     def open(self, how, focus, *args, **kwargs): 
 
         if focus:
-            self.app.modes.setMode('normal')
+            self.modeWanted('normal')
         else:
             self.ui.show()
 

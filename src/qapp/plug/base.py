@@ -1,5 +1,3 @@
-import zmq
-
 from PyQt5 import QtCore, QtWidgets
 
 from plug import Plug as BasePlug
@@ -12,23 +10,22 @@ class Plug(BasePlug):
 
     def __init__(self, 
                  app=None, 
-                 command_leader=['.'],
-                 command_activated=False,
+                 mode_keys={},
+                 command_leader='Ctrl+.',
                  **kwargs,
                  ):
 
         self.app=app
+        self.mode_keys=mode_keys
+        self.command_activated=False
         self.command_leader=command_leader
-        self.command_activated=command_activated
 
         super(Plug, self).__init__(**kwargs)
 
         self.setShortcuts()
 
-    def addLeader(self, leader):
-
-        if not leader in self.command_leader:
-            self.command_leader+=[leader]
+    def modeKey(self, mode): 
+        return self.mode_keys.get(mode, '')
 
     def setListener(self):
 
@@ -56,7 +53,7 @@ class Plug(BasePlug):
                 self.os_listener.loop)
         QtCore.QTimer.singleShot(0, self.os_thread.start)
 
-    def setConnection(self, kind=zmq.PULL):
+    def setConnection(self, kind='PULL'):
 
         super().setConnection(kind)
         if self.port or self.listen_port:
@@ -73,62 +70,59 @@ class Plug(BasePlug):
                     shortcut.activated.connect(func)
                     self.action[(key, func_name)]=func
 
-    def registerActions(self):
-
-        if hasattr(self, 'ui'):
-            for f in self.ui.__dir__():
-                m=getattr(self.ui, f)
-                if hasattr(m, 'key'):
-                    if not m.info: m.info=f
-                    if not m.key or not m.key in self.commandKeys:
-                        self.actions[(m.key, m.info)]=m
-
-        for f in self.__dir__():
-            m=getattr(self, f)
-            if hasattr(m, 'key'):
-                if not getattr(m, 'info', None): 
-                    m.__func__.info=f
-                    if not m.key or not m.key in self.commandKeys:
-                        self.commandKeys[m.key]=m
-                        # self.actions[(method.key, method.info)]=method.__func__
-                        self.actions[(m.key, m.info)]=m 
-
-        if self.config.has_section('Keys'):
-            config=dict(self.config['Keys'])
-            for f, key in config.items():
-                m=getattr(self, f, None)
-                if m:
-                    setattr(m.__func__, 'key', key)
-                    setattr(m.__func__, 'info', f)
-                    if not m.key or not m.key in self.commandKeys:
-                        self.commandKeys[m.key]=m
-                        self.actions[(m.key, m.info)]=m 
-
     def eventFilter(self, widget, event):
 
         if event.type()==QtCore.QEvent.KeyPress:
 
             if self.command_leader:
-                if event.text() in self.command_leader and not self.command_activated:
-                    self.leader_pressed=event.text()
-                    self.activateCommandMode()
-                    return True
-                elif event.text() in self.command_leader and self.command_activated:
-                    self.deactivateCommandMode()
-                    return True
+                c=hasattr(self, 'ui') 
+                c=c and hasattr(self.ui, 'commands')
+                if c:
+                    c1=self.checkKey(event, self.command_leader)
+                    if c1:
+                        if self.command_activated:
+                            self.deactivateCommandMode()
+                        else:
+                            self.activateCommandMode()
+                        event.accept()
+                        return True
 
         return super().eventFilter(widget, event)
 
+    def setKey(self, set_key):
+
+        if set_key:
+            set_key=set_key.split('+')
+            set_key=sorted(set_key[:-1])+set_key[-1:]
+            return '+'.join(set_key)
+
+    def checkKey(self, event, check_key):
+
+        if check_key:
+            key=event.text()
+            if check_key[-1]==key:
+                mod=[]
+                if len(check_key)==1:
+                    return True
+                else:
+                    mdf=event.modifiers()
+                    if mdf==QtCore.Qt.AltModifier:
+                        mod+=['Alt']
+                    if mdf==QtCore.Qt.ControlModifier:
+                        mod+=['Ctrl']
+                    if mdf==QtCore.Qt.ShiftModifier:
+                        mod+=['Shift']
+                    pressed='+'.join(mod+[key])
+                    if check_key==pressed: 
+                        return True
+
     def deactivateCommandMode(self):
 
-        self.leader_pressed=None
         self.command_activated=False
-        if hasattr(self, 'ui') and hasattr(self.ui, 'commands'):
-            if self.ui.current==self.ui.commands: 
-                self.ui.show(self.ui.previous)
+        if self.ui.current==self.ui.commands: 
+            self.ui.show(self.ui.previous)
 
     def activateCommandMode(self):
 
         self.command_activated=True
-        if hasattr(self, 'ui') and hasattr(self.ui, 'commands'):
-            self.ui.show(self.ui.commands)
+        self.ui.show(self.ui.commands)
