@@ -26,9 +26,11 @@ class Input(Mode):
         c1=event.type()==QtCore.QEvent.KeyPress
         if self.listening and c1: 
 
-            enter=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
 
             m=event.modifiers()==QtCore.Qt.ControlModifier
+
+            enter=m and QtCore.Qt.Key_M
+
             escape=event.key()==QtCore.Qt.Key_Escape
             escape= escape or (m and event.key()==QtCore.Qt.Key_BracketLeft)
 
@@ -38,10 +40,10 @@ class Input(Mode):
                 event.accept()
                 return True
                     
-            elif espace: 
+            elif escape: 
 
                 self.forceDelisten.emit()
                 event.accept()
                 return True
 
-        return super().eventFilter(widget, event)
+        return False
