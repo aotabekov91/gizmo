@@ -6,9 +6,9 @@ from ..widget import CommandStack
 class PlugObj(Plug, QtCore.QObject):
 
     delistenWanted=QtCore.pyqtSignal()
+    modeWanted=QtCore.pyqtSignal(object)
     listenWanted=QtCore.pyqtSignal(object)
 
-    modeWanted=QtCore.pyqtSignal(object)
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__(self,
@@ -99,7 +99,7 @@ class PlugObj(Plug, QtCore.QObject):
 
     def on_uiHideWanted(self):
 
-        self.delistenWanted.emit('normal')
+        self.delistenWanted.emit()
         self.deactivate()
 
     def listen(self): 
