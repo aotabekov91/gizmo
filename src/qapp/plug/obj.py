@@ -5,10 +5,12 @@ from ..widget import CommandStack
 
 class PlugObj(Plug, QtCore.QObject):
 
+    forceDelisten=QtCore.pyqtSignal()
     delistenWanted=QtCore.pyqtSignal()
     modeWanted=QtCore.pyqtSignal(object)
     listenWanted=QtCore.pyqtSignal(object)
 
+    returnPressed=QtCore.pyqtSignal()
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__(self,

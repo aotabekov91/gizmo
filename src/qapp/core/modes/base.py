@@ -6,8 +6,6 @@ from ...utils import register
 
 class Mode(PlugObj):
 
-    returnPressed=QtCore.pyqtSignal()
-
     def __init__(self, 
                  wait_run=2,
                  wait_time=100,
@@ -30,7 +28,6 @@ class Mode(PlugObj):
     def setup(self):
 
         super().setup()
-
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.deactivate)
 

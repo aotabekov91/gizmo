@@ -31,8 +31,14 @@ class Modeman(QtCore.QObject):
         setattr(self, mode.name, mode) 
 
         mode.modeWanted.connect(self.setMode)
-        mode.delistenWanted.connect(self.setMode)
+        mode.forceDelisten.connect(self.setMode)
         mode.keyPressed.connect(self.reportToBar)
+        mode.delistenWanted.connect(self.on_delistenWanted)
+
+    def on_delistenWanted(self):
+
+        if not self.current.name!='input':
+            self.setMode()
 
     def setMode(self, mode='normal'):
 
