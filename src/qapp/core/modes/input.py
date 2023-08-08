@@ -30,11 +30,10 @@ class Input(Mode):
             m=event.modifiers()==QtCore.Qt.ControlModifier
 
             enter=m and QtCore.Qt.Key_M
-
             escape=event.key()==QtCore.Qt.Key_Escape
             escape= escape or (m and event.key()==QtCore.Qt.Key_BracketLeft)
 
-            if event.key() in enter: 
+            if enter: 
 
                 self.returnPressed.emit()
                 event.accept()
