@@ -6,7 +6,10 @@ from ....widget import StackWidget
 
 class StackWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, app, display_class=None, view_class=None):
+    def __init__(self, 
+            app, 
+            display_class=None, 
+            view_class=None):
 
         super().__init__()
 
@@ -25,7 +28,10 @@ class StackWindow(QtWidgets.QMainWindow):
                 }
                ''' 
 
-        self.app.main=MainWindow(self.app, display_class, view_class)
+        self.app.main=MainWindow(
+                self.app,
+                display_class, 
+                view_class)
         self.add(self.app.main, 'main', main=True)
         self.setStyleSheet(stl)
 

@@ -38,9 +38,13 @@ class Display(QtWidgets.QSplitter):
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
-    def __init__(self, app, window, view_class=None):
+    def __init__(self, 
+            app, 
+            window, 
+            view_class=None):
 
-        super().__init__(QtCore.Qt.Vertical, parent=window)
+        super().__init__(QtCore.Qt.Vertical,
+                parent=window)
 
         self.app=app
         self.win=window
@@ -51,12 +55,22 @@ class Display(QtWidgets.QSplitter):
         self.view=None
         self.cursor_visible=True
 
-        self.configure=Configure(app=app, 
-                                 name='Display', 
-                                 parent=self, 
-                                 mode_keys={'command': 'w'})
+        self.configure=Configure(
+                app=app, 
+                name='Display', 
+                parent=self, 
+                mode_keys={'command': 'w'})
 
         self.setUI()
+        self.app.installEventFilter(self)
+
+    def eventFilter(self, widget, event):
+
+        if event.type()==QtCore.QEvent.MouseMove:
+            if not self.cursor_visible:
+                event.accept()
+                return True
+        return False
 
     def setUI(self):
 
@@ -194,7 +208,7 @@ class Display(QtWidgets.QSplitter):
             if self.view: self.view.cleanUp()
         else:
             super().keyPressEvent(event)
-
+    
     def toggleCursor(self): 
 
         if self.cursor_visible:

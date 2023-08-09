@@ -68,4 +68,3 @@ class UpDown(Item):
         size_up=self.up.size()
         size.setWidth(size_up.width())
         return size
-
