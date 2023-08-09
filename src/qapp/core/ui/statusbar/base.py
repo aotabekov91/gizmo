@@ -26,6 +26,9 @@ class StatusBar(QtWidgets.QStatusBar):
         self.window.display.itemChanged.connect(
                 self.on_itemChanged)
 
+        self.window.app.buffer.hashChanged.connect(
+                self.on_hashChanged)
+
     def setUI(self):
 
         self.style_sheet='''
@@ -83,6 +86,10 @@ class StatusBar(QtWidgets.QStatusBar):
         self.edit.removeEventFilter(listener)
         self.detail.removeEventFilter(listener)
         self.model.removeEventFilter(listener)
+
+    def on_hashChanged(self, document): 
+
+        if document.hash(): self.model.setText(str(document.hash()))
 
     def on_viewChanged(self, view): 
 
