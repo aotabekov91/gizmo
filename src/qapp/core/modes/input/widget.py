@@ -54,7 +54,8 @@ class InputWidget(QtWidgets.QWidget):
             self.setFixedSize(w, h)
 
             x=int(pwidth/2-self.width()/2)
-            y=int(pheight/2-self.height()/2)
+            # y=int(pheight/2-self.height()/2)
+            y=250
 
             self.setGeometry(x, y, w, h)
 
