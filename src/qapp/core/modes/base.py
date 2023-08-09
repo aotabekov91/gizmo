@@ -11,6 +11,7 @@ class Mode(PlugObj):
                  wait_time=100,
                  report_keys=True,
                  delisten_on_exec=True,
+                 mode_on_exit='normal',
                  **kwargs):
 
         self.commands={}
@@ -18,6 +19,7 @@ class Mode(PlugObj):
         self.wait_run=wait_run
         self.wait_time=wait_time
         self.report_keys=report_keys
+        self.mode_on_exit=mode_on_exit
 
         self.delisten_on_exec=delisten_on_exec
 
@@ -175,7 +177,7 @@ class Mode(PlugObj):
                 self.clearKeys()
 
             if len(matches)==1:
-                if self.delisten_on_exec: self._onExecuteMatch()
+                self._onExecuteMatch()
 
                 m=matches[0]
 
@@ -187,7 +189,10 @@ class Mode(PlugObj):
                 else:
                     m()
 
-    def _onExecuteMatch(self): self.delistenWanted.emit()
+    def _onExecuteMatch(self): 
+
+        if self.delisten_on_exec: 
+            self.modeWanted.emit(self.mode_on_exit)
 
     @register('q')
     def exit(self): self.app.exit()

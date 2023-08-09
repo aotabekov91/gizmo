@@ -42,17 +42,21 @@ class Modeman(QtCore.QObject):
 
     def setMode(self, mode='normal'):
 
-        if self.current: self.current.delisten()
-
         if type(mode)==str:
             mode=getattr(self, mode, 'normal')
 
-        self.current=mode
-        self.reportToBar()
+        if self.current!=mode:
 
-        self.current.listen()
-        if self.current.name=='normal':
-            self.app.main.setFocus()
+            if self.current: 
+                self.current.delisten()
 
-        data={'mode':self.current.name.title()} 
-        self.app.main.bar.setData(data)
+            self.current=mode
+            self.reportToBar()
+
+            self.current.listen()
+
+            if self.current.name=='normal':
+                self.app.main.setFocus()
+
+            data={'mode':self.current.name.title()} 
+            self.app.main.bar.setData(data)
