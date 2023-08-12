@@ -107,8 +107,9 @@ class Plug(BasePlug):
                 mod+=['Alt']
             if mdf==QtCore.Qt.ControlModifier:
                 mod+=['Ctrl']
-            if mdf==QtCore.Qt.ShiftModifier:
-                mod+=['Shift']
+            # if mdf==QtCore.Qt.ShiftModifier:
+                # mod+=['Shift']
+
             if mod:
                 pressed='+'.join(mod+[key])
             else:

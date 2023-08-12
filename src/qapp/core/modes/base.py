@@ -33,6 +33,12 @@ class Mode(PlugObj):
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.deactivate)
 
+    def saveCommands(self, plug, method):
+
+        prefix=plug.modeKey(self.name)
+        key=f'{prefix}{method.key}'
+        self.commands[key]=method
+
     def setPlugData(self):
 
         def setData(plug, actions, mname=None):
@@ -40,9 +46,7 @@ class Mode(PlugObj):
             for (pname, fname), m in actions.items():
                 if not mname or  mname in m.modes:
                     if hasattr(m, 'key'): 
-                        prefix=plug.modeKey(self.name)
-                        key=f'{prefix}{m.key}'
-                        self.commands[key]=m
+                        self.saveCommands(plug, m)
 
         for plug, actions in self.app.manager.actions.items():
             setData(plug, actions, self.name)
@@ -55,43 +59,55 @@ class Mode(PlugObj):
         c1=event.type()==QtCore.QEvent.KeyPress
         if self.listening and c1: 
 
-            enter=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
-
-            if event.key() in enter: 
-
-                self.returnPressed.emit()
+            if self.checkSpecialCharacters(event):
                 event.accept()
                 return True
-                    
-            elif event.key()==QtCore.Qt.Key_Backspace:
-
-                self.clearKeys()
-                event.accept()
-                return True
-
-            elif event.key()==QtCore.Qt.Key_Escape:
-
-                self._onExecuteMatch()
-                event.accept()
-                return True
-
-            elif event.key()==QtCore.Qt.Key_BracketLeft:
-
-                if event.modifiers()==QtCore.Qt.ControlModifier:
-
-                    self._onExecuteMatch()
-                    event.accept()
-                    return True
 
             else:
 
                 mode=self.checkListen(event)
                 if not mode:
-                    self.addKeys(event)
+                    self.addKeys(event, widget)
                     event.accept()
                     return True
 
         return super().eventFilter(widget, event)
+
+    def checkSpecialCharacters(self, event):
+
+        enter=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
+
+        if event.key() in enter: 
+
+            self.on_returnPressed()
+            return 'return'
+                
+        elif event.key()==QtCore.Qt.Key_Backspace:
+
+            self.on_backspacePressed()
+            return 'backspace'
+
+        elif event.key()==QtCore.Qt.Key_Escape:
+
+            self.on_escapePressed()
+            return 'escape'
+
+        elif event.key()==QtCore.Qt.Key_Tab:
+
+            self.on_tabPressed()
+            return 'tab'
+
+        elif event.modifiers()==QtCore.Qt.ControlModifier:
+
+            if event.key()==QtCore.Qt.Key_BracketLeft:
+                self.on_escapePressed()
+                return 'escape_bracket'
+
+            elif event.key()==QtCore.Qt.Key_M:
+                self.on_carriagePressed()
+                return 'carriage'
+
+        return False
 
     def clearKeys(self):
 
@@ -109,7 +125,7 @@ class Mode(PlugObj):
         self.timer.stop()
         self.clearKeys()
 
-    def addKeys(self, event):
+    def addKeys(self, event, widget=None):
 
         self.timer.stop()
         if self.registerKey(event):
@@ -121,7 +137,15 @@ class Mode(PlugObj):
     def registerKey(self, event):
         
         text=event.text()
-        if text: self.keys_pressed+=[text]
+        if text: 
+            self.keys_pressed+=[text]
+
+            if self.report_keys:
+                self.bar_data={
+                        'detail': ''.join(self.keys_pressed)}
+            else:
+                self.bar_data={}
+
         return text
 
     def runMatches(self, matches, partial, key, digit):
@@ -196,3 +220,18 @@ class Mode(PlugObj):
 
     @register('q')
     def exit(self): self.app.exit()
+
+    def on_carriagePressed(self): pass
+
+    def on_tabPressed(self): pass
+
+    def on_escapePressed(self): 
+
+        if self.delisten_on_exec: 
+            self.modeWanted.emit(self.mode_on_exit)
+        else:
+            self.delistenWanted.emit()
+
+    def on_returnPressed(self): self.returnPressed.emit()
+
+    def on_backspacePressed(self): self.clearKeys()

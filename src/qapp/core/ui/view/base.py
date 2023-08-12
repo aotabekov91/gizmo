@@ -74,9 +74,15 @@ class View(QtWidgets.QGraphicsView):
         self.scene().setBackgroundBrush(QtGui.QColor('black'))
 
         self.setAcceptDrops(False)
-        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setDragMode(
+                QtWidgets.QGraphicsView.ScrollHandDrag)
+        self.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+
+        self.setContentsMargins(0,0,0,0)
+        self.setStyleSheet('background-color: white')
 
     def setId(self, vid): self.m_id=vid
 

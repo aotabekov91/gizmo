@@ -7,7 +7,7 @@ class StatusBar(QtWidgets.QStatusBar):
 
     hideWanted=QtCore.pyqtSignal()
     toggled=QtCore.pyqtSignal(bool)
-    keyPressEventOccurred=QtCore.pyqtSignal(object)
+    keyPressed=QtCore.pyqtSignal(object)
 
     def __init__(self, window):
 
@@ -32,13 +32,13 @@ class StatusBar(QtWidgets.QStatusBar):
     def setUI(self):
 
         self.style_sheet='''
-            QtWidgets.QLineEdit {
+            QLineEdit {
                 background-color: transparent;
                 border-color: transparent;
                 border-width: 0px;
                 border-radius: 0px;
                 }
-            QtWidgets.QLabel{
+            QLabel{
                 background-color: transparent;
                 }
                 '''
@@ -48,7 +48,6 @@ class StatusBar(QtWidgets.QStatusBar):
         self.setLayout(layout)
 
         self.mode=QtWidgets.QLabel()
-
         self.info=QtWidgets.QLabel()
         self.edit=QtWidgets.QLineEdit(self)
         self.detail=QtWidgets.QLabel()
@@ -59,7 +58,7 @@ class StatusBar(QtWidgets.QStatusBar):
 
         self.addPermanentWidget(self.mode, 1)
         self.addPermanentWidget(self.info, 100)
-        self.addPermanentWidget(self.edit, 1)
+        self.addPermanentWidget(self.edit, 100)
         self.addPermanentWidget(self.detail)
         self.addPermanentWidget(self.model)
         self.addPermanentWidget(self.page, 0)
@@ -132,11 +131,6 @@ class StatusBar(QtWidgets.QStatusBar):
 
     def keyPressEvent(self, event):
 
-        self.keyPressEventOccurred.emit(event)
-        if event.key()==QtCore.Qt.Key_Escape:
-            self.hideWanted.emit()
-        elif self.edit.isVisible():
-            if event.key()==QtCore.Qt.Key_I: 
-                self.edit.setFocus()
-        else:
-            super().keyPressEvent(event)
+        self.keyPressed.emit(event) 
+        if event.key()==QtCore.Qt.Key_Escape: 
+            self.hideWanted.emit() 

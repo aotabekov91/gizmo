@@ -20,6 +20,7 @@ class PlugObj(Plug, QtCore.QObject):
                  follow_mouse=True,
                  **kwargs):
 
+        self.bar_data={}
         self.listening=False
         self.position=position
         self.follow_mouse=follow_mouse
@@ -36,7 +37,11 @@ class PlugObj(Plug, QtCore.QObject):
         super().setup()
         if self.app: 
             self.app.modes.addMode(self)
-            self.app.installEventFilter(self)
+            self.setFilter()
+
+    def setFilter(self):
+
+        self.app.installEventFilter(self)
 
     def setUI(self): 
 
@@ -45,7 +50,6 @@ class PlugObj(Plug, QtCore.QObject):
         self.ui.hideWanted.connect(self.on_uiHideWanted)
         self.ui.focusGained.connect(self.on_uiFocusGained)
 
-        self.ui.keyPressed
         self.locateUI()
 
     def locateUI(self):
@@ -74,17 +78,23 @@ class PlugObj(Plug, QtCore.QObject):
         self.delocateUI()
         self.locateUI()
 
+    def checkMode(self, widget, event):
+
+        mode=self.checkListen(event)
+        if mode:
+            if mode==self:
+                self.delistenWanted.emit()
+            else:
+                self.modeWanted.emit(mode)
+            return True
+        return False
+
     def eventFilter(self, widget, event):
 
         c1=event.type()==QtCore.QEvent.KeyPress
         if self.listening and c1: 
 
-            mode=self.checkListen(event)
-            if mode:
-                if mode==self:
-                    self.delistenWanted.emit()
-                else:
-                    self.modeWanted.emit(mode)
+            if self.checkMode(widget, event):
                 event.accept()
                 return True
             return super().eventFilter(widget, event)
@@ -117,11 +127,12 @@ class PlugObj(Plug, QtCore.QObject):
 
         self.activated=True
         self.listenWanted.emit(self)
+
         if hasattr(self, 'ui'): 
             if hasattr(self.ui, 'dock'):
                 self.ui.dock.activate(self.ui)
             elif self.position=='window':
-                pass
+                self.app.stack.show(self.ui)
             elif self.position=='overlay':
                 self.ui.show()
 
@@ -132,7 +143,7 @@ class PlugObj(Plug, QtCore.QObject):
             if hasattr(self.ui, 'dock'):
                 self.ui.dock.deactivate(self.ui)
             elif self.position=='window':
-                pass
+                self.app.stack.show(self.app.main)
             elif self.position=='overlay':
                 self.ui.hide()
 

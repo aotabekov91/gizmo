@@ -4,7 +4,7 @@ import importlib
 
 class Plugman:
 
-    def __init__(self, app):
+    def __init__(self, app=None, path=None):
 
         super(Plugman, self).__init__()
 
@@ -16,16 +16,14 @@ class Plugman:
 
         self.plugs={}
 
-    def cleanup(self): pass #TODO
+    def load(self, plugs_path=None):
 
-    def install(self): pass #TODO
+        if not plugs_path: plugs_path=self.path
 
-    def load(self):
-
-        if os.path.exists(self.path):
-            sys.path.append(self.path)
-            for path in os.listdir(self.path):
-                self.read(path, register=False)
+        if os.path.exists(plugs_path):
+            sys.path.append(plugs_path)
+            for plugs_path in os.listdir(plugs_path):
+                self.read(plugs_path, register=False)
 
             self.app.actionRegistered.emit()
 

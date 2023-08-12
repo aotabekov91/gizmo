@@ -17,11 +17,11 @@ class Modeman(QtCore.QObject):
     def reportToBar(self, digit=None, key=None):
 
         if self.current:
-            if getattr(self.current, 'report_keys', False):
-                data={'mode':self.current.name.title(), 
-                      'detail':''.join(
-                          self.current.keys_pressed)}
-                self.app.main.bar.setData(data)
+
+            bar_data={'mode':self.current.name.title()} 
+            data=getattr(self.current, 'bar_data', {})
+            data.update(bar_data)
+            self.app.main.bar.setData(data)
 
     def addMode(self, mode):
 
@@ -52,11 +52,4 @@ class Modeman(QtCore.QObject):
 
             self.current=mode
             self.reportToBar()
-
             self.current.listen()
-
-            if self.current.name=='normal':
-                self.app.main.setFocus()
-
-            data={'mode':self.current.name.title()} 
-            self.app.main.bar.setData(data)

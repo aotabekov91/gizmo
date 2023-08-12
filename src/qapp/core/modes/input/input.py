@@ -24,13 +24,14 @@ class Input(Mode):
                 **kwargs
                 )
 
-        self.edit=None
+        self.client=None
         self.widget=InputWidget(self.app)
         self.widget.hide()
 
     def listen(self):
 
         super().listen()
+        self.client=QtWidgets.QApplication.focusWidget()
         self.showField()
 
     def showField(self, field=True, label=False):
@@ -59,32 +60,13 @@ class Input(Mode):
                 e.accept()
                 return True
             elif  e.type()==QtCore.QEvent.KeyPress:
-                m=e.modifiers()
-                m=m and e.modifiers()==QtCore.Qt.ControlModifier
-                enter=m and e.key()==QtCore.Qt.Key_M
-                escape= e.key()==QtCore.Qt.Key_BracketLeft
-                if enter or escape: 
-                    if enter: 
-                        self.on_returnPressed()
-                    else:
-                        self.on_escapePressed()
-                    if self.widget.isVisible(): self.hideClearField()
+                if self.checkSpecialCharacters(e):
                     e.accept()
-                    self.client=None
-                    self.forceDelisten.emit()
                     return True
-        elif e.type()==QtCore.QEvent.KeyPress:
-            mode=self.checkListen(e)
-            if mode==self: 
-                self.client=QtWidgets.QApplication.focusWidget()
-                self.modeWanted.emit(mode)
-                e.accept()
-                return True
         return False 
 
     def setText(self):
 
-        print(self.client)
         if self.client:
             func=None
 
@@ -95,13 +77,27 @@ class Input(Mode):
 
             if func: 
                 text=self.widget.field.text()
-                print(text)
                 func(text)
 
-    def on_escapePressed(self): pass
+    def checkSpecialCharacters(self, event):
 
+        r=super().checkSpecialCharacters(event)
+        if r in ['escape_bracket', 'carriage']:
+            return True
+        else:
+            return False
 
-    def on_returnPressed(self): 
+    def on_escapePressed(self): 
+
+        super().on_escapePressed()
+        self.forceDelisten.emit()
+        self.client=None
+        if self.widget.isVisible(): self.hideClearField()
+
+    def on_carriagePressed(self): 
 
         self.setText()
         self.returnPressed.emit()
+        self.forceDelisten.emit()
+        self.client=None
+        if self.widget.isVisible(): self.hideClearField()

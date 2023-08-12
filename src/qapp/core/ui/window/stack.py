@@ -21,11 +21,38 @@ class StackWindow(QtWidgets.QMainWindow):
     def setUI(self, display_class, view_class):
 
         stl='''
+
             QWidget {
                 color: #101010;
                 border-color: #101010;
                 background-color: #101010;
                 }
+
+            QGraphicsScene {
+                border-width: 0px;
+                padding: 0 0 0 0;
+                border-color: red;
+                background-color: green;
+                }
+
+            QGraphicsView {
+                padding: 0 0 0 0;
+                border-width: 0px;
+                color: white;
+                border-color: white;
+                background-color: white;
+                }
+            QGraphicsObject{
+                border-width: 0px;
+                padding: 0 0 0 0;
+                background-color: purple;
+            }
+            QSplitter{
+                border-width: 0px;
+                padding: 0 0 0 0;
+                background-color: purple;
+            }
+
                ''' 
 
         self.app.main=MainWindow(
@@ -33,7 +60,12 @@ class StackWindow(QtWidgets.QMainWindow):
                 display_class, 
                 view_class)
         self.add(self.app.main, 'main', main=True)
+
         self.setStyleSheet(stl)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.stack.setContentsMargins(0, 0, 0, 0)
+        self.app.main.setContentsMargins(0, 0, 0, 0)
+        self.app.main.display.setContentsMargins(0, 0, 0, 0)
 
     def add(self, *args, **kwargs): 
 
