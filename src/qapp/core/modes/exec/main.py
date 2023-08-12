@@ -11,7 +11,8 @@ class Exec(Mode):
     def __init__(self, 
                  app=None, 
                  name='exec',
-                 listen_leader=':',  
+                 # Todo
+                 listen_leader='Ctrl+e',  
                  delisten_on_exec=False,
                  **kwargs
                  ):

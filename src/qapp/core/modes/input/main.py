@@ -32,7 +32,18 @@ class Input(Mode):
 
         super().listen()
         self.client=QtWidgets.QApplication.focusWidget()
+        self.yankText()
         self.showField()
+
+    def yankText(self):
+
+        f=getattr(self.client, 'text', None)
+        if not f:
+            f=getattr(self.client, 'toPlainText', None)
+
+        if f:
+            text=f()
+            self.widget.setText(text)
 
     def showField(self, field=True, label=False):
 
@@ -68,16 +79,14 @@ class Input(Mode):
     def setText(self):
 
         if self.client:
-            func=None
 
-            if not func:
-                func=getattr(self.client, 'setText', None)
-            if not func:
-                func=getattr(self.client, 'setPlainText', None)
+            f=getattr(self.client, 'setText', None)
+            if not f:
+                f=getattr(self.client, 'setPlainText', None)
 
-            if func: 
+            if f: 
                 text=self.widget.field.text()
-                func(text)
+                if text: f(text)
 
     def checkSpecialCharacters(self, event):
 

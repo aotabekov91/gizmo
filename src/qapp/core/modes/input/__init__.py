@@ -1,1 +1,1 @@
-from .input import Input
+from .main import Input

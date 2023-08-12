@@ -39,7 +39,7 @@ class TreeWidget(QtWidgets.QTreeView):
                 border-radius: 0px;
                 padding: 5px 5px 5px 10px;
                 }
-            QTreeView::item:selected:active {
+            QTreeView::item:selected{
                 color: black;
                 background-color: yellow;
                 }

@@ -23,6 +23,11 @@ class InputWidget(QtWidgets.QWidget):
         self.setup()
         self.parent().installEventFilter(self)
 
+    def setText(self, text):
+
+        self.nvim.setText(text)
+        self.field.setText(text)
+
     def setup(self):
 
         self.nvim=NVim()

@@ -34,6 +34,7 @@ class Dock(QtWidgets.QDockWidget):
     def createTab(self):
 
         self.tab = QtWidgets.QStackedWidget(self)
+        self.tab.setContentsMargins(0,0,0,0)
         self.setWidget(self.tab)
 
     def setFocus(self, widget=None):

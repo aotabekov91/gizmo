@@ -82,7 +82,6 @@ class View(QtWidgets.QGraphicsView):
                 QtCore.Qt.ScrollBarAlwaysOff)
 
         self.setContentsMargins(0,0,0,0)
-        self.setStyleSheet('background-color: white')
 
     def setId(self, vid): self.m_id=vid
 

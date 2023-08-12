@@ -74,6 +74,12 @@ class Display(QtWidgets.QSplitter):
 
     def setUI(self):
 
+        self.setContentsMargins(0,0,0,0)
+        self.setStyleSheet('''
+                           QSplitter {
+                            border-width: 0px;
+                           }
+                           ''')
         self.m_hlayout=QtWidgets.QVBoxLayout(self)#.m_hsplit)
         self.m_hlayout.setSpacing(0)
         self.m_hlayout.setContentsMargins(0,0,0,0)

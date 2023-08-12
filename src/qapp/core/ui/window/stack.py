@@ -31,26 +31,20 @@ class StackWindow(QtWidgets.QMainWindow):
             QGraphicsScene {
                 border-width: 0px;
                 padding: 0 0 0 0;
-                border-color: red;
-                background-color: green;
                 }
 
             QGraphicsView {
                 padding: 0 0 0 0;
                 border-width: 0px;
                 color: white;
-                border-color: white;
-                background-color: white;
                 }
             QGraphicsObject{
                 border-width: 0px;
                 padding: 0 0 0 0;
-                background-color: purple;
             }
             QSplitter{
                 border-width: 0px;
                 padding: 0 0 0 0;
-                background-color: purple;
             }
 
                ''' 
