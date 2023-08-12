@@ -10,7 +10,6 @@ class Input(Mode):
     def __init__(self, 
                  app=None, 
                  name='input',
-                 #Bug Ctrl+letter does not work
                  listen_leader='Ctrl+;',  
                  delisten_on_exec=False,
                  **kwargs

@@ -16,7 +16,6 @@ class PlugObj(Plug, QtCore.QObject):
     def __init__(self,
                  position=None,
                  listen_port=False, 
-                 listen_leader=None,
                  follow_mouse=True,
                  **kwargs):
 
@@ -24,7 +23,6 @@ class PlugObj(Plug, QtCore.QObject):
         self.listening=False
         self.position=position
         self.follow_mouse=follow_mouse
-        self.listen_leader=self.setKey(listen_leader)
 
         super(PlugObj, self).__init__(
                 listen_port=listen_port,
@@ -103,7 +101,7 @@ class PlugObj(Plug, QtCore.QObject):
     def checkListen(self, event):
 
         for mode in self.app.modes.getModes():
-            if mode.checkKey(event, mode.listen_leader): 
+            if mode.checkKey(event): 
                 return mode
 
     def on_uiFocusGained(self):

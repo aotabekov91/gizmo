@@ -57,14 +57,13 @@ class Mode(PlugObj):
     def eventFilter(self, widget, event):
 
         c1=event.type()==QtCore.QEvent.KeyPress
+
         if self.listening and c1: 
 
             if self.checkSpecialCharacters(event):
                 event.accept()
                 return True
-
             else:
-
                 mode=self.checkListen(event)
                 if not mode:
                     self.addKeys(event, widget)
