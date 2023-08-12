@@ -58,10 +58,9 @@ class StatusBar(QtWidgets.QStatusBar):
         self.setFixedHeight(25)
 
         self.addPermanentWidget(self.mode, 1)
-        self.addPermanentWidget(self.info)
+        self.addPermanentWidget(self.info, 100)
         self.addPermanentWidget(self.edit, 1)
         self.addPermanentWidget(self.detail)
-
         self.addPermanentWidget(self.model)
         self.addPermanentWidget(self.page, 0)
 
@@ -89,7 +88,8 @@ class StatusBar(QtWidgets.QStatusBar):
 
     def on_hashChanged(self, document): 
 
-        if document.hash(): self.model.setText(str(document.hash()))
+        if document.hash(): 
+            self.model.setText(str(document.hash()))
 
     def on_viewChanged(self, view): 
 

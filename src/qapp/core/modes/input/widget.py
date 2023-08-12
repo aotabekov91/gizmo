@@ -1,10 +1,13 @@
 from PyQt5 import QtWidgets, QtCore 
 
+from .nvim import Editor, NVim
+
 class InputWidget(QtWidgets.QWidget):
 
     def __init__(self, parent):
 
-        super().__init__(parent)
+        self.app=parent
+        super().__init__(self.app.main)
 
         self.setStyleSheet('''
             QWidget{
@@ -18,16 +21,14 @@ class InputWidget(QtWidgets.QWidget):
             ''')
 
         self.setup()
-
-        self.label.hide()
-        self.field.hide()
-
         self.parent().installEventFilter(self)
 
     def setup(self):
 
+        self.nvim=NVim()
+
         self.label=QtWidgets.QLabel()
-        self.field=QtWidgets.QTextEdit()
+        self.field=Editor(self.nvim, self.app.main.bar)
 
         layout=QtWidgets.QVBoxLayout()
         layout.setSpacing(5)
@@ -39,6 +40,9 @@ class InputWidget(QtWidgets.QWidget):
 
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
+        self.label.hide()
+        self.field.hide()
+
     def updatePosition(self):
 
         parent_rect = self.parent().rect()
@@ -48,14 +52,13 @@ class InputWidget(QtWidgets.QWidget):
             pwidth=parent_rect.width()
             pheight=parent_rect.height()
 
-            w=int(parent_rect.width()*0.7)
-            h=self.height() if self.height()>150 else 150 
+            w=int(pwidth*0.7)
+            h=int(pheight*0.7)
 
             self.setFixedSize(w, h)
 
             x=int(pwidth/2-self.width()/2)
-            # y=int(pheight/2-self.height()/2)
-            y=250
+            y=int(pheight/2-self.height()/2)
 
             self.setGeometry(x, y, w, h)
 

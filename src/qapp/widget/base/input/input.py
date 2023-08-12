@@ -14,7 +14,7 @@ class InputWidget(QLineEdit):
                 background-color: white;
                 border-color: green;
                 border-width: 3px;
-                border-radius: 10px;
+                border-radius: 15px;
                 border-style: outset;
                 padding: 0 0 0 10px;
                 }

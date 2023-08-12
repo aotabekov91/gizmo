@@ -1,4 +1,4 @@
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtWidgets
 
 from ..base import Mode
 from .widget import InputWidget
@@ -10,7 +10,8 @@ class Input(Mode):
     def __init__(self, 
                  app=None, 
                  name='input',
-                 listen_leader='Ctrl+i', 
+                 #Bug Ctrl+letter does not work
+                 listen_leader='Ctrl+;',  
                  delisten_on_exec=False,
                  **kwargs
                  ):
@@ -23,8 +24,14 @@ class Input(Mode):
                 **kwargs
                 )
 
-        self.widget=InputWidget(self.app.main)
+        self.edit=None
+        self.widget=InputWidget(self.app)
         self.widget.hide()
+
+    def listen(self):
+
+        super().listen()
+        self.showField()
 
     def showField(self, field=True, label=False):
 
@@ -45,42 +52,56 @@ class Input(Mode):
         self.widget.field.clear()
         self.widget.label.clear()
 
-    def eventFilter(self, widget, event):
+    def eventFilter(self, w, e):
 
         if self.listening:
-
-            if  event.type()==QtCore.QEvent.Enter:
-
-                event.accept()
+            if  e.type()==QtCore.QEvent.Enter:
+                e.accept()
                 return True
-
-            elif  event.type()==QtCore.QEvent.KeyPress:
-
-                m=(event.modifiers() and event.modifiers()==QtCore.Qt.ControlModifier)
-
-                enter=m and event.key()==QtCore.Qt.Key_M
-                escape=event.key()==QtCore.Qt.Key_Escape
-                escape= escape or (m and event.key()==QtCore.Qt.Key_BracketLeft)
-
-                if enter: 
-
-                    self.on_returnPressed()
-                    event.accept()
+            elif  e.type()==QtCore.QEvent.KeyPress:
+                m=e.modifiers()
+                m=m and e.modifiers()==QtCore.Qt.ControlModifier
+                enter=m and e.key()==QtCore.Qt.Key_M
+                escape= e.key()==QtCore.Qt.Key_BracketLeft
+                if enter or escape: 
+                    if enter: 
+                        self.on_returnPressed()
+                    else:
+                        self.on_escapePressed()
+                    if self.widget.isVisible(): self.hideClearField()
+                    e.accept()
+                    self.client=None
+                    self.forceDelisten.emit()
                     return True
-                        
-                elif escape: 
-
-                    self.on_escapePressed()
-                    event.accept()
-                    return True
-
+        elif e.type()==QtCore.QEvent.KeyPress:
+            mode=self.checkListen(e)
+            if mode==self: 
+                self.client=QtWidgets.QApplication.focusWidget()
+                self.modeWanted.emit(mode)
+                e.accept()
+                return True
         return False 
 
-    def on_escapePressed(self):
+    def setText(self):
 
-        if self.widget.isVisible(): self.hideClearField()
-        self.forceDelisten.emit()
+        print(self.client)
+        if self.client:
+            func=None
 
-    def on_returnPressed(self):
+            if not func:
+                func=getattr(self.client, 'setText', None)
+            if not func:
+                func=getattr(self.client, 'setPlainText', None)
 
+            if func: 
+                text=self.widget.field.text()
+                print(text)
+                func(text)
+
+    def on_escapePressed(self): pass
+
+
+    def on_returnPressed(self): 
+
+        self.setText()
         self.returnPressed.emit()

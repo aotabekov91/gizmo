@@ -99,22 +99,23 @@ class Plug(BasePlug):
     def checkKey(self, event, check_key):
 
         if check_key:
+
+            mod=[]
             key=event.text()
-            if check_key[-1]==key:
-                mod=[]
-                if len(check_key)==1:
-                    return True
-                else:
-                    mdf=event.modifiers()
-                    if mdf==QtCore.Qt.AltModifier:
-                        mod+=['Alt']
-                    if mdf==QtCore.Qt.ControlModifier:
-                        mod+=['Ctrl']
-                    if mdf==QtCore.Qt.ShiftModifier:
-                        mod+=['Shift']
-                    pressed='+'.join(mod+[key])
-                    if check_key==pressed: 
-                        return True
+            mdf=event.modifiers()
+            if mdf==QtCore.Qt.AltModifier:
+                mod+=['Alt']
+            if mdf==QtCore.Qt.ControlModifier:
+                mod+=['Ctrl']
+            if mdf==QtCore.Qt.ShiftModifier:
+                mod+=['Shift']
+            if mod:
+                pressed='+'.join(mod+[key])
+            else:
+                pressed=key
+
+            if check_key==pressed: 
+                return True
 
     def deactivateCommandMode(self):
 

@@ -1,8 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 
-class Item(QWidget):
+class Item(QtWidgets.QWidget):
 
     def __init__(self, listWidget, data={}):
 
@@ -21,7 +19,7 @@ class Item(QWidget):
 
     def setItem(self):
 
-        self.item = QListWidgetItem(self.list)
+        self.item = QtWidgets.QListWidgetItem(self.list)
         self.item.widget=self
         self.item.sizeHint=self.sizeHint
 
@@ -47,10 +45,10 @@ class Item(QWidget):
                 padding: 2px 10px 2px 10px;
                 '''
 
-        self.up = QLabel()
+        self.up = QtWidgets.QLabel()
         self.up.setWordWrap(True)
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.setSpacing(0)
         layout.addWidget(self.up)
 

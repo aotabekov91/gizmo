@@ -37,7 +37,7 @@ class Modeman(QtCore.QObject):
 
     def on_delistenWanted(self):
 
-        if not self.current.name!='input':
+        if not self.current or self.current.name!='input':
             self.setMode()
 
     def setMode(self, mode='normal'):

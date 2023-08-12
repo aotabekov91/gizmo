@@ -23,14 +23,14 @@ class InputLabelWidget (QWidget):
                 background-color: white;
                 border-color: green;
                 border-width: 3px;
-                border-radius: 10px;
+                border-radius: 15px;
                 border-style: outset;
                 }
             #label{
                 border-color: transparent;
                 border-width: 0px;
                 padding: 0px 5px 0px 10px;
-                border-radius: 10px;
+                border-radius: 15px;
                 border-style: outset;
                 }
                 '''

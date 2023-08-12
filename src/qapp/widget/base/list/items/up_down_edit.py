@@ -1,6 +1,6 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
+
+from qapp.utils import setEditorTabSize
 
 from .base import Item
 
@@ -8,7 +8,7 @@ class UpDownEdit (Item):
 
     def __init__(self, *args, **kwargs):
 
-        self.timer=QTimer()
+        self.timer=QtCore.QTimer()
         self.timer.timeout.connect(self.emit_signal)
 
         super().__init__(*args, **kwargs)
@@ -19,10 +19,12 @@ class UpDownEdit (Item):
 
         style_sheet += 'QPlainTextEdit{padding: 0px 10px 0px 10px;}'
 
-        self.down = QPlainTextEdit(objectName='downEdit')
-        self.down.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.down.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.down = QtWidgets.QPlainTextEdit(objectName='downEdit')
+        self.down.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.down.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.down.textChanged.connect(self.on_contentChanged)
+
+        setEditorTabSize(self.down, 4)
 
         layout.addWidget(self.down, 70)
 
@@ -46,7 +48,7 @@ class UpDownEdit (Item):
         if times==0: times=1
         height=int(25*times)
         if height<50: height=50
-        size=QSize(width, height)
+        size=QtCore.QSize(width, height)
         return size
 
     def setFixedWidth(self, width):

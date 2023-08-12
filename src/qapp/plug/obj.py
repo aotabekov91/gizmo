@@ -41,6 +41,7 @@ class PlugObj(Plug, QtCore.QObject):
     def setUI(self): 
 
         self.ui=CommandStack()
+
         self.ui.hideWanted.connect(self.on_uiHideWanted)
         self.ui.focusGained.connect(self.on_uiFocusGained)
 

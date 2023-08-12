@@ -38,8 +38,10 @@ class LeftRightEdit (Item):
         self.left.setWordWrap(True)
 
         self.right = QPlainTextEdit(objectName='rightEdit')
-        self.right.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.right.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.right.setHorizontalScrollBarPolicy(
+                Qt.ScrollBarAlwaysOff)
+        self.right.setVerticalScrollBarPolicy(
+                Qt.ScrollBarAlwaysOff)
         self.right.textChanged.connect(self.on_contentChanged)
 
         left_right_layout.addWidget(self.left)
@@ -58,9 +60,7 @@ class LeftRightEdit (Item):
         self.left.setText(text)
         self.left.adjustSize()
 
-    def textLeft(self):
-
-        return self.left.text()
+    def textLeft(self): return self.left.text()
 
     def textRight(self): return self.right.toPlainText()
 
