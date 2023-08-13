@@ -5,13 +5,11 @@ build-backend="setuptools.build_meta"
 
 [project]
 
-name="qapp"
+name="gizmo"
 version="0.0.1"
-description="Vim-like application building framework in PyQt"
+description="UI items"
 dependencies=[
-	"plug==0.0.1",
 	"pynvim==0.4.3",
-	"pynput==1.7.6",
 	"PyQt5==5.15.9",
 	"PyQtWebEngine==5.15.6",
 	]
