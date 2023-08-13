@@ -67,14 +67,14 @@ class Plug(BasePlug):
 
     def setShortcuts(self):
 
-        if self.config.has_section('Shortcuts'):
-            config=dict(self.config['Shortcuts'])
-            for func_name, key in config.items():
-                func=getattr(self, func_name, None)
+        if self.config.get('Shortcuts'):
+            shortcuts=self.config['Shortcuts']
+            for name, key in shortcuts.items():
+                func=getattr(self, name, None)
                 if func:
                     shortcut=QtWidgets.QShortcut(key)
                     shortcut.activated.connect(func)
-                    self.action[(key, func_name)]=func
+                    self.action[(key, name)]=func
 
     def eventFilter(self, widget, event):
 
@@ -138,8 +138,6 @@ class Plug(BasePlug):
         t.start()
 
     def checkKey(self, event, kind='listen_leader'):
-
-        print(self.name, self.listen_leader)
 
         mod=[]
         mdf=event.modifiers()

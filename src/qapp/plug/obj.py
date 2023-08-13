@@ -145,29 +145,6 @@ class PlugObj(Plug, QtCore.QObject):
             elif self.position=='overlay':
                 self.ui.hide()
 
-    def setShortcuts(self):
-
-        if self.config.has_section('Shortcuts'):
-            shortcuts=dict(self.config['Shortcuts'])
-            for func_name, key in shortcuts.items():
-                func=getattr(self, func_name, None)
-                if func and hasattr(func, 'widget'): 
-                    if func.widget=='window':
-                        widget=self.app.main
-                    elif func.widget=='display':
-                        widget=self.app.main.display
-                    else:
-                        setattr(func, 'key', key)
-                        continue
-                    context=getattr(
-                            func, 
-                            'context', 
-                            QtCore.Qt.WidgetWithChildrenShortcut)
-                    shortcut=QtWidgets.QShortcut(widget)
-                    shortcut.setKey(key)
-                    shortcut.setContext(context)
-                    shortcut.activated.connect(func)
-
     def register(self):
 
         if self.app: 

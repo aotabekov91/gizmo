@@ -10,6 +10,7 @@ version="0.0.1"
 description="Vim-like application building framework in PyQt"
 dependencies=[
 	"plug==0.0.1",
+	"pynvim==0.4.3",
 	"pynput==1.7.6",
 	"PyQt5==5.15.9",
 	"PyQtWebEngine==5.15.6",

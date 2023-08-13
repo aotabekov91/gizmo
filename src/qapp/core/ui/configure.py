@@ -27,7 +27,7 @@ class Configure(Plug):
     def setSettings(self):
 
         self.settings=None
-        if self.app.config.has_section(f'{self.name}'):
+        if self.app.config.get(f'{self.name}'):
             self.settings=self.app.config[f'{self.name}']
 
     def register(self):
