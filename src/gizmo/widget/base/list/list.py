@@ -11,8 +11,8 @@ class ListWidget(QListWidget):
     returnPressed=pyqtSignal()
     widgetDataChanged=pyqtSignal(object)
 
-    def __init__(self, item_widget=IconUpDown, 
-
+    def __init__(self, 
+                 item_widget=IconUpDown, 
                  check_fields=['up', 'down'],
                  ignore_case=True,
                  exact_match=False,
@@ -47,7 +47,6 @@ class ListWidget(QListWidget):
                 background-color: transparent; 
                 }
             QListWidget::item{
-                border-style: outset;
                 border-radius: 10px;
                 border-style: outset;
                 padding: 0px 0px 0px 0px;
@@ -64,8 +63,8 @@ class ListWidget(QListWidget):
 
         self.setStyleSheet(self.style_sheet)
 
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -144,7 +143,8 @@ class ListWidget(QListWidget):
         self.addItems(tempList)
         self.setCurrentRow(crow)
 
-    def setEnableFilter(self, condition): self.enable_filter=condition
+    def setEnableFilter(self, condition): 
+        self.enable_filter=condition
 
     def unfilter(self): 
 

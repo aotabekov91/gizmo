@@ -10,7 +10,8 @@ class StatusBar(QtWidgets.QStatusBar):
 
     def __init__(self, window):
 
-        super(StatusBar, self).__init__()
+        super(StatusBar, self).__init__(
+                objectName='statusbar')
 
         self.window=window
         self.configure=Configure(
@@ -21,32 +22,45 @@ class StatusBar(QtWidgets.QStatusBar):
 
     def setUI(self):
 
-        self.style_sheet='''
-            QLineEdit {
-                background-color: transparent;
-                border-color: transparent;
-                border-width: 0px;
-                border-radius: 0px;
-                }
-            QLabel{
-                background-color: transparent;
-                }
-                '''
-
         layout=self.layout()
+        layout.setSpacing(0)
         layout.setContentsMargins(0,0,0,0)
+
         self.setLayout(layout)
 
-        self.mode=QtWidgets.QLabel(':')
-        self.edit=QtWidgets.QLineEdit(self)
+        self.container=QtWidgets.QWidget(
+                objectName='statusbarContainer')
 
-        self.setFixedHeight(25)
+        self.container_layout=QtWidgets.QVBoxLayout()
+        self.container_layout.setSpacing(0)
+        self.container_layout.setContentsMargins(0,0,0,0)
+        self.container.setLayout(self.container_layout)
 
-        self.addPermanentWidget(self.mode)
-        self.addPermanentWidget(self.edit, 100)
+        self.bottom=QtWidgets.QWidget(
+                objectName='statusbarBottom')
+        self.bottom.setFixedHeight(20)
+
+        blayout=QtWidgets.QHBoxLayout()
+        self.bottom.setLayout(blayout)
+
+        blayout.setSpacing(0)
+        blayout.setContentsMargins(0,0,0,0)
+
+        self.mode=QtWidgets.QLabel(
+                ':', objectName='statusbarColon')
+        self.edit=QtWidgets.QLineEdit(
+                objectName='statusbarEdit')
+
+        blayout.addWidget(self.mode)
+        blayout.addWidget(self.edit)
+
+        self.container_layout.addWidget(self.bottom)
+
+        self.addPermanentWidget(self.container, 100)
 
         self.setSizeGripEnabled(False)
-        self.setStyleSheet(self.style_sheet)
+
+        self.bottom.hide()
 
     def installEventFilter(self, listener):
 

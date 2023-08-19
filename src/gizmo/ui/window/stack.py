@@ -24,7 +24,6 @@ class StackWindow(QtWidgets.QMainWindow):
     def setUI(self, display_class, view_class):
 
         stl='''
-
             QWidget {
                 color: #101010;
                 border-color: #101010;
@@ -50,6 +49,19 @@ class StackWindow(QtWidgets.QMainWindow):
                 border-width: 0px;
                 padding: 0 0 0 0;
             }
+
+            QLineEdit#statusbarEdit{
+                color: white;
+                border-width: 0px;
+                border-radius: 0px;
+                border-color: transparent;
+                background-color: transparent;
+            }
+
+            QLabel#statusbarColon{
+                color: white;
+            }
+
             QLabel#modeLabel {
                 color: black;
                 background-color: yellow;
@@ -73,6 +85,7 @@ class StackWindow(QtWidgets.QMainWindow):
         self.stack.setContentsMargins(0, 0, 0, 0)
 
         main_style_sheet=self.main.styleSheet()
+
         self.main.setStyleSheet(stl+main_style_sheet)
         self.main.setContentsMargins(0, 0, 0, 0)
         self.main.display.setContentsMargins(0, 0, 0, 0)
