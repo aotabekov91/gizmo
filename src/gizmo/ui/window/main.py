@@ -1,36 +1,50 @@
 from PyQt5 import QtWidgets, QtCore
 
-from ..docks import Docks
 from ..display import Display
-from ..statusbar import StatusBar
 from ..configure import Configure
 
 class MainWindow(QtWidgets.QMainWindow):
 
     viewCreated=QtCore.pyqtSignal(object)
     
-    def __init__(self, app, display_class=None, view_class=None):
+    def __init__(self, 
+                 app, 
+                 display_class=None, 
+                 view_class=None):
 
         super().__init__()
 
         self.app=app
-        self.configure=Configure(app=app, name='Window', parent=self)
+        self.configure=Configure(
+                app=app, 
+                name='Window', 
+                parent=self)
+
+
         self.setUI(display_class, view_class)
 
     def setDisplay(self, display_class, view_class=None):
 
+        self.main_widget=QtWidgets.QWidget()
+
+        self.main_layout=QtWidgets.QVBoxLayout()
+        self.main_layout.setContentsMargins(0,0,0,0)
+        self.main_layout.setSpacing(0)
+
+        self.main_widget.setLayout(self.main_layout)
+
         if not display_class: display_class=Display
+
         self.display=display_class(self.app, self, view_class)
         self.display.viewCreated.connect(self.viewCreated)
-        self.setCentralWidget(self.display)
+
+        self.main_layout.addWidget(self.display)
+        self.setCentralWidget(self.main_widget)
 
     def setUI(self, display_class, view_class):
 
         # Order matters
         self.setDisplay(display_class, view_class)
-        self.docks=Docks(self)
-        self.bar=StatusBar(self)
-        self.setStatusBar(self.bar)
 
         stl='''
             QWidget {
@@ -41,7 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
                ''' 
         self.setStyleSheet(stl)
         self.setAcceptDrops(True)
-        self.setContentsMargins(2, 2, 2, 2)
+        self.setContentsMargins(0, 0, 0, 0)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 

@@ -286,7 +286,7 @@ class View(QtWidgets.QGraphicsView):
         if event.type()==QtCore.QEvent.Enter:
             self.setFocus()
             self.app.main.display.setCurrentView(self)
-            self.app.modes.setMode('normal')
+            self.app.plugman.set('normal')
         return super().event(event)
 
     def visibleItems(self): return self.items(self.viewport().rect())

@@ -3,7 +3,9 @@ from PyQt5 import QtWidgets
 from gizmo.widget import StackWidget
 
 from .main import MainWindow
-from ..display import Display
+
+from ..docks import Docks
+from ..statusbar import StatusBar
 
 class StackWindow(QtWidgets.QMainWindow):
 
@@ -37,30 +39,48 @@ class StackWindow(QtWidgets.QMainWindow):
             QGraphicsView {
                 padding: 0 0 0 0;
                 border-width: 0px;
-                color: white;
                 }
+
             QGraphicsObject{
                 border-width: 0px;
                 padding: 0 0 0 0;
             }
+
             QSplitter{
                 border-width: 0px;
                 padding: 0 0 0 0;
             }
+            QLabel#modeLabel {
+                color: black;
+                background-color: yellow;
+            }
 
+            QLabel#pageLabel {
+                color: black;
+                background-color: yellow ;
+            }
                ''' 
 
-        self.app.main=MainWindow(
+        self.main=MainWindow(
                 self.app,
                 display_class, 
                 view_class)
-        self.add(self.app.main, 'main', main=True)
+
+        self.add(self.main, 'main', main=True)
 
         self.setStyleSheet(stl)
         self.setContentsMargins(0, 0, 0, 0)
         self.stack.setContentsMargins(0, 0, 0, 0)
-        self.app.main.setContentsMargins(0, 0, 0, 0)
-        self.app.main.display.setContentsMargins(0, 0, 0, 0)
+
+        main_style_sheet=self.main.styleSheet()
+        self.main.setStyleSheet(stl+main_style_sheet)
+        self.main.setContentsMargins(0, 0, 0, 0)
+        self.main.display.setContentsMargins(0, 0, 0, 0)
+
+        self.docks=Docks(self)
+        self.bar=StatusBar(self)
+        self.setStatusBar(self.bar)
+        self.bar.hide()
 
     def add(self, *args, **kwargs): 
 

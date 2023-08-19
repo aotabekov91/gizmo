@@ -32,4 +32,4 @@ class Configure(Plug):
 
     def register(self):
 
-        self.app.manager.register(self.object, self.actions)
+        self.app.plugman.register(self.object, self.actions)

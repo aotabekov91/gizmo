@@ -43,7 +43,8 @@ class Display(QtWidgets.QSplitter):
             window, 
             view_class=None):
 
-        super().__init__(QtCore.Qt.Vertical,
+        super().__init__(
+                QtCore.Qt.Vertical,
                 parent=window)
 
         self.app=app
