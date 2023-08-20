@@ -2,17 +2,27 @@ from PyQt5 import QtWidgets
 
 class Item(QtWidgets.QWidget):
 
-    def __init__(self, listWidget, data={}):
+    def __init__(self, 
+                 listWidget, 
+                 data={},
+                 set_base_style=True,
+                 **kwargs,
+                 ):
 
-        super(Item, self).__init__()
+        super(Item, self).__init__(
+                parent=listWidget,
+                objectName='ListItemWidget', 
+                **kwargs)
 
         self.list=listWidget
+        self.set_base_style=set_base_style
 
         layout, style_sheet=self.setUI()
+
         self.setLayout(layout)
 
-        self.style_sheet=style_sheet
-        self.setStyleSheet(style_sheet)
+        if self.set_base_style:
+            self.setStyleSheet(style_sheet)
 
         self.setItem()
         self.setData(data)
@@ -37,21 +47,14 @@ class Item(QtWidgets.QWidget):
                 }
                 '''
 
-        # self.up = QLabel(objectName='upElement')
-
-        self.label_style= '''QLabel{
-                border-radius: 10px;
-                border-style: outset;
-                padding: 2px 10px 2px 10px;
-                '''
-
-        self.up = QtWidgets.QLabel()
+        self.up = QtWidgets.QLabel(
+                objectName='ListItemUp')
         self.up.setWordWrap(True)
 
         layout = QtWidgets.QVBoxLayout()
+
         layout.setSpacing(0)
         layout.addWidget(self.up)
-
         layout.setContentsMargins(4, 4, 4, 4)
 
         return layout, style_sheet
@@ -73,21 +76,33 @@ class Item(QtWidgets.QWidget):
 
         if data:
 
-            if data.get('up', None): self.setTextUp(str(data.get('up')))
+            if data.get('up', None): 
+                self.setTextUp(str(data.get('up')))
 
-            up_color=data.get('up_color', None)
+            style=data.get('style', None)
+            if style:
+                style=str(style).replace("'", "")
+                self.style_sheet+style
+                self.setStyleSheet(style)
+
+            up_color=data.get('style', None)
+
             if up_color: 
+
                 up_style=self.label_style+f'color: black; background-color: {up_color};'+'}'
                 self.up.setStyleSheet(up_style)
 
             color=data.get('item_color', None)
+
             if color: 
+
                 self.style_sheet+='QWidget {background-color: '+f'{color}; '+' color: black}'
                 self.setStyleSheet(self.style_sheet)
 
     def setFixedWidth(self, width):
 
-        if hasattr(self, 'up'): self.up.setFixedWidth(width-12) # minus padding
+        if hasattr(self, 'up'): 
+            self.up.setFixedWidth(width-12) # minus padding
         super().setFixedWidth(width)
         self.adjustSize()
 
@@ -101,4 +116,5 @@ class Item(QtWidgets.QWidget):
         super().installEventFilter(listener)
         self.up.installEventFilter(listener)
 
-    def on_contentChanged(self): self.list.widgetDataChanged.emit(self)
+    def on_contentChanged(self): 
+        self.list.widgetDataChanged.emit(self)

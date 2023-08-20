@@ -2,9 +2,8 @@ from PyQt5 import QtWidgets
 
 from gizmo.widget import StackWidget
 
-from .main import MainWindow
-
 from ..docks import Docks
+from .main import MainWindow
 from ..statusbar import StatusBar
 
 class StackWindow(QtWidgets.QMainWindow):
@@ -50,7 +49,7 @@ class StackWindow(QtWidgets.QMainWindow):
                 padding: 0 0 0 0;
             }
 
-            QLineEdit#statusbarEdit{
+            QLineEdit#Statusbar_edit{
                 color: white;
                 border-width: 0px;
                 border-radius: 0px;
@@ -58,19 +57,48 @@ class StackWindow(QtWidgets.QMainWindow):
                 background-color: transparent;
             }
 
-            QLabel#statusbarColon{
-                color: white;
-            }
-
-            QLabel#modeLabel {
+            QLabel#Powerline_mode {
                 color: black;
+                padding: 0 5px 0 5px;
+                qproperty-alignment: AlignCenter;
                 background-color: yellow;
             }
 
-            QLabel#pageLabel {
+            QLabel#Powerline_keys {
+                color: white;
+                padding: 0 5px 0 5px;
+                qproperty-alignment: AlignCenter;
+            }
+
+            QLabel#Powerline_page {
                 color: black;
+                padding: 0 5px 0 5px;
+                qproperty-alignment: AlignCenter;
                 background-color: yellow ;
             }
+
+            QLabel#Statusbar_colon{
+                color: white;
+            }
+
+            QListWidget#ExecMode_List{
+                border-width: 0px;
+                border-color: transparent;
+                background-color: transparent;
+            }
+            QListWidget#ExecMode_List::item{
+                border-width: 0px;
+                border-radius: 0px;
+            }
+            QListWidget#ExecMode_List::item:selected{
+                border-width: 0px;
+                background-color: gray;
+                border-color: transparent;
+            }
+            QWidget#ExecMode_ListItem{
+                color: white;
+                border-width: 0px;
+                }
                ''' 
 
         self.main=MainWindow(
@@ -79,16 +107,7 @@ class StackWindow(QtWidgets.QMainWindow):
                 view_class)
 
         self.add(self.main, 'main', main=True)
-
-        self.setStyleSheet(stl)
-        self.setContentsMargins(0, 0, 0, 0)
-        self.stack.setContentsMargins(0, 0, 0, 0)
-
-        main_style_sheet=self.main.styleSheet()
-
-        self.main.setStyleSheet(stl+main_style_sheet)
-        self.main.setContentsMargins(0, 0, 0, 0)
-        self.main.display.setContentsMargins(0, 0, 0, 0)
+        # self.setStyleSheet(stl)
 
         self.docks=Docks(self)
         self.bar=StatusBar(self)

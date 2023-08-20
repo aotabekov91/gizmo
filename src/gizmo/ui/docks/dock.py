@@ -81,7 +81,7 @@ class Dock(QtWidgets.QDockWidget):
         else:
             self.hide()
             self.docks.adjustDocks()
-            self.parent().display.setFocus()
+            self.parent().main.setFocus()
 
         self.docks.adjustDocks()
 
@@ -111,11 +111,11 @@ class Dock(QtWidgets.QDockWidget):
         if widget:
             if fullscreen:
                 widget.prev_size=widget.dock.tab.size()
-                self.parent().display.hide()
+                self.parent().main.hide()
                 widget.dock.tab.setFixedSize(self.parent().size())
                 widget.setFixedSize(self.parent().size())
             elif restore:
-                self.parent().display.show()
+                self.parent().main.show()
                 widget.dock.tab.setFixedSize(widget.prev_size)
                 widget.setFixedSize(widget.prev_size)
             else:

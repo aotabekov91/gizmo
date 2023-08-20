@@ -35,7 +35,7 @@ class View(QtWidgets.QGraphicsView):
 
     def __init__(self, app, layout, scene_class=None):
 
-        super().__init__(app.main)
+        super().__init__(app.window.main)
 
         self.app=app
         self.m_model=None
@@ -112,31 +112,31 @@ class View(QtWidgets.QGraphicsView):
     def connect(self):
 
         self.mouseDoubleClickOccured.connect(
-                self.app.main.display.viewMouseDoubleClickOccured)
+                self.app.window.main.display.viewMouseDoubleClickOccured)
         self.mouseReleaseOccured.connect(
-                self.app.main.display.viewMouseReleaseOccured)
+                self.app.window.main.display.viewMouseReleaseOccured)
         self.mouseMoveOccured.connect(
-                self.app.main.display.viewMouseMoveOccured)
+                self.app.window.main.display.viewMouseMoveOccured)
         self.mousePressOccured.connect(
-                self.app.main.display.viewMousePressOccured)
+                self.app.window.main.display.viewMousePressOccured)
         self.hoverMoveOccured.connect(
-                self.app.main.display.viewHoverMoveOccured)
+                self.app.window.main.display.viewHoverMoveOccured)
 
         self.itemMouseDoubleClickOccured.connect(
-                self.app.main.display.itemMouseDoubleClickOccured)
+                self.app.window.main.display.itemMouseDoubleClickOccured)
         self.itemMouseReleaseOccured.connect(
-                self.app.main.display.itemMouseReleaseOccured)
+                self.app.window.main.display.itemMouseReleaseOccured)
         self.itemMouseMoveOccured.connect(
-                self.app.main.display.itemMouseMoveOccured)
+                self.app.window.main.display.itemMouseMoveOccured)
         self.itemMousePressOccured.connect(
-                self.app.main.display.itemMousePressOccured)
+                self.app.window.main.display.itemMousePressOccured)
         self.itemHoverMoveOccured.connect(
-                self.app.main.display.itemHoverMoveOccured)
+                self.app.window.main.display.itemHoverMoveOccured)
 
         self.itemChanged.connect(
-                self.app.main.display.itemChanged)
+                self.app.window.main.display.itemChanged)
         self.itemPainted.connect(
-                self.app.main.display.itemPainted)
+                self.app.window.main.display.itemPainted)
 
     def resizeEvent(self, event):
 
@@ -285,7 +285,7 @@ class View(QtWidgets.QGraphicsView):
 
         if event.type()==QtCore.QEvent.Enter:
             self.setFocus()
-            self.app.main.display.setCurrentView(self)
+            self.app.window.main.display.setCurrentView(self)
             self.app.plugman.set('normal')
         return super().event(event)
 

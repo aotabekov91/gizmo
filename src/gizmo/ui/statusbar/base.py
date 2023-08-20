@@ -22,22 +22,18 @@ class StatusBar(QtWidgets.QStatusBar):
 
     def setUI(self):
 
-        layout=self.layout()
-        layout.setSpacing(0)
-        layout.setContentsMargins(0,0,0,0)
-
-        self.setLayout(layout)
-
         self.container=QtWidgets.QWidget(
-                objectName='statusbarContainer')
+                objectName='Statusbar_container')
 
         self.container_layout=QtWidgets.QVBoxLayout()
+
         self.container_layout.setSpacing(0)
         self.container_layout.setContentsMargins(0,0,0,0)
+
         self.container.setLayout(self.container_layout)
 
         self.bottom=QtWidgets.QWidget(
-                objectName='statusbarBottom')
+                objectName='Statusbar_bottom')
         self.bottom.setFixedHeight(20)
 
         blayout=QtWidgets.QHBoxLayout()
@@ -47,33 +43,16 @@ class StatusBar(QtWidgets.QStatusBar):
         blayout.setContentsMargins(0,0,0,0)
 
         self.mode=QtWidgets.QLabel(
-                ':', objectName='statusbarColon')
+                ':', objectName='Statusbar_colon')
         self.edit=QtWidgets.QLineEdit(
-                objectName='statusbarEdit')
+                objectName='Statusbar_edit')
 
         blayout.addWidget(self.mode)
         blayout.addWidget(self.edit)
 
         self.container_layout.addWidget(self.bottom)
+        self.addPermanentWidget(self.container, 10)
 
-        self.addPermanentWidget(self.container, 100)
-
+        self.setContentsMargins(0,0,0,0)
         self.setSizeGripEnabled(False)
-
         self.bottom.hide()
-
-    def installEventFilter(self, listener):
-
-        super().installEventFilter(listener)
-        self.mode.installEventFilter(listener)
-
-    def removeEventFilter(self, listener):
-
-        super().removeEventFilter(listener)
-        self.mode.removeEventFilter(listener)
-
-    def keyPressEvent(self, event):
-
-        self.keyPressed.emit(event) 
-        if event.key()==QtCore.Qt.Key_Escape: 
-            self.hideWanted.emit() 

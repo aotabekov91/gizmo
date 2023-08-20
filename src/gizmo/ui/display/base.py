@@ -234,7 +234,7 @@ class Display(QtWidgets.QSplitter):
 
         self.deactivate(focusView=False)
         self.setFocus()
-        view=self.app.main.display.view
+        view=self.app.window.main.display.view
         if view: view.setFocus()
 
     def deactivate(self, focusView=True):
@@ -245,7 +245,7 @@ class Display(QtWidgets.QSplitter):
     def activate(self):
 
         self.activated=True
-        # statusbar=self.app.main.statusBar()
+        # statusbar=self.app.window.main.statusBar()
         # statusbar.details.setText(self.configure.name)
         # statusbar.show()
         self.show()

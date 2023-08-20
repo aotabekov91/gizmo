@@ -12,16 +12,16 @@ class CommandWindow(CommandStack):
 
     def setUI(self):
 
-        self.app.stack.add(self, 'command')
+        self.app.window.add(self, 'command')
         self.addWidget(ListWidget(exact_match=True, check_fields=['down']), 'mode')
 
     def activate(self): 
 
         self.activated=True
-        self.app.stack.show(self)
-        self.setFixedSize(self.app.stack.size())
+        self.app.window.show(self)
+        self.setFixedSize(self.app.window.size())
 
     def deactivate(self): 
 
         self.activated=False
-        self.app.stack.show(self.app.main)
+        self.app.window.show(self.app.window.main)

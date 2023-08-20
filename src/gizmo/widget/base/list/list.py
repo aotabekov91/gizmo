@@ -1,15 +1,13 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
 from .items import IconUpDown
 
-class ListWidget(QListWidget):
+class ListWidget(QtWidgets.QListWidget):
 
-    hideWanted=pyqtSignal()
-    openWanted=pyqtSignal()
-    returnPressed=pyqtSignal()
-    widgetDataChanged=pyqtSignal(object)
+    hideWanted=QtCore.pyqtSignal()
+    openWanted=QtCore.pyqtSignal()
+    returnPressed=QtCore.pyqtSignal()
+    widgetDataChanged=QtCore.pyqtSignal(object)
 
     def __init__(self, 
                  item_widget=IconUpDown, 
@@ -19,9 +17,13 @@ class ListWidget(QListWidget):
                  enable_filter=True,
                  field_rematch=lambda x: x,
                  text_non_found='No match found',
+                 set_base_style=True,
+                 objectName='List',
                  **kwargs):
 
-        super(ListWidget, self).__init__(**kwargs)
+        super(ListWidget, self).__init__(
+                objectName=objectName,
+                **kwargs)
 
         self.dlist = []
         self.flist = []
@@ -34,12 +36,13 @@ class ListWidget(QListWidget):
         self.field_rematch=field_rematch
         self.enable_filter=enable_filter
         self.text_non_found=text_non_found
+        self.set_base_style=set_base_style
 
         self.setUI()
 
-    def setUI(self):
+    def setBaseStyleSheet(self):
 
-        self.style_sheet = '''
+        style_sheet = '''
             QListWidget{
                 border-width: 0px;
                 color: transparent;
@@ -58,16 +61,23 @@ class ListWidget(QListWidget):
                 border-color: red;
                 }
                 '''
+        self.setStyleSheet(style_sheet)
+
+    def setUI(self):
 
         self.setSpacing(2)
 
-        self.setStyleSheet(self.style_sheet)
+        self.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setWindowFlags(
+                QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(
+                QtCore.Qt.WA_TranslucentBackground)
 
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        if self.set_base_style:
+            self.setBaseStyleSheet()
 
     def installEventFilter(self, listener):
 
@@ -79,8 +89,12 @@ class ListWidget(QListWidget):
 
     def addItem(self, data):
 
-        widget = self.item_widget(self, data)
-        if self.listener: widget.installEventFilter(self.listener)
+        widget = self.item_widget(
+                self, 
+                data, 
+                set_base_style=self.set_base_style)
+        if self.listener: 
+            widget.installEventFilter(self.listener)
 
         super().addItem(widget.listItem())
         super().setItemWidget(widget.listItem(), widget)
@@ -101,7 +115,7 @@ class ListWidget(QListWidget):
         self.setCurrentRow(crow)
         self.scrollToItem(
                 self.currentItem(), 
-                hint=QAbstractItemView.PositionAtCenter)
+                hint=QtWidgets.QAbstractItemView.PositionAtCenter)
 
         self.itemChanged.emit(self.currentItem())
 
@@ -204,20 +218,25 @@ class ListWidget(QListWidget):
 
     def keyPressEvent(self, event):
 
-        if event.key() in [Qt.Key_J, Qt.Key_N]:
+        if event.key() in [QtCore.Qt.Key_J, 
+                           QtCore.Qt.Key_N]:
             self.move(crement=1)
-        elif event.key() in [Qt.Key_K, Qt.Key_P]:
+        elif event.key() in [QtCore.Qt.Key_K, 
+                             QtCore.Qt.Key_P]:
             self.move(crement=-1)
-        elif event.key() in  [Qt.Key_M, Qt.Key_Enter]:
+        elif event.key() in  [QtCore.Qt.Key_M, 
+                              QtCore.Qt.Key_Enter]:
             self.returnPressed.emit()
-        elif event.key() in [Qt.Key_Escape]: 
+        elif event.key() in [QtCore.Qt.Key_Escape]: 
             self.hideWanted.emit()
-        elif event.key() == Qt.Key_L:
+        elif event.key() == QtCore.Qt.Key_L:
             self.openWanted.emit()
-        elif event.modifiers()==Qt.ControlModifier:
-            if event.key() in [Qt.Key_BracketLeft]:
+        elif event.modifiers()==QtCore.Qt.ControlModifier:
+            if event.key() in [QtCore.Qt.Key_BracketLeft]:
                 self.hideWanted.emit()
-            elif event.key() in  [Qt.Key_M, Qt.Key_Return, Qt.Key_Enter]:
+            elif event.key() in  [QtCore.Qt.Key_M, 
+                                  QtCore.Qt.Key_Return, 
+                                  QtCore.Qt.Key_Enter]:
                 self.returnPressed.emit()
             else:
                 super().keyPressEvent(event)
