@@ -278,5 +278,6 @@ class ListWidget(QtWidgets.QListWidget):
         self.setFixedWidth(width)
         self.setFixedHeight(height)
 
-        for i in range(self.count()): self.item(i).widget.setFixedWidth(width)
+        for i in range(self.count()): 
+            self.item(i).widget.setFixedWidth(width)
         super().adjustSize()
