@@ -16,8 +16,10 @@ class TreeWidget(QtWidgets.QTreeView):
 
         self.setHeaderHidden(True)
 
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
 
         self.setUI()
 
@@ -159,7 +161,8 @@ class TreeWidget(QtWidgets.QTreeView):
             new=parent.child(index.row()-1, 0)
         else:
             new=parent.child(index.row()+1, 0)
-        if new.isValid(): self.setCurrentIndex(new )
+        if new.isValid(): 
+            self.setCurrentIndex(new )
 
     def gotoEnd(self): 
 
