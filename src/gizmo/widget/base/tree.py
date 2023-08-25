@@ -1,10 +1,13 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-class TreeWidget(QtWidgets.QTreeView):
+from gizmo.utils import SetKeys, register
+
+class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
 
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
+    keyPressed=QtCore.pyqtSignal(object, object)
 
     itemChanged=QtCore.pyqtSignal(object)
     indexChanged=QtCore.pyqtSignal(object)
@@ -51,23 +54,31 @@ class TreeWidget(QtWidgets.QTreeView):
 
     def currentItem(self):
 
-        if self.model():
-            if type(self.model())==QtGui.QStandardItemModel:
-                return self.model().itemFromIndex(self.currentIndex())
-            elif hasattr(self.model(), 'itemFromIndex'):
-                return self.model().itemFromIndex(self.currentIndex())
-            elif type(self.model())==QtCore.QSortFilterProxyModel:
-                index=self.model().mapToSource(self.currentIndex())
-                return self.model().itemFromIndex(index)
+        m=self.model()
+        if m:
+            if type(m)==QtGui.QStandardItemModel:
+                return m.itemFromIndex(
+                        self.currentIndex())
+            elif hasattr(m, 'itemFromIndex'):
+                return m.itemFromIndex(
+                        self.currentIndex())
+            elif type(m)==QtCore.QSortFilterProxyModel:
+                index=m.mapToSource(self.currentIndex())
+                return m.itemFromIndex(index)
 
+    @register('k')
     def moveUp(self):
 
-        if self.currentIndex(): self.customMove('MoveUp')
+        if self.currentIndex(): 
+            self.customMove('MoveUp')
 
+    @register('j')
     def moveDown(self):
 
-        if self.currentIndex(): self.customMove('MoveDown')
+        if self.currentIndex(): 
+            self.customMove('MoveDown')
 
+    @register('l')
     def expand(self, index=None):
 
         if index: self.setCurrentIndex(index)
@@ -115,6 +126,7 @@ class TreeWidget(QtWidgets.QTreeView):
         for i in range(item.rowCount()):
             self.collapseAllInside(item.child(i))
 
+    @register('h')
     def collapse(self, index=None):
 
         if index is None: index=self.currentIndex()
@@ -141,6 +153,7 @@ class TreeWidget(QtWidgets.QTreeView):
         ind=self.moveCursor(action, QtCore.Qt.NoModifier)
         self.setCurrentIndex(ind)
 
+    @register('gg')
     def gotoStart(self):
 
         index=self.rootIndex()
@@ -152,6 +165,7 @@ class TreeWidget(QtWidgets.QTreeView):
         parent=index.parent()
         if parent.isValid(): self.setCurrentIndex(parent)
 
+    @register('Ctrl+w Shift+s')
     def gotoSibling(self, kind='up'):
 
         index=self.currentIndex()
@@ -164,58 +178,58 @@ class TreeWidget(QtWidgets.QTreeView):
         if new.isValid(): 
             self.setCurrentIndex(new )
 
+    @register('Shift+e Ctrl+a')
     def gotoEnd(self): 
 
         index=self.currentIndex()
         if index:
             parent=index.parent()
-            last=parent.child(index.model().rowCount(parent)-1, 0)
+            last=parent.child(
+                    index.model().rowCount(parent)-1, 0)
             self.setCurrentIndex(last)
 
-    def keyPressEvent(self, event):
-
-        self.keyPressEventOccurred.emit(event)
-
-        if event.key()==QtCore.Qt.Key_J:
-            self.moveDown()
-        elif event.text()=='G':
-            self.gotoEnd()
-        elif event.key()==QtCore.Qt.Key_G:
-            self.gotoStart()
-        elif event.key()==QtCore.Qt.Key_BracketLeft:
-            self.gotoSibling(kind='up')
-        elif event.key()==QtCore.Qt.Key_BracketRight:
-            self.gotoSibling(kind='down')
-        elif event.key()==QtCore.Qt.Key_P:
-            self.gotoParent()
-        elif event.key()==QtCore.Qt.Key_K:
-            self.moveUp()
-        elif event.key()==QtCore.Qt.Key_L:
-            self.expand()
-        elif event.key()==QtCore.Qt.Key_H:
-            self.collapse()
-        elif event.key()==QtCore.Qt.Key_U:
-            self.rootUp()
-        elif event.key()==QtCore.Qt.Key_Z:
-            self.update()
-        elif event.key()==QtCore.Qt.Key_D:
-            self.rootDown()
-        elif event.key()==QtCore.Qt.Key_Semicolon:
-            self.moveToParent()
-        elif event.key()==QtCore.Qt.Key_B:
-            self.moveToBottom()
-        elif event.key()==QtCore.Qt.Key_X:
-            self.expandAllInside()
-        elif event.key()==QtCore.Qt.Key_T:
-            self.collapseAllInside()
-        elif event.key()==QtCore.Qt.Key_O:
-            self.openWanted.emit()
-        elif event.key()==QtCore.Qt.Key_Escape:
-            self.hideWanted.emit()
-        elif event.key()==QtCore.Qt.Key_Return:
-            self.returnPressed.emit()
-        else:
-            super().keyPressEvent(event)
+    # def keyPressEvent(self, event):
+    #     self.keyPressEventOccurred.emit(event)
+    #     if event.key()==QtCore.Qt.Key_J:
+    #         self.moveDown()
+    #     elif event.text()=='G':
+    #         self.gotoEnd()
+    #     elif event.key()==QtCore.Qt.Key_G:
+    #         self.gotoStart()
+    #     elif event.key()==QtCore.Qt.Key_BracketLeft:
+    #         self.gotoSibling(kind='up')
+    #     elif event.key()==QtCore.Qt.Key_BracketRight:
+    #         self.gotoSibling(kind='down')
+    #     elif event.key()==QtCore.Qt.Key_P:
+    #         self.gotoParent()
+    #     elif event.key()==QtCore.Qt.Key_K:
+    #         self.moveUp()
+    #     elif event.key()==QtCore.Qt.Key_L:
+    #         self.expand()
+    #     elif event.key()==QtCore.Qt.Key_H:
+    #         self.collapse()
+    #     elif event.key()==QtCore.Qt.Key_U:
+    #         self.rootUp()
+    #     elif event.key()==QtCore.Qt.Key_Z:
+    #         self.update()
+    #     elif event.key()==QtCore.Qt.Key_D:
+    #         self.rootDown()
+    #     elif event.key()==QtCore.Qt.Key_Semicolon:
+    #         self.moveToParent()
+    #     elif event.key()==QtCore.Qt.Key_B:
+    #         self.moveToBottom()
+    #     elif event.key()==QtCore.Qt.Key_X:
+    #         self.expandAllInside()
+    #     elif event.key()==QtCore.Qt.Key_T:
+    #         self.collapseAllInside()
+    #     elif event.key()==QtCore.Qt.Key_O:
+    #         self.openWanted.emit()
+    #     elif event.key()==QtCore.Qt.Key_Escape:
+    #         self.hideWanted.emit()
+    #     elif event.key()==QtCore.Qt.Key_Return:
+    #         self.returnPressed.emit()
+    #     else:
+    #         super().keyPressEvent(event)
 
     def setCurrentIndex(self, index):
 
