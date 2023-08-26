@@ -181,5 +181,4 @@ class SetKeys(type(QtCore.QObject)):
 
         obj=type.__call__(cls, *args, **kwargs)
         obj.listener=Listener(obj)
-        obj.setListener=
         return obj
