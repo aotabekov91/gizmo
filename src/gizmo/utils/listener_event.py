@@ -23,9 +23,10 @@ class EventListener(QtCore.QObject):
             app=None, 
             obj=None, 
             config={},
+            leader='',
             wait_run=10,
             mode_keys={},
-            wait_time=100,
+            wait_time=200,
             listen_leader=None, 
             command_leader=None,
             mode_on_exit='normal',
@@ -39,6 +40,7 @@ class EventListener(QtCore.QObject):
         self.app=app
         self.commands={}
         self.config=config
+        self.leader=leader
         self.pressed_text=''
         self.keys_pressed=[]
         self.listening=False
@@ -204,16 +206,17 @@ class EventListener(QtCore.QObject):
 
         m, p = [], []
 
-        for (k, text), f in self.commands.items():
-            if key==k[:len(key)]: 
-                if not digit is None:
-                    t=getattr(f, '__wrapped__', f)
-                    c1='digit' in signature(t).parameters
-                    if not c1: continue
-                if key==k: 
-                    m+=[f]
-                elif key==k[:len(key)]: 
-                    p+=[f]
+        for v, f in self.commands.items():
+            for (k, text) in v:
+                if key==k[:len(key)]: 
+                    if not digit is None:
+                        t=getattr(f, '__wrapped__', f)
+                        c1='digit' in signature(t).parameters
+                        if not c1: continue
+                    if key==k: 
+                        m+=[f]
+                    elif key==k[:len(key)]: 
+                        p+=[f]
         return m, p
 
     def runMatches(self, matches, partial, key, digit):
@@ -264,8 +267,7 @@ class EventListener(QtCore.QObject):
             mode_keys=getattr(obj, 'mode_keys', {})
             name=getattr(self.obj, 'name', None)
             prefix=mode_keys.get(name, '')
-            k=f'{prefix}{key}'
-            match=self.parseKey(k)
+            match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 
     def savePlugKeys(self):
@@ -279,7 +281,7 @@ class EventListener(QtCore.QObject):
                 if own_m or any_m or in_m:
                     self.setKey(plug, m)
 
-    def parseKey(self, key):
+    def parseKey(self, key, prefix=''):
 
         mapping={
                 ',': 'Comma', 
@@ -306,42 +308,59 @@ class EventListener(QtCore.QObject):
             unit+=[getattr(QtCore.Qt, f"Key_{k}")]
             return unit
 
+        def parse(key):
+
+            parsed=[]
+            p=r'(?P<group>(<[acAC]-.>)*)(?P<tail>([^<]*))'
+            match=re.match(p, key)
+            groups=match.group('group')
+            if groups:
+                groups=re.findall('<([^>]*)>', groups)
+                for g in groups:
+                    unit=[]
+                    t=g.split('-', 1)
+                    m, l = t[0], t[1]
+                    if m in 'cC':
+                        cm=getattr(QtCore.Qt,'ControlModifier')
+                        unit+=[cm]
+                    elif m in 'aA':
+                        am=getattr(QtCore.Qt,'AltModifier')
+                        unit+=[am]
+                    unit+=parseLetter(l)
+                    parsed+=[tuple(unit)]
+            tails=match.group('tail')
+            if tails:
+                for t in list(tails):
+                    unit=parseLetter(t)
+                    parsed+=[tuple(unit)]
+            return (tuple(parsed), key)
+
         parsed=[]
         if not key: return parsed 
-        p=r'(?P<group>(<[acAC]-.>)*)(?P<tail>([^<]*))'
-        match=re.match(p, key)
-        groups=match.group('group')
-        if groups:
-            groups=re.findall('<([^>]*)>', groups)
-            for g in groups:
-                unit=[]
-                t=g.split('-', 1)
-                m, l = t[0], t[1]
-                if m in 'cC':
-                    unit+=[getattr(QtCore.Qt,'ControlModifier')]
-                elif m in 'aA':
-                    unit+=[getattr(QtCore.Qt,'AltModifier')]
-                unit+=parseLetter(l)
-                parsed+=[tuple(unit)]
-        tails=match.group('tail')
-        if tails:
-            for t in list(tails):
-                unit=parseLetter(t)
-                parsed+=[tuple(unit)]
-        return (tuple(parsed), key)
-    
+        if type(key)==str: key=[key]
+        for k in key: 
+            k=f"{prefix}{k}"
+            k=k.replace('<leader>', self.leader)
+            parsed+=[parse(k)]
+        return tuple(parsed)
+
     def checkLeader(self, event, kind='listen_leader'):
 
         text, pressed=self.getPressed(event)
+        check_val=[]
         if kind=='listen_leader':
             if not self.listen_leader:
                 return False
-            check_val, key=self.listen_leader
+            for (v, k) in self.listen_leader:
+                key=k
+                check_val+=[v]
         elif kind=='command_leader':
             if not self.command_leader:
                 return False
-            check_val, key=self.command_leader
-        if (pressed, )==check_val: 
+            for (v, k) in self.listen_leader:
+                key=k
+                check_val+=[v]
+        if (pressed, ) in check_val: 
             self.keysChanged.emit(key)
             return True
         else:

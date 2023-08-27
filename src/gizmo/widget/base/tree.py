@@ -68,17 +68,19 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 index=m.mapToSource(self.currentIndex())
                 return m.itemFromIndex(index)
 
-    @register('k')
+    @register(['k', 'r'])
     def moveUp(self, digit=1):
 
         if self.currentIndex(): 
-            for d in range(digit): self.customMove('MoveUp')
+            for d in range(digit): 
+                self.customMove('MoveUp')
 
     @register('j')
     def moveDown(self, digit=1):
 
         if self.currentIndex(): 
-            for d in range(digit): self.customMove('MoveDown')
+            for d in range(digit): 
+                self.customMove('MoveDown')
 
     @register('l')
     def expand(self, index=None):
@@ -86,23 +88,14 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if index: self.setCurrentIndex(index)
         super().expand(self.currentIndex())
 
-    @register('L')
-    def expandAllInside(self, item=None):
-
-        raise
-        if item is None: item=self.currentItem()
-        if item is None: return
-        super().expand(item.index())
-        for i in range(item.rowCount()):
-            self.expandAllInside(item.child(i))
-
     @register('e')
     def expandAll(self, index=None):
 
         if index is None:
             super().expandAll()
         elif index.isValid():
-            if not self.isExpanded(index): self.expand(index)
+            if not self.isExpanded(index): 
+                self.expand(index)
             for row in range(self.model().rowCount()):
                 self.expandAll(index.child(row,0))
 
@@ -208,13 +201,13 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if parent.isValid(): self.setCurrentIndex(parent)
 
     @register('sd')
-    def gotoSiglingDown(self, digit=1):
+    def gotoSiblingDown(self, digit=1):
 
         for d in range(digit):
             self.gotoSibling(kind='down')
 
     @register('su')
-    def gotoSiglingUp(self, digit=1):
+    def gotoSiblingUp(self, digit=1):
 
         for d in range(digit):
             self.gotoSibling(kind='up')

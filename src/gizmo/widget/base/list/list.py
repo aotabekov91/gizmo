@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
+from gizmo.utils import register
 
 from .items import IconUpDown
 
@@ -215,6 +216,26 @@ class ListWidget(QtWidgets.QListWidget):
 
         self.setCurrentRow(0)
         self.adjustSize()
+
+    @register('j')
+    def moveDown(self): 
+
+        self.move(crement=1)
+
+    @register('k')
+    def moveUp(self): 
+
+        self.move(crement=-1)
+
+    @register('<c-[>')
+    def wantedHide(self): 
+
+        self.hideWanted.emit()
+
+    @register('<c-m>')
+    def pressedReturn(self): 
+
+        self.returnPressed.emit()
 
     def keyPressEvent(self, event):
 

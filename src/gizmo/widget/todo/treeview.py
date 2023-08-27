@@ -1,18 +1,22 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets, QtGui
 
-class EmptyIconProvider(QFileIconProvider):
-    def icon(self, _):
-        return QIcon()
+class EmptyIconProvider(QtWidgets.QFileIconProvider):
 
-class TreeView(QTreeView):
+    def icon(self, _): return QtGui.QIcon()
 
-    keyPressEventOccurred=pyqtSignal(object)
-    returnPressed=pyqtSignal(object, object)
-    itemChanged=pyqtSignal(QStandardItem)
+class TreeView(QtWidgets.QTreeView):
 
-    def __init__(self, app, parent, location=None, name=None, model=None):
+    keyPressEventOccurred=QtCore.pyqtSignal(object)
+    returnPressed=QtCore.pyqtSignal(object, object)
+    itemChanged=QtCore.pyqtSignal(QStandardItem)
+
+    def __init__(self, 
+                 app, 
+                 parent, 
+                 location=None, 
+                 name=None, 
+                 model=None):
+
         super().__init__(app.window)
         self.app=app
         self.name=name
@@ -21,9 +25,12 @@ class TreeView(QTreeView):
         self.location=location
 
         self.header().hide()
-        self.app.window.docks.setTabLocation(self, self.location, self.name)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.app.window.docks.setTabLocation(
+                self, self.location, self.name)
+        self.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
 
     def deactivate(self):
         self.app.window.docks.deactivateTabWidget(self)
@@ -35,29 +42,35 @@ class TreeView(QTreeView):
     def currentItem(self):
         if self.model() is None: return None
 
-        if type(self.model())==QStandardItemModel:
-            return self.model().itemFromIndex(self.currentIndex())
+        if type(self.model())==QtGui.QStandardItemModel:
+            return self.model().itemFromIndex(
+                    self.currentIndex())
         elif hasattr(self.model(), 'itemFromIndex'):
-            return self.model().itemFromIndex(self.currentIndex())
-        elif type(self.model())==QSortFilterProxyModel:
+            return self.model().itemFromIndex(
+                    self.currentIndex())
+        elif type(self.model())==QtCore.QSortFilterProxyModel:
             index=self.model().mapToSource(self.currentIndex())
             return self.m_model.itemFromIndex(index)
 
     def moveUp(self):
+
         if self.currentIndex() is None: return
         self.customMove('MoveUp')
 
     def moveDown(self):
+
         if self.currentIndex() is None: return
         self.customMove('MoveDown')
 
     def expand(self, index=None):
+
         if index is None:
             if self.currentIndex() is None: return
             index=self.currentIndex()
         super().expand(self.currentIndex())
 
     def expandAllInside(self, item=None):
+
         if item is None: item=self.currentItem()
         if item is None: return
         super().expand(item.index())
