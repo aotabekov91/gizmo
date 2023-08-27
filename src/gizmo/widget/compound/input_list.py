@@ -1,38 +1,34 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets, QtCore
+
+from gizmo.utils import SetKeys, register
 
 from ..base import IconUpDown, ListWidget, InputLabelWidget
 
-class InputList (QWidget):
+class InputList (QtWidgets.QWidget, metaclass=SetKeys):
 
-    hideWanted=pyqtSignal()
-    returnPressed=pyqtSignal()
-
-    inputTextChanged=pyqtSignal()
-    inputReturnPressed=pyqtSignal()
-    listReturnPressed=pyqtSignal()
+    hideWanted=QtCore.pyqtSignal()
+    returnPressed=QtCore.pyqtSignal()
+    inputTextChanged=QtCore.pyqtSignal()
+    inputReturnPressed=QtCore.pyqtSignal()
+    listReturnPressed=QtCore.pyqtSignal()
 
     def __init__(self, 
-             list_class=ListWidget,
+                 list_class=ListWidget,
                  input_class=InputLabelWidget, 
                  **kwargs): 
 
-        super(InputList, self).__init__(objectName='mainWidget')
+        super(InputList, self).__init__(
+                objectName='mainWidget')
 
         self.setInputWidget(input_class)
         self.setListWidget(list_class, **kwargs)
-
         self.input_focused=True
-
         self.setUI()
-
         self.setMinimumSize(400, 600)
 
     def setListWidget(self, list_class, **kwargs):
 
         if list_class:
-
             self.list=list_class(**kwargs)
             self.list.hideWanted.connect(self.hideWanted)
             self.list.openWanted.connect(self.list.focusItem)
@@ -66,7 +62,7 @@ class InputList (QWidget):
                 }
                 '''
         
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
         layout.setSpacing(5)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -102,21 +98,31 @@ class InputList (QWidget):
         else:
             self.list.setFocus()
 
-    def keyPressEvent(self, event):
+    @register(['<c-j>', '<c-n>'])
+    def moveListDown(self):
 
-        if event.modifiers()==Qt.ControlModifier:  
-            if event.key() in [Qt.Key_J, Qt.Key_N]:
-                self.list.move(crement=1)
-            elif event.key() in [Qt.Key_K, Qt.Key_P]:
-                # TODO :bug: Key_K does not work
-                self.list.move(crement=-1)
-            elif event.key() == Qt.Key_L:
-                self.focusItem()
-            elif event.key() in [Qt.Key_I]:
-                self.toggleFocus()
-        else:
-            super().keyPressEvent(event)
+        self.list.move(crement=1)
 
+    @register(['<c-k>', '<c-p>'])
+    def moveListUp(self):
+
+        self.list.move(crement=-1)
+
+    # def keyPressEvent(self, event):
+    #     if event.modifiers()==QtCore.Qt.ControlModifier:  
+    #         if event.key() in [QtCore.Qt.Key_J, QtCore.Qt.Key_N]:
+    #             self.list.move(crement=1)
+    #         elif event.key() in [QtCore.Qt.Key_K, QtCore.Qt.Key_P]:
+    #             # TODO :bug: Key_K does not work
+    #             self.list.move(crement=-1)
+    #         elif event.key() == QtCore.Qt.Key_L:
+    #             self.focusItem()
+    #         elif event.key() in [QtCore.Qt.Key_I]:
+    #             self.toggleFocus()
+    #     else:
+    #         super().keyPressEvent(event)
+
+    @register('<c-i>')
     def toggleFocus(self):
 
         if self.input_focused:
@@ -126,6 +132,7 @@ class InputList (QWidget):
             self.input_focused=True
             self.input.setFocus()
 
+    @register('<c-l>')
     def focusItem(self):
 
         item=self.list.currentItem()
@@ -133,6 +140,7 @@ class InputList (QWidget):
 
     def clear(self): self.input.clear()
 
+    @register('<c-I>')
     def toggleInput(self):
 
         if self.input.isVisible():
@@ -151,14 +159,10 @@ class InputList (QWidget):
 
         width=self.size().width()
         height=self.size().height()
-
         if self.parent(): 
             width=self.parent().size().width()
             height=self.parent().size().height()
-
         height=height-self.input.size().height()-5
-
         self.input.setFixedWidth(width)
         self.list.adjustSize(width, height)
-
         super().adjustSize()

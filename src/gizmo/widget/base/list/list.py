@@ -1,9 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
-from gizmo.utils import register
+from gizmo.utils import SetKeys, register
 
 from .items import IconUpDown
 
-class ListWidget(QtWidgets.QListWidget):
+class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
 
     hideWanted=QtCore.pyqtSignal()
     openWanted=QtCore.pyqtSignal()
@@ -19,16 +19,15 @@ class ListWidget(QtWidgets.QListWidget):
                  field_rematch=lambda x: x,
                  text_non_found='No match found',
                  set_base_style=True,
+                 item_position='PositionAtCenter',
                  objectName='List',
                  **kwargs):
 
         super(ListWidget, self).__init__(
                 objectName=objectName,
                 **kwargs)
-
         self.dlist = []
         self.flist = []
-
         self.listener=None
         self.item_widget=item_widget
         self.exact_match=exact_match
@@ -36,9 +35,9 @@ class ListWidget(QtWidgets.QListWidget):
         self.check_fields=check_fields
         self.field_rematch=field_rematch
         self.enable_filter=enable_filter
+        self.item_position=item_position
         self.text_non_found=text_non_found
         self.set_base_style=set_base_style
-
         self.setUI()
 
     def setBaseStyleSheet(self):
@@ -67,7 +66,6 @@ class ListWidget(QtWidgets.QListWidget):
     def setUI(self):
 
         self.setSpacing(2)
-
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(
@@ -76,7 +74,6 @@ class ListWidget(QtWidgets.QListWidget):
                 QtCore.Qt.FramelessWindowHint)
         self.setAttribute(
                 QtCore.Qt.WA_TranslucentBackground)
-
         if self.set_base_style:
             self.setBaseStyleSheet()
 
@@ -96,11 +93,12 @@ class ListWidget(QtWidgets.QListWidget):
                 set_base_style=self.set_base_style)
         if self.listener: 
             widget.installEventFilter(self.listener)
-
         super().addItem(widget.listItem())
         super().setItemWidget(widget.listItem(), widget)
 
-    def widget(self): return self.item_widget(self)
+    def widget(self): 
+
+        return self.item_widget(self)
 
     def move(self, crement=-1):
 
@@ -112,12 +110,12 @@ class ListWidget(QtWidgets.QListWidget):
             crow = self.count()-1
         elif crow >= self.count():
             crow = 0
-
         self.setCurrentRow(crow)
+        hint=getattr(QtWidgets.QAbstractItemView,
+                     self.item_position,
+                     'PositionAtCenter')
         self.scrollToItem(
-                self.currentItem(), 
-                hint=QtWidgets.QAbstractItemView.PositionAtCenter)
-
+                self.currentItem(), hint=hint)
         self.itemChanged.emit(self.currentItem())
 
     def sizeHint(self):
@@ -143,10 +141,8 @@ class ListWidget(QtWidgets.QListWidget):
     def setList(self, dlist, limit=30):
 
         if dlist is None: dlist=[]
-
         self.dlist=dlist
         self.flist=dlist
-
         self.addItems(dlist, limit=limit)
 
     def refresh(self, clear=False):
@@ -154,16 +150,17 @@ class ListWidget(QtWidgets.QListWidget):
         tempList=self.filterList()
         if clear: tempList=self.dataList()
         crow=self.currentRow()
-
         self.addItems(tempList)
         self.setCurrentRow(crow)
 
     def setEnableFilter(self, condition): 
+
         self.enable_filter=condition
 
     def unfilter(self): 
 
-        if self.flist!=self.dlist: self.setList(self.dlist)
+        if self.flist!=self.dlist: 
+            self.setList(self.dlist)
 
     def filter(self, text):
 
@@ -207,13 +204,11 @@ class ListWidget(QtWidgets.QListWidget):
     def addItems(self, dlist, limit=30): 
 
         self.clear()
-
         if dlist:
             for i, data in enumerate(dlist):
                 if limit and i>limit: break
                 self.addItem(data)
             self.setCurrentRow(0)
-
         self.setCurrentRow(0)
         self.adjustSize()
 
@@ -228,12 +223,12 @@ class ListWidget(QtWidgets.QListWidget):
         self.move(crement=-1)
 
     @register('<c-[>')
-    def wantedHide(self): 
+    def wantHide(self): 
 
         self.hideWanted.emit()
 
     @register('<c-m>')
-    def pressedReturn(self): 
+    def pressReturn(self): 
 
         self.returnPressed.emit()
 
