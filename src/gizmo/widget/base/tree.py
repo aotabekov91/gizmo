@@ -7,6 +7,8 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
+
+    keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
 
     itemChanged=QtCore.pyqtSignal(object)
@@ -67,16 +69,16 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 return m.itemFromIndex(index)
 
     @register('k')
-    def moveUp(self):
+    def moveUp(self, digit=1):
 
         if self.currentIndex(): 
-            self.customMove('MoveUp')
+            for d in range(digit): self.customMove('MoveUp')
 
     @register('j')
-    def moveDown(self):
+    def moveDown(self, digit=1):
 
         if self.currentIndex(): 
-            self.customMove('MoveDown')
+            for d in range(digit): self.customMove('MoveDown')
 
     @register('l')
     def expand(self, index=None):
@@ -84,14 +86,17 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if index: self.setCurrentIndex(index)
         super().expand(self.currentIndex())
 
+    @register('L')
     def expandAllInside(self, item=None):
 
+        raise
         if item is None: item=self.currentItem()
         if item is None: return
         super().expand(item.index())
         for i in range(item.rowCount()):
             self.expandAllInside(item.child(i))
 
+    @register('e')
     def expandAll(self, index=None):
 
         if index is None:
@@ -108,6 +113,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
             index=index.parent()
             self.expand(index)
 
+    @register('c')
     def collapseAll(self, index=None):
 
         if index is not None and index.isValid():
@@ -118,6 +124,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         else:
             super().collapseAll()
 
+    @register('H')
     def collapseAllInside(self, item=None):
 
         if item is None: item=self.currentItem()
@@ -132,20 +139,25 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if index is None: index=self.currentIndex()
         if index: super().collapse(index)
 
-    def rootDown(self):
+    @register('d')
+    def rootDown(self, digit=1):
 
-        index=self.currentIndex()
-        if index:
-            self.setRootIndex(index)
-            child=index.child(0,0)
-            if child.isValid(): self.setCurrentIndex(child)
+        for d in range(digit):
+            index=self.currentIndex()
+            if index:
+                self.setRootIndex(index)
+                child=index.child(0,0)
+                if child.isValid(): 
+                    self.setCurrentIndex(child)
 
-    def rootUp(self):
+    @register('u')
+    def rootUp(self, digit=1):
 
-        index=self.rootIndex()
-        if index.parent().isValid():
-            self.setRootIndex(index.parent())
-            self.setCurrentIndex(index)
+        for d in range(digit):
+            index=self.rootIndex()
+            if index.parent().isValid():
+                self.setRootIndex(index.parent())
+                self.setCurrentIndex(index)
 
     def customMove(self, direction):
 
@@ -159,13 +171,54 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         index=self.rootIndex()
         if index: self.setCurrentIndex(index.child(0, 0))
 
+    @register('G')
+    def gotoEnd(self): 
+
+        index=self.rootIndex()
+        if index: 
+            parent=index.parent()
+            last_row=index.model().rowCount(parent)-1
+            last=index.child(last_row, 0)
+            self.setCurrentIndex(last)
+
+    @register('gf')
+    def gotoFirst(self): 
+
+        index=self.currentIndex()
+        if index:
+            parent=index.parent()
+            first=parent.child(0, 0)
+            self.setCurrentIndex(first)
+
+    @register('gl')
+    def gotoLast(self): 
+
+        index=self.currentIndex()
+        if index:
+            parent=index.parent()
+            last_row=index.model().rowCount(parent)-1
+            last=parent.child(last_row, 0)
+            self.setCurrentIndex(last)
+
+    @register('gp')
     def gotoParent(self):
 
         index=self.currentIndex()
         parent=index.parent()
         if parent.isValid(): self.setCurrentIndex(parent)
 
-    @register('Ctrl+w Shift+s')
+    @register('sd')
+    def gotoSiglingDown(self, digit=1):
+
+        for d in range(digit):
+            self.gotoSibling(kind='down')
+
+    @register('su')
+    def gotoSiglingUp(self, digit=1):
+
+        for d in range(digit):
+            self.gotoSibling(kind='up')
+
     def gotoSibling(self, kind='up'):
 
         index=self.currentIndex()
@@ -178,15 +231,20 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if new.isValid(): 
             self.setCurrentIndex(new )
 
-    @register('Shift+e Ctrl+a')
-    def gotoEnd(self): 
+    def setCurrentIndex(self, index):
 
-        index=self.currentIndex()
-        if index:
-            parent=index.parent()
-            last=parent.child(
-                    index.model().rowCount(parent)-1, 0)
-            self.setCurrentIndex(last)
+        super().setCurrentIndex(index)
+        if self.model() is None: return
+        if self.currentItem() is None: return
+        self.indexChanged.emit(index)
+        self.itemChanged.emit(self.currentItem())
+
+    def event(self, event):
+
+        if event.type()==QtCore.QEvent.Enter:
+            item=self.currentItem()
+            if item: self.itemChanged.emit(item)
+        return super().event(event)
 
     # def keyPressEvent(self, event):
     #     self.keyPressEventOccurred.emit(event)
@@ -230,18 +288,3 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
     #         self.returnPressed.emit()
     #     else:
     #         super().keyPressEvent(event)
-
-    def setCurrentIndex(self, index):
-
-        super().setCurrentIndex(index)
-        if self.model() is None: return
-        if self.currentItem() is None: return
-        self.indexChanged.emit(index)
-        self.itemChanged.emit(self.currentItem())
-
-    def event(self, event):
-
-        if event.type()==QtCore.QEvent.Enter:
-            item=self.currentItem()
-            if item: self.itemChanged.emit(item)
-        return super().event(event)

@@ -8,6 +8,7 @@ class StackWidget(QtWidgets.QStackedWidget):
     focusGained=QtCore.pyqtSignal()
 
     resizeEventOccurred=QtCore.pyqtSignal()
+    keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__ (self):
@@ -63,6 +64,8 @@ class StackWidget(QtWidgets.QStackedWidget):
             widget.showWanted.connect(self.showWanted)
         if hasattr(widget, 'keyPressed'):
             widget.keyPressed.connect(self.keyPressed)
+        if hasattr(widget, 'keysChanged'):
+            widget.keysChanged.connect(self.keysChanged)
         if self.listener: 
             widget.installEventFilter(self.listener)
         return widget.sid

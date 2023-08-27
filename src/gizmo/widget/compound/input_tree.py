@@ -1,28 +1,31 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
 from ..base import TreeWidget, InputLabelWidget
 
-class InputTree (QWidget):
+class InputTree (QtWidgets.QWidget):
 
-    hideWanted=pyqtSignal()
-    returnPressed=pyqtSignal()
-    inputTextChanged=pyqtSignal()
-    inputReturnPressed=pyqtSignal()
+    hideWanted=QtCore.pyqtSignal()
+    returnPressed=QtCore.pyqtSignal()
+    inputTextChanged=QtCore.pyqtSignal()
+    inputReturnPressed=QtCore.pyqtSignal()
+
+    keysChanged=QtCore.pyqtSignal(str)
+    keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__(self): 
 
         super(InputTree, self).__init__()
-
         layout, style_sheet=self.setUI()
-
         self.setLayout(layout)
         self.setStyleSheet(style_sheet)
-
         self.setMinimumSize(400, 600)
-
         self.input.hide()
+        self.setup()
+
+    def setup(self):
+
+        self.tree.keyPressed.connect(self.keyPressed)
+        self.tree.keysChanged.connect(self.keysChanged)
 
     def setUI(self):
 
@@ -46,7 +49,7 @@ class InputTree (QWidget):
 
         self.tree.hideWanted.connect(self.hideWanted)
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.setSpacing(2)
         layout.setContentsMargins(0, 0, 0, 0)
 
@@ -73,9 +76,10 @@ class InputTree (QWidget):
 
     def keyPressEvent(self, event):
 
-        if event.modifiers() and  event.key() in [Qt.Key_BracketLeft]:
-            self.hideWanted.emit()
-        elif event.modifiers() and  event.key() in [Qt.Key_I]:
-            self.toggleInput()
+        if event.modifiers():
+            if event.key() in [QtCore.Qt.Key_BracketLeft]:
+                self.hideWanted.emit()
+            elif event.key() in [QtCore.Qt.Key_I]:
+                self.toggleInput()
         else:
             super().keyPressEvent(event)
