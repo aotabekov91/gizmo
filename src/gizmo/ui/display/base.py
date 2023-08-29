@@ -10,6 +10,8 @@ class Display(QtWidgets.QSplitter):
     itemChanged = QtCore.pyqtSignal(object, object)
     itemPainted = QtCore.pyqtSignal(
             object, object, object, object, object)
+    positionChanged = QtCore.pyqtSignal(
+            object, object, object, object)
 
     itemKeyPressOccured=QtCore.pyqtSignal(
             [object, object, object])
@@ -108,8 +110,8 @@ class Display(QtWidgets.QSplitter):
             self.show()
 
         view.show()
-
-        if focus: view.setFocus()
+        if focus: 
+            view.setFocus()
 
     def addView(self, view):
 
@@ -157,10 +159,13 @@ class Display(QtWidgets.QSplitter):
     def open(self, model=None, how='reset', focus=True):
 
         if how=='rest':
-            if self.view and self.view.model()==model: return
+            if self.view and self.view.model()==model: 
+                return
 
         view=self.createView(model)
-        if view: self.setView(view, how, focus)
+        if view: 
+            self.setView(view, how, focus)
+            self.viewCreated.emit(view)
 
     def createView(self, model):
 
@@ -170,7 +175,6 @@ class Display(QtWidgets.QSplitter):
             view=self.view_class(self.app)
             view.setModel(model)
             self.views[self.count]=view
-            self.viewCreated.emit(view)
 
             return view
 

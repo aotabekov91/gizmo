@@ -6,21 +6,31 @@ from ..configure import Configure
 class View(QtWidgets.QGraphicsView):
 
     resized=QtCore.pyqtSignal(object, object)
-
     modelModified = QtCore.pyqtSignal(object)
     layoutModeChanged = QtCore.pyqtSignal(object)
 
-    selection=QtCore.pyqtSignal(object, object)
-    itemChanged = QtCore.pyqtSignal(object, object)
-    itemPainted = QtCore.pyqtSignal(object, object, object, object, object)
+    selection=QtCore.pyqtSignal(
+            object, object)
+    itemChanged = QtCore.pyqtSignal(
+            object, object)
+    itemPainted = QtCore.pyqtSignal(
+            object, object, object, object, object)
+    positionChanged = QtCore.pyqtSignal(
+            object, object, object, object)
 
-    keyPressOccurred=QtCore.pyqtSignal([object, object])
+    keyPressOccurred=QtCore.pyqtSignal(
+            [object, object])
 
-    hoverMoveOccured = QtCore.pyqtSignal([object, object])
-    mouseMoveOccured = QtCore.pyqtSignal([object, object])
-    mousePressOccured = QtCore.pyqtSignal([object, object])
-    mouseReleaseOccured = QtCore.pyqtSignal([object, object])
-    mouseDoubleClickOccured = QtCore.pyqtSignal([object, object])
+    hoverMoveOccured = QtCore.pyqtSignal(
+            [object, object])
+    mouseMoveOccured = QtCore.pyqtSignal(
+            [object, object])
+    mousePressOccured = QtCore.pyqtSignal(
+            [object, object])
+    mouseReleaseOccured = QtCore.pyqtSignal(
+            [object, object])
+    mouseDoubleClickOccured = QtCore.pyqtSignal(
+            [object, object])
 
     itemHoverMoveOccured = QtCore.pyqtSignal(
             [object, object, object])
@@ -111,32 +121,37 @@ class View(QtWidgets.QGraphicsView):
 
     def connect(self):
 
+        display=self.app.window.main.display
+
         self.mouseDoubleClickOccured.connect(
-                self.app.window.main.display.viewMouseDoubleClickOccured)
+                display.viewMouseDoubleClickOccured)
         self.mouseReleaseOccured.connect(
-                self.app.window.main.display.viewMouseReleaseOccured)
+                display.viewMouseReleaseOccured)
         self.mouseMoveOccured.connect(
-                self.app.window.main.display.viewMouseMoveOccured)
+                display.viewMouseMoveOccured)
         self.mousePressOccured.connect(
-                self.app.window.main.display.viewMousePressOccured)
+                display.viewMousePressOccured)
         self.hoverMoveOccured.connect(
-                self.app.window.main.display.viewHoverMoveOccured)
+                display.viewHoverMoveOccured)
 
         self.itemMouseDoubleClickOccured.connect(
-                self.app.window.main.display.itemMouseDoubleClickOccured)
+                display.itemMouseDoubleClickOccured)
         self.itemMouseReleaseOccured.connect(
-                self.app.window.main.display.itemMouseReleaseOccured)
+                display.itemMouseReleaseOccured)
         self.itemMouseMoveOccured.connect(
-                self.app.window.main.display.itemMouseMoveOccured)
+                display.itemMouseMoveOccured)
         self.itemMousePressOccured.connect(
-                self.app.window.main.display.itemMousePressOccured)
+                display.itemMousePressOccured)
         self.itemHoverMoveOccured.connect(
-                self.app.window.main.display.itemHoverMoveOccured)
+                display.itemHoverMoveOccured)
 
         self.itemChanged.connect(
-                self.app.window.main.display.itemChanged)
+            display.itemChanged)
+        self.positionChanged.connect(
+            display.positionChanged)
+
         self.itemPainted.connect(
-                self.app.window.main.display.itemPainted)
+                display.itemPainted)
 
     def resizeEvent(self, event):
 
