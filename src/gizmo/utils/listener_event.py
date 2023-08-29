@@ -163,9 +163,10 @@ class EventListener(QtCore.QObject):
         if (mdf & QtCore.Qt.ControlModifier):
             pressed+=[QtCore.Qt.ControlModifier]
             text+=['c']
-        if (mdf & QtCore.Qt.ShiftModifier):
-            pressed+=[QtCore.Qt.ShiftModifier]
         t=event.text()
+        if t.isalpha():
+            if (mdf & QtCore.Qt.ShiftModifier):
+                pressed+=[QtCore.Qt.ShiftModifier]
         text+=[t]
         if t and t.isnumeric():
             pressed+=[t]
@@ -297,6 +298,7 @@ class EventListener(QtCore.QObject):
                 '[': 'BracketLeft',
                 ']': 'BracketRight',
                 '_': 'Underscore',
+                ' ': 'Space'
                 }
 
         def parseLetter(t):
