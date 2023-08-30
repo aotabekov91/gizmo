@@ -15,10 +15,15 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
     indexChanged=QtCore.pyqtSignal(object)
     keyPressEventOccurred=QtCore.pyqtSignal(object)
 
-    def __init__(self, *args, **kwargs): 
+    def __init__(self, 
+            *args, 
+            set_base_style=True,
+            **kwargs): 
+
 
         super().__init__(*args, **kwargs)
 
+        self.set_base_style=set_base_style
         self.setHeaderHidden(True)
 
         self.setVerticalScrollBarPolicy(
@@ -28,9 +33,10 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
 
         self.setUI()
 
-    def setUI(self):
+    def setBaseStyleSheet(self):
 
         self.style_sheet = '''
+
             QTreeView{
                 border-width: 0px;
                 color: transparent;
@@ -46,13 +52,18 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 border-radius: 0px;
                 padding: 5px 5px 5px 10px;
                 }
+
             QTreeView::item:selected{
                 color: black;
                 background-color: yellow;
                 }
                 '''
-
         self.setStyleSheet(self.style_sheet)
+
+    def setUI(self):
+
+        if self.set_base_style:
+            self.setBaseStyleSheet()
 
     def currentItem(self):
 
@@ -156,6 +167,15 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
 
         action=getattr(QtWidgets.QAbstractItemView, direction)
         ind=self.moveCursor(action, QtCore.Qt.NoModifier)
+        # oind=self.currentIndex()
+        # row=oind.row()
+        # column=oind.column()
+        # if direction=='MoveUp':
+            # dx=-1
+        # else:
+            # dx=1
+        # ind=oind.parent().child(row+dx, column)
+        print(ind.row())
         self.setCurrentIndex(ind)
 
     @register('gg')

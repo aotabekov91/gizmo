@@ -266,6 +266,10 @@ class EventListener(QtCore.QObject):
         key=getattr(method, 'key')
         if key:
             mode_keys=getattr(obj, 'mode_keys', {})
+            if hasattr(obj, 'event_listener'):
+                mode_keys_l=getattr(
+                        obj.event_listener, 'mode_keys', {})
+                mode_keys.update(mode_keys_l)
             name=getattr(self.obj, 'name', None)
             prefix=mode_keys.get(name, '')
             match=self.parseKey(key, prefix=prefix)
@@ -281,6 +285,7 @@ class EventListener(QtCore.QObject):
                 in_m=self.obj.name in m.modes
                 if own_m or any_m or in_m:
                     self.setKey(plug, m)
+
 
     def parseKey(self, key, prefix=''):
 
