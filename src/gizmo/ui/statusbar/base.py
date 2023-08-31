@@ -11,7 +11,7 @@ class StatusBar(QtWidgets.QStatusBar):
     def __init__(self, window):
 
         super(StatusBar, self).__init__(
-                objectName='statusbar')
+                objectName='Statusbar')
 
         self.window=window
         self.configure=Configure(
@@ -33,7 +33,7 @@ class StatusBar(QtWidgets.QStatusBar):
         self.container.setLayout(self.container_layout)
 
         self.bottom=QtWidgets.QWidget(
-                objectName='Statusbar_bottom')
+                objectName='Bottom')
         self.bottom.setFixedHeight(20)
 
         blayout=QtWidgets.QHBoxLayout()
@@ -43,9 +43,9 @@ class StatusBar(QtWidgets.QStatusBar):
         blayout.setContentsMargins(0,0,0,0)
 
         self.mode=QtWidgets.QLabel(
-                ':', objectName='Statusbar_colon')
+                ':', objectName='Colon')
         self.edit=QtWidgets.QLineEdit(
-                objectName='Statusbar_edit')
+                objectName='Edit')
 
         blayout.addWidget(self.mode)
         blayout.addWidget(self.edit)

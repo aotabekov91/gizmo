@@ -7,10 +7,8 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
-
     keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
-
     itemChanged=QtCore.pyqtSignal(object)
     indexChanged=QtCore.pyqtSignal(object)
     keyPressEventOccurred=QtCore.pyqtSignal(object)
@@ -20,23 +18,18 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
             set_base_style=True,
             **kwargs): 
 
-
         super().__init__(*args, **kwargs)
-
         self.set_base_style=set_base_style
         self.setHeaderHidden(True)
-
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
-
         self.setUI()
 
     def setBaseStyleSheet(self):
 
         self.style_sheet = '''
-
             QTreeView{
                 border-width: 0px;
                 color: transparent;
@@ -44,7 +37,6 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 background-color: transparent; 
                 show-decoration-selected: 0;
                 }
-
             QTreeView::item{
                 color: white;
                 border-color: transparent;
@@ -52,7 +44,6 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 border-radius: 0px;
                 padding: 5px 5px 5px 10px;
                 }
-
             QTreeView::item:selected{
                 color: black;
                 background-color: yellow;
@@ -79,7 +70,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 index=m.mapToSource(self.currentIndex())
                 return m.itemFromIndex(index)
 
-    @register(['k', 'r'])
+    @register('k')
     def moveUp(self, digit=1):
 
         if self.currentIndex(): 
@@ -165,32 +156,24 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
 
     def customMove(self, direction):
 
-        action=getattr(QtWidgets.QAbstractItemView, direction)
-        ind=self.moveCursor(action, QtCore.Qt.NoModifier)
-        # oind=self.currentIndex()
-        # row=oind.row()
-        # column=oind.column()
-        # if direction=='MoveUp':
-            # dx=-1
-        # else:
-            # dx=1
-        # ind=oind.parent().child(row+dx, column)
-        print(ind.row())
-        self.setCurrentIndex(ind)
+        move=getattr(QtWidgets.QAbstractItemView, direction)
+        index=self.moveCursor(move, QtCore.Qt.NoModifier)
+        self.setCurrentIndex(index)
 
     @register('gg')
     def gotoStart(self):
 
         index=self.rootIndex()
-        if index: self.setCurrentIndex(index.child(0, 0))
+        if index: 
+            child=index.child(0, 0)
+            self.setCurrentIndex(child)
 
     @register('G')
     def gotoEnd(self): 
 
         index=self.rootIndex()
         if index: 
-            parent=index.parent()
-            last_row=index.model().rowCount(parent)-1
+            last_row=self.model().rowCount(index)-1
             last=index.child(last_row, 0)
             self.setCurrentIndex(last)
 
@@ -250,7 +233,14 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
         if self.model() is None: return
         if self.currentItem() is None: return
         self.indexChanged.emit(index)
+
         self.itemChanged.emit(self.currentItem())
+        self.selectionModel().select(
+                index, QtCore.QItemSelectionModel.Current)
+        if hasattr(self.model(), 'itemChanged'):
+            self.model().itemChanged.emit(
+                    self.currentItem()
+                    )
 
     def event(self, event):
 

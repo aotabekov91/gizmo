@@ -107,7 +107,6 @@ class StackWindow(QtWidgets.QMainWindow):
                 view_class)
 
         self.add(self.main, 'main', main=True)
-        # self.setStyleSheet(stl)
 
         self.docks=Docks(self)
         self.bar=StatusBar(self)

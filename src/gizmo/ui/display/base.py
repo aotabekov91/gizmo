@@ -26,7 +26,8 @@ class Display(QtWidgets.QSplitter):
     itemMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object, object])
 
-    viewSelection=QtCore.pyqtSignal([object, object])
+    viewSelection=QtCore.pyqtSignal(
+            [object, object])
     viewKeyPressOccurred=QtCore.pyqtSignal(
             [object, object])
     viewHoverMoveOccured=QtCore.pyqtSignal(
@@ -48,22 +49,18 @@ class Display(QtWidgets.QSplitter):
         super().__init__(
                 QtCore.Qt.Vertical,
                 parent=window)
-
         self.app=app
         self.win=window
         self.view_class=view_class
-
         self.count=-1
         self.views={}
         self.view=None
         self.cursor_visible=True
-
         self.configure=Configure(
                 app=app, 
                 name='Display', 
                 parent=self, 
                 mode_keys={'command': 'w'})
-
         self.setUI()
         self.app.installEventFilter(self)
 
@@ -88,7 +85,9 @@ class Display(QtWidgets.QSplitter):
         self.m_hlayout.setContentsMargins(0,0,0,0)
         self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
 
-    def setViewClass(self, view_class): self.view_class=view_class
+    def setViewClass(self, view_class): 
+
+        self.view_class=view_class
 
     def clear(self):
 
@@ -100,7 +99,6 @@ class Display(QtWidgets.QSplitter):
     def setView(self, view, how=None, focus=True):
 
         self.setCurrentView(view)
-
         if how=='reset':
             self.clear()
             self.m_hlayout.addWidget(view)
@@ -108,7 +106,6 @@ class Display(QtWidgets.QSplitter):
         elif how=='below':
             self.m_hlayout.addWidget(view)
             self.show()
-
         view.show()
         if focus: 
             view.setFocus()
@@ -158,7 +155,7 @@ class Display(QtWidgets.QSplitter):
 
     def open(self, model=None, how='reset', focus=True):
 
-        if how=='rest':
+        if how=='reset':
             if self.view and self.view.model()==model: 
                 return
 
@@ -205,11 +202,13 @@ class Display(QtWidgets.QSplitter):
 
     def zoomIn(self, digit=1): 
         
-        for d in range(digit): self.view.changeScale(kind='zoomIn')
+        for d in range(digit): 
+            self.view.changeScale(kind='zoomIn')
 
     def zoomOut(self, digit=1): 
         
-        for d in range(digit): self.view.changeScale(kind='zoomOut')
+        for d in range(digit): 
+            self.view.changeScale(kind='zoomOut')
 
     def adjust(self): self.view.readjust()
 
