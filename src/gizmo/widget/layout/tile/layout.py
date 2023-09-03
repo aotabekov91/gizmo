@@ -94,22 +94,6 @@ class TileLayout:
                 idx=max(0, idx-1)
             return widgets[(idx)]
 
-    # def nextWidget(self, widget):
-
-    #     widgets = list(self.root.widgets())
-    #     if widget in widgets:
-    #         idx = widgets.index(widget)
-    #         if idx + 1 < len(widgets):
-    #             return widgets[(idx + 1)]
-
-    # def previousWidget(self, widget):
-
-    #     widgets = list(self.root.widgets())
-    #     if widget in widgets:
-    #         idx = widgets.index(widget)
-    #         if idx > 0:
-    #             return widgets[(idx - 1)]
-
     def findNode(self, d):
 
         l = self.current
@@ -210,12 +194,15 @@ class TileLayout:
             node = self.current
             self.removeWidget(node.widget)
             newroot = Node()
+
             newroot.hsplit = True
             if d in ['up', 'down']:
                 newroot.hsplit = False
+
             newroot.leaves = [self.root, node]
             if d in ['left', 'up']:
                 newroot.leaves = [node, self.root]
+
             self.root.parent = newroot
             node.parent = newroot
             self.root = newroot
@@ -250,12 +237,12 @@ class TileLayout:
             if d in ['left', 'right']: 
                 cond = p.hsplit
 
-            if d in ['left', 'down']:
+            if d in ['right', 'down']:
                 cond = cond and l is p.leaves[0]
                 ratio=max(5, p.ratio - self.delta)
                 if k=='increment':
                     ratio = min(95, p.ratio + self.delta)
-            elif d in ['right', 'up']:
+            elif d in ['left', 'up']:
                 cond = cond and l is p.leaves[1]
                 ratio=min(95, p.ratio + self.delta)
                 if k=='increment':
