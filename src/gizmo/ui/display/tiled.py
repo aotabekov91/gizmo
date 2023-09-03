@@ -53,8 +53,12 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
                     view, **kwargs)
         self.show()
         view.show()
-        if focus: 
-            self.m_layout.focusWidget(view)
+        if focus: self.focusView(view)
+
+    def focusView(self, view):
+
+        self.setCurrentView(view)
+        self.m_layout.focusWidget(view)
 
     def addWidget(self, widget, hsplit=False):
 

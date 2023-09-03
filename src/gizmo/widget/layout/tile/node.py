@@ -109,6 +109,7 @@ class Node(QObject):
         self.y = y
         self.w = w
         self.h = h
+
         if len(self.leaves) > 1:
             leaves=self.leaves
             if self.hsplit:
