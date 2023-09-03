@@ -79,12 +79,6 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
             self.setCurrentView(node.widget)
         return node
 
-    def focusCurrentView(self):
-
-        super().focusCurrentView()
-    #     if self.view:
-    #         self.m_layout.focusWidget(self.view)
-
     def move(self, kind):
 
         return self.m_layout.move(kind)
@@ -93,9 +87,9 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
         return self.m_layout.flip(kind)
 
-    def resize(self, direction):
+    def resize(self, direction, kind):
 
-        return self.m_layout.resize(direction)
+        return self.m_layout.resize(direction, kind)
 
     def split(self, hsplit=False): 
 

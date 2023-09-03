@@ -240,23 +240,29 @@ class TileLayout:
             l = p
             p = l.parent
 
-    def resize(self, d):
+    def resize(self, d, k='increment'):
 
         l = self.current
         p = l.parent
         while p:
-            c = not p.hsplit
-            if d in ['left', 'right']: c = p.hsplit
-            cond = c and l is p.leaves[0]
-            delta = p.ratio + self.delta
-            ratio = min(95, delta) 
-            if d in ['left', 'up']:
-                cond = c and l is p.leaves[1]
-                delta = p.ratio - self.delta
-                ratio=max(5, delta)
+
+            cond = not p.hsplit
+            if d in ['left', 'right']: 
+                cond = p.hsplit
+
+            if d in ['left', 'down']:
+                cond = cond and l is p.leaves[0]
+                ratio=max(5, p.ratio - self.delta)
+                if k=='increment':
+                    ratio = min(95, p.ratio + self.delta)
+            elif d in ['right', 'up']:
+                cond = cond and l is p.leaves[1]
+                ratio=min(95, p.ratio + self.delta)
+                if k=='increment':
+                    ratio = max(5, p.ratio - self.delta)
             if cond:
                 p.ratio = ratio
-                self.update()
+                p.update()
                 break
             l = p
             p = l.parent
