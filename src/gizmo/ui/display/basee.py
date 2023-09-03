@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from ..configure import Configure
 
@@ -41,8 +41,12 @@ class BaseDisplay:
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
-    def setup(self, app, window, view_class):
+    def __init__(self, 
+            app, 
+            window, 
+            view_class=None):
 
+        super().__init__(parent=window)
         self.app=app
         self.win=window
         self.view_class=view_class
@@ -50,13 +54,11 @@ class BaseDisplay:
         self.views={}
         self.view=None
         self.cursor_visible=True
-        
         self.configure=Configure(
-                app=self.app, 
+                app=app, 
                 name='Display', 
                 parent=self, 
                 mode_keys={'command': 'w'})
-
         self.setUI()
         self.app.installEventFilter(self)
 
@@ -71,10 +73,10 @@ class BaseDisplay:
     def setUI(self):
 
         self.setContentsMargins(0,0,0,0)
+        self.m_hlayout=QtWidgets.QVBoxLayout(self)#.m_hsplit)
+        self.m_hlayout.setSpacing(0)
+        self.m_hlayout.setContentsMargins(0,0,0,0)
         self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.m_layout=QtWidgets.QVBoxLayout(self)#.m_hsplit)
-        self.m_layout.setSpacing(0)
-        self.m_layout.setContentsMargins(0,0,0,0)
 
     def setViewClass(self, view_class): 
 
@@ -82,8 +84,8 @@ class BaseDisplay:
 
     def clear(self):
 
-        for index in range(self.m_layout.count(),-1, -1):
-            item=self.m_layout.takeAt(index)
+        for index in range(self.m_hlayout.count(),-1, -1):
+            item=self.m_hlayout.takeAt(index)
             if item: item.widget().hide()
         self.hide()
 
@@ -92,62 +94,59 @@ class BaseDisplay:
         self.setCurrentView(view)
         if how=='reset':
             self.clear()
-            self.m_layout.addWidget(view)
+            self.m_hlayout.addWidget(view)
+            self.show()
         elif how=='below':
-            self.m_layout.addWidget(view)
-        self.show()
+            self.m_hlayout.addWidget(view)
+            self.show()
         view.show()
         if focus: 
             view.setFocus()
 
     def addView(self, view):
 
-        self.m_layout.addWidget(view)
+        self.m_hlayout.addWidget(view)
 
     def focus(self, increment=1):
 
-        if self.m_layout.count()<2:
+        if self.m_hlayout.count()<2:
             view=self.currentView()
             if view: view.setFocus()
         else:
             currentView=self.currentView()
             index=self.indexOf(currentView)
             index+=increment
-            if index>=self.m_layout.count():
+            if index>=self.m_hlayout.count():
                 index=0
             elif index<0:
-                index=self.m_layout.count()-1
+                index=self.m_hlayout.count()-1
             view=self.widget(index)
             self.setCurrentView(view)
 
     def closeView(self, view=None, vid=None):
 
-        if not view:
+        if view is None:
             view=self.currentView()
-        if not vid and view:
+        if vid is None and view:
             vid=view.id()
         index=None
-        for f in range(self.m_layout.count()):
-            item=self.m_layout.itemAt(f)
+        for f in range(self.m_hlayout.count()):
+            item=self.m_hlayout.itemAt(f)
             if item and item.widget().id()==vid:
                 view=item.widget()
                 index=f
                 break
         if not index is None:
-            self.m_layout.removeWidget(view)
+            self.m_hlayout.removeWidget(view)
             view.close()
             index-=1
             if index<0: index=0
-            if self.m_layout.count()>0:
+            if self.m_hlayout.count()>0:
                 view=self.widget(index)
                 self.setCurrentView(view)
                 self.focusCurrentView()
 
-    def open(self, 
-             model=None, 
-             how='reset', 
-             focus=True,
-             **kwargs):
+    def open(self, model=None, how='reset', focus=True):
 
         if how=='reset':
             if self.view and self.view.model()==model: 
@@ -155,7 +154,7 @@ class BaseDisplay:
 
         view=self.createView(model)
         if view: 
-            self.setView(view, how, focus, **kwargs)
+            self.setView(view, how, focus)
             self.viewCreated.emit(view)
 
     def createView(self, model):
@@ -223,9 +222,9 @@ class BaseDisplay:
         self.cursor_visible=not self.cursor_visible
         self.app.setOverrideCursor(cursor)
 
-    def focusUp(self): self.focus(-1)
+    def focusUpView(self): self.focus(-1)
 
-    def focusDown(self): self.focus(+1)
+    def focusDownView(self): self.focus(+1)
 
     def focusCurrentView(self): 
 
@@ -242,6 +241,9 @@ class BaseDisplay:
     def activate(self):
 
         self.activated=True
+        # statusbar=self.app.window.main.statusBar()
+        # statusbar.details.setText(self.configure.name)
+        # statusbar.show()
         self.show()
         self.setFocus()
 

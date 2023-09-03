@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 from gizmo.widget import StackWidget
 
@@ -7,6 +7,8 @@ from .main import MainWindow
 from ..statusbar import StatusBar
 
 class StackWindow(QtWidgets.QMainWindow):
+
+    windowResized=QtCore.pyqtSignal()
 
     def __init__(self, 
             app, 
@@ -125,3 +127,8 @@ class StackWindow(QtWidgets.QMainWindow):
 
         super().show()
         self.stack.show(*args, **kwargs)
+
+    def resizeEvent(self, event):
+
+        super().resizeEvent(event)
+        self.windowResized.emit()

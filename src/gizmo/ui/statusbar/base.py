@@ -43,7 +43,7 @@ class StatusBar(QtWidgets.QStatusBar):
         blayout.setContentsMargins(0,0,0,0)
 
         self.mode=QtWidgets.QLabel(
-                ':', objectName='Colon')
+                ':', objectName='Mode')
         self.edit=QtWidgets.QLineEdit(
                 objectName='Edit')
 

@@ -5,6 +5,7 @@ from ..configure import Configure
 
 class MainWindow(QtWidgets.QMainWindow):
 
+    resized=QtCore.pyqtSignal()
     viewCreated=QtCore.pyqtSignal(object)
     
     def __init__(self, 
@@ -65,3 +66,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         data=self.app.buffer.load(filePath)
         self.display.open(data, how, focus)
+
+    def resizeEvent(self, event):
+
+        super().resizeEvent(event)
+        self.resized.emit()
