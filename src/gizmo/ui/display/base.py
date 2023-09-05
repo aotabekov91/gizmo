@@ -5,7 +5,7 @@ from ..configure import Configure
 class BaseDisplay:
 
     viewCreated=QtCore.pyqtSignal(object)
-    viewChanged=QtCore.pyqtSignal(object)
+    viewChanged=QtCore.pyqtSignal(object, object)
 
     itemChanged = QtCore.pyqtSignal(object, object)
     itemPainted = QtCore.pyqtSignal(
@@ -49,6 +49,7 @@ class BaseDisplay:
         self.count=-1
         self.views={}
         self.view=None
+        self.prev=None
         self.cursor_visible=True
         
         self.configure=Configure(
@@ -174,9 +175,10 @@ class BaseDisplay:
     def setCurrentView(self, view):
 
         if view!=self.view: 
+            self.prev=self.view
             self.view=view
             self.focusCurrentView()
-            self.viewChanged.emit(self.view)
+            self.viewChanged.emit(self.view, self.prev)
 
     def incrementUp(self, digit=1): 
 

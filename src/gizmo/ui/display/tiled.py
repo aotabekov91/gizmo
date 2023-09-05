@@ -9,16 +9,20 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
     def __init__(self, 
                  app,
                  window,
-                 view_class=None):
+                 view_class=None,
+                 objectName='Display',
+                 ):
 
         super().__init__(parent=window)
         self.setup(app, window, view_class)
-        window.resized.connect(self.m_layout.update)
+        window.resized.connect(
+                self.m_layout.update)
 
     def setUI(self):
 
         self.setContentsMargins(0,0,0,0)
-        self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
+        self.setContextMenuPolicy(
+                QtCore.Qt.NoContextMenu)
         self.m_layout = TileLayout(self)
 
     def clear(self):
@@ -40,7 +44,11 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
                 self.setCurrentView(cw)
                 self.focusCurrent()
 
-    def setView(self, view, how=None, focus=True, **kwargs):
+    def setView(self, 
+                view, 
+                how=None, 
+                focus=True, 
+                **kwargs):
 
         self.setCurrentView(view)
         if how=='reset':

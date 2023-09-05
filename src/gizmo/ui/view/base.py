@@ -8,6 +8,7 @@ class View(QtWidgets.QGraphicsView):
     resized=QtCore.pyqtSignal(object, object)
     modelModified = QtCore.pyqtSignal(object)
     layoutModeChanged = QtCore.pyqtSignal(object)
+    focusGained=QtCore.pyqtSignal(object)
 
     selection=QtCore.pyqtSignal(
             object, object)
@@ -68,7 +69,6 @@ class View(QtWidgets.QGraphicsView):
                 name='View', 
                 parent=self)
         self.s_settings=self.configure.getSettings()
-
         self.setup(scene_class, layout)
         self.connect()
 
@@ -149,7 +149,6 @@ class View(QtWidgets.QGraphicsView):
             display.itemChanged)
         self.positionChanged.connect(
             display.positionChanged)
-
         self.itemPainted.connect(
                 display.itemPainted)
 
@@ -300,6 +299,7 @@ class View(QtWidgets.QGraphicsView):
 
         if event.type()==QtCore.QEvent.Enter:
             self.setFocus()
+            self.focusGained.emit(self)
             self.app.window.main.display.setCurrentView(self)
             self.app.plugman.set('normal')
         return super().event(event)

@@ -47,14 +47,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # Order matters
         self.setDisplay(display_class, view_class)
 
-        stl='''
-            QWidget {
-                color: white;
-                border-color: transparent;
-                background-color: transparent;
-                }
-               ''' 
-        self.setStyleSheet(stl)
+        # stl='''
+        #     QWidget {
+        #         color: white;
+        #         border-color: transparent;
+        #         background-color: transparent;
+        #         }
+        #        ''' 
+        # self.setStyleSheet(stl)
+
         self.setAcceptDrops(True)
         self.setContentsMargins(0, 0, 0, 0)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)

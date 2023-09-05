@@ -65,7 +65,7 @@ class Display(QScrollArea):
         self.m_view=None
         self.load(item.id())
 
-    def on_viewChanged(self, view):
+    def on_viewChanged(self, view, prev):
 
         if not self.isVisible(): return
         if view is None: return

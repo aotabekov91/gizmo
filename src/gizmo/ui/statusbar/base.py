@@ -8,10 +8,13 @@ class StatusBar(QtWidgets.QStatusBar):
     toggled=QtCore.pyqtSignal(bool)
     keyPressed=QtCore.pyqtSignal(object)
 
-    def __init__(self, window):
+    def __init__(self, 
+                 window,
+                 objectName='Statusbar',
+                 ):
 
         super(StatusBar, self).__init__(
-                objectName='Statusbar')
+                objectName=objectName)
 
         self.window=window
         self.configure=Configure(

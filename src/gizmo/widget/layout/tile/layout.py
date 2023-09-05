@@ -1,8 +1,9 @@
 from .node import Node
+from ....widget import ViewContainer
 
 class TileLayout:
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
 
         self.delta=10
         self.ratio=1.6
@@ -30,13 +31,21 @@ class TileLayout:
             self.focusNode(node)
             return node
 
+    def getContainer(self, widget):
+
+        return ViewContainer(
+                widget, 
+                parent=self.parent,
+                objectName='ViewContainer',
+                )
+
     def addWidget(self, widget, hsplit=False):
 
         node = self.current
         node.hsplit=hsplit
         widget.setParent(self.parent)
         self.current = node.insert(
-                widget, 
+                self.getContainer(widget), 
                 int(self.lower_right), 
                 self.ratio)
         self.update()

@@ -10,7 +10,7 @@ class Docks(QtCore.QObject):
 
     def __init__(self, window):
 
-        super(Docks, self).__init__(window)
+        super(Docks, self).__init__()#window)
 
         self.prev=None
         self.current=None
@@ -65,8 +65,7 @@ class Docks(QtCore.QObject):
         if event.type()==QtCore.QEvent.Resize:
             self.adjustDocks()
             return True
-        else:
-            return super().eventFilter(widget, event)
+        return False
 
     def focus(self, position): 
 
