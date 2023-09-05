@@ -17,28 +17,23 @@ class StatusBar(QtWidgets.QStatusBar):
         self.configure=Configure(
                 app=window.app, 
                 parent=self)
-
         self.setUI()
 
     def setUI(self):
 
         self.container=QtWidgets.QWidget(
-                objectName='Statusbar_container')
-
-        self.container_layout=QtWidgets.QVBoxLayout()
-
+                objectName='Container')
+        self.container_layout=QtWidgets.QVBoxLayout(
+                self.container)
         self.container_layout.setSpacing(0)
         self.container_layout.setContentsMargins(0,0,0,0)
-
         self.container.setLayout(self.container_layout)
 
         self.bottom=QtWidgets.QWidget(
                 objectName='Bottom')
         self.bottom.setFixedHeight(20)
-
-        blayout=QtWidgets.QHBoxLayout()
+        blayout=QtWidgets.QHBoxLayout(self.bottom)
         self.bottom.setLayout(blayout)
-
         blayout.setSpacing(0)
         blayout.setContentsMargins(0,0,0,0)
 
