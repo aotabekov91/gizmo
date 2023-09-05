@@ -2,34 +2,22 @@ from PyQt5 import QtWidgets, QtCore
 
 class Dock(QtWidgets.QDockWidget):
 
-    def __init__(self, docks, loc):
+    def __init__(self, 
+                 docks, 
+                 loc,
+                 objectName='DockWidget',
+                 ):
 
-        super().__init__(docks.window)
+        super().__init__(
+                objectName=objectName)
 
         self.loc=loc
         self.name=loc
         self.widgets=[]
         self.docks=docks
 
-        self.setUI()
         self.createTab()
-
-    def setUI(self):
-
-        self.style_sheet = '''
-            QWidget{
-                color: white;
-                border-color: transparent; 
-                background-color: transparent; 
-                border-width: 0px;
-                padding: 0px 0px 0px 0px;
-                }
-                '''
-        self.setStyleSheet(self.style_sheet)
         self.setContentsMargins(0, 0, 0, 0)
-
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
     def createTab(self):
 
@@ -104,7 +92,11 @@ class Dock(QtWidgets.QDockWidget):
         super().installEventFilter(listener)
         self.tab.installEventFilter(listener)
 
-    def resize(self, factor=1.2, widget=None, fullscreen=False, restore=False):
+    def resize(self, 
+               factor=1.2, 
+               widget=None, 
+               fullscreen=False, 
+               restore=False):
 
         if not widget: widget=self.current()
 
@@ -112,14 +104,17 @@ class Dock(QtWidgets.QDockWidget):
             if fullscreen:
                 widget.prev_size=widget.dock.tab.size()
                 self.parent().main.hide()
-                widget.dock.tab.setFixedSize(self.parent().size())
+                widget.dock.tab.setFixedSize(
+                        self.parent().size())
                 widget.setFixedSize(self.parent().size())
             elif restore:
                 self.parent().main.show()
-                widget.dock.tab.setFixedSize(widget.prev_size)
+                widget.dock.tab.setFixedSize(
+                        widget.prev_size)
                 widget.setFixedSize(widget.prev_size)
             else:
-                w, h=widget.prev_size.width(), widget.prev_size.height()
+                w=widget.prev_size.width()
+                h=widget.prev_size.height()
                 if self.loc in ['left', 'right']:
                     size=QtCore.QSize(round(w*factor), h)
                 else:
