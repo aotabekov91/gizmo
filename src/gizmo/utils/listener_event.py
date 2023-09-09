@@ -42,11 +42,12 @@ class EventListener(QtCore.QObject):
         self.app=app
         self.methods={}
         self.commands={}
+        self.pressed=None
         self.config=config
         self.leader=leader
         self.pressed_text=''
         self.special=special
-        self.keys_pressed=[]
+        self.pressed_keys=[]
         self.listening=False
         self.wait_run=wait_run
         self.wait_time=wait_time
@@ -110,6 +111,18 @@ class EventListener(QtCore.QObject):
                 self.clearKeys)
         self.escapePressed.connect(
                 self.on_escapePressed)
+        self.setKeyMap()
+
+    def setKeyMap(self):
+
+        self.key_map={}
+        for n, v in vars(QtCore.Qt).items():
+            c1 = n.startswith('Key_')
+            c2 = n.endswith('Modifier')
+            if c1 or c2: 
+                if c1:
+                    n=n.replace('Key_', '').lower()
+                self.key_map[v]=n
 
     def on_escapePressed(self): 
 
@@ -123,14 +136,27 @@ class EventListener(QtCore.QObject):
     def clearKeys(self):
 
         self.timer.stop()
+        self.pressed=None
         self.pressed_text=''
-        self.keys_pressed=[]
+        self.pressed_keys=[]
+
+    def registerKey(self, event):
+
+        self.pressed=self.getPressed(event)
+        if self.pressed and event.text():
+            text=self.getText(self.pressed)
+            self.pressed_text+=text
+            self.pressed_keys+=[self.pressed]
+            self.keysChanged.emit(self.pressed_text)
 
     def eventFilter(self, widget, event):
 
         if event.type()!=QtCore.QEvent.KeyPress:
             return False
-        elif self.command_leader:
+
+        self.registerKey(event)
+
+        if self.command_leader:
             if hasattr(self, 'commands'):
                 c1=self.checkLeader(
                         event, 'command_leader')
@@ -147,11 +173,11 @@ class EventListener(QtCore.QObject):
 
         self.timer.stop()
         matches, partial = [], []
-        if self.registerKey(event):
+        if self.pressed:
             key, digit = self.getKeys()
-            self.keyPressed.emit(digit, key)
             matches, partial=self.getMatches(key, digit)
             self.runMatches(matches, partial, key, digit)
+
         if matches or partial: 
             return True
         else:
@@ -160,48 +186,46 @@ class EventListener(QtCore.QObject):
 
     def getPressed(self, event):
 
-        text=[]
-        pressed=[]
+        pressed = []
         mdf=event.modifiers()
         if (mdf & QtCore.Qt.AltModifier):
             pressed+=[QtCore.Qt.AltModifier]
-            text+=['a']
         if (mdf & QtCore.Qt.ControlModifier):
             pressed+=[QtCore.Qt.ControlModifier]
-            text+=['c']
-        t=event.text()
-        if t.isalpha():
+
+        text=event.text()
+        if text.isalpha():
             if (mdf & QtCore.Qt.ShiftModifier):
                 pressed+=[QtCore.Qt.ShiftModifier]
-        text+=[t]
-        if t and t.isnumeric():
-            pressed+=[t]
-        else:
-            pressed+=[event.key()]
-        if len(text)>2:
-            text='-'.join(text)
-            text=f'<{text}>'
-        else:
-            text=''.join(text)
-        return text, tuple(pressed)
+        # if text and text.isnumeric():
+            # pressed+=[text]
+        # else:
+        pressed+=[event.key()]
+        return tuple(pressed)
 
-    def registerKey(self, event):
+    def getText(self, pressed):
 
-        text, pressed=self.getPressed(event)
-        if pressed and event.text():
-            self.keys_pressed+=[pressed]
-            self.pressed_text+=text
-            self.keysChanged.emit(self.pressed_text)
-        return pressed
+        p=[]
+        shift=False
+        for i in pressed:
+            n=self.key_map[i]
+            if n == 'ControlModifier':
+                p+=['c']
+            elif n == 'ShiftModifier':
+                shift=True
+            else:
+                if shift: n=n.upper()
+                p+=[n]
+        return '-'.join(p)
 
     def getKeys(self):
 
         key, digit = [], ''
-        for i, k in enumerate(self.keys_pressed):
+        for i, k in enumerate(self.pressed_keys):
             if type(k[0])==str:
                 digit+=k[0]
             else:
-                key=self.keys_pressed[i:]
+                key=self.pressed_keys[i:]
                 break
         if digit: 
             digit=int(digit)
@@ -295,7 +319,6 @@ class EventListener(QtCore.QObject):
                     self.setKey(plug, m, fname)
         self.keysSet.emit(self.commands)
 
-
     def parseKey(self, key, prefix=''):
 
         mapping={
@@ -362,22 +385,18 @@ class EventListener(QtCore.QObject):
 
     def checkLeader(self, event, kind='listen_leader'):
 
-        text, pressed=self.getPressed(event)
         check_val=[]
         if kind=='listen_leader':
             if not self.listen_leader:
                 return False
             for (v, k) in self.listen_leader:
-                key=k
                 check_val+=[v]
         elif kind=='command_leader':
             if not self.command_leader:
                 return False
             for (v, k) in self.listen_leader:
-                key=k
                 check_val+=[v]
-        if (pressed, ) in check_val: 
-            self.keysChanged.emit(key)
+        if (self.pressed, ) in check_val: 
             return True
         else:
             return False
