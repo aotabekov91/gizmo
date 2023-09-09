@@ -1,4 +1,4 @@
-from PyQt5 import QtGui
+from PyQt6 import QtGui
 
 def setEditorTabSize(editor, tab_stop):
 
