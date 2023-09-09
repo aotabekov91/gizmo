@@ -10,7 +10,7 @@ version="0.0.1"
 description="UI items"
 dependencies=[
 	"pynvim==0.4.3",
-	"PyQt6==5.15.9",
+	"PyQt5==5.15.9",
 	"PyQtWebEngine==5.15.6",
 	]
 

@@ -1,7 +1,7 @@
 import pynvim
 import tempfile
 
-from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 from gizmo.utils import setEditorTabSize
 

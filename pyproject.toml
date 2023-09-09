@@ -8,8 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.8"
 pynvim = ">=0.4.3"
-PyQt6  = ">=6.5.1"
-PyQt6-WebEngine = ">=6.5.0"
+PyQt5  = ">=5.15.6"
+PyQtWebEngine = ">=5.15.6"
 
 [build-system]
 requires = ["poetry-core"]

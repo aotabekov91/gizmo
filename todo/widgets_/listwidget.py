@@ -1,6 +1,6 @@
-from PyQt6.QtGui import *
-from PyQt6.QtCore import *
-from PyQt6.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 from plug.widget import ListWidget as PlugListWidget
 from .components import CustomListItem, CustomListWidget
@@ -71,9 +71,9 @@ class ListWidget (PlugListWidget):
     #     print('resize')
     #     super().resizeEvent(event)
 
-# from PyQt6.QtGui import *
-# from PyQt6.QtCore import *
-# from PyQt6.QtWidgets import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import *
 
 # from .components import InputWidget
 # from .components import CustomListWidget, CustomListItem

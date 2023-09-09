@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore
 
 from ..display import Display
 from ..configure import Configure

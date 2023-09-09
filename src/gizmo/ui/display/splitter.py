@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets
+from PyQt5 import QtWidgets
 from .base import BaseDisplay
 
 class SplitterDisplay(BaseDisplay, QtWidgets.QSplitter):

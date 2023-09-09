@@ -1,4 +1,4 @@
-from PyQt6 import QtCore
+from PyQt5 import QtCore
 from .listener_event import EventListener
 
 class SetKeys(type(QtCore.QObject)):

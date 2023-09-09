@@ -1,5 +1,5 @@
 import re
-from PyQt6 import QtCore
+from PyQt5 import QtCore
 from inspect import signature
 
 class EventListener(QtCore.QObject):
