@@ -79,19 +79,22 @@ class Editor (QtWidgets.QTextEdit):
                  tab_stop = 4
                  ):
 
-        sup = super(Editor, self)
+        sup = super(Editor, 
+                    self,
+                    objectName='NVimEditor'
+                    )
         sup.__init__(parent)
 
-        self.setStyleSheet('''
-            QWidget{
-                font-size: 16px;
-                color: white;
-                border-radius: 15px;
-                border-style: outset;
-                background-color: rgba(0, 0, 0, .8); 
-                padding: 15px 15px 15px 15px;
-                }
-            ''')
+        # self.setStyleSheet('''
+        #     QWidget{
+        #         font-size: 16px;
+        #         color: white;
+        #         border-radius: 15px;
+        #         border-style: outset;
+        #         background-color: rgba(0, 0, 0, .8); 
+        #         padding: 15px 15px 15px 15px;
+        #         }
+        #     ''')
 
         self.setFont(QtGui.QFont("MS Gothic"))
         self.bar = bar

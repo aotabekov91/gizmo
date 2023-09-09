@@ -10,6 +10,7 @@ class EventListener(QtCore.QObject):
     backspacePressed=QtCore.pyqtSignal()
     carriageReturnPressed=QtCore.pyqtSignal()
 
+    keysSet=QtCore.pyqtSignal(object)
     keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
 
@@ -39,6 +40,7 @@ class EventListener(QtCore.QObject):
 
         self.obj=obj
         self.app=app
+        self.methods={}
         self.commands={}
         self.config=config
         self.leader=leader
@@ -94,7 +96,7 @@ class EventListener(QtCore.QObject):
             obj=self.app
             plugman=getattr(self.app, 'plugman', None)
             if plugman:
-                plugman.actionsRegistered.connect(
+                plugman.plugsLoaded.connect(
                         self.savePlugKeys)
         obj.installEventFilter(self)
 
@@ -150,7 +152,6 @@ class EventListener(QtCore.QObject):
             self.keyPressed.emit(digit, key)
             matches, partial=self.getMatches(key, digit)
             self.runMatches(matches, partial, key, digit)
-
         if matches or partial: 
             return True
         else:
@@ -264,9 +265,11 @@ class EventListener(QtCore.QObject):
         for f in self.obj.__dir__():
             method=getattr(self.obj, f)
             if hasattr(method, 'key'):
-                self.setKey(self.obj, method)
+                self.setKey(self.obj, method, method.name)
 
-    def setKey(self, obj, method):
+    def setKey(self, obj, method, name):
+
+        self.methods[name]=method
 
         key=getattr(method, 'key')
         if key:
@@ -289,7 +292,8 @@ class EventListener(QtCore.QObject):
                 any_m='any' in m.modes
                 in_m=self.obj.name in m.modes
                 if own_m or any_m or in_m:
-                    self.setKey(plug, m)
+                    self.setKey(plug, m, fname)
+        self.keysSet.emit(self.commands)
 
 
     def parseKey(self, key, prefix=''):

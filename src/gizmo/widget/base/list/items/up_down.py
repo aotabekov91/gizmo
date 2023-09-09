@@ -41,13 +41,14 @@ class UpDown(Item):
             if data.get('down', None):
                 self.setTextDown(str(data.get('down')))
                 color=data.get('down_color', None)
-                if color: 
-                    self.setStyleSheet(
-                            self.style_sheet + ' '.join(
-                        ['QLabel#downElement{',
-                         f'background-color: {color};',
-                         'color: black;}',
-                         ]))
+
+                # if color: 
+                #     self.setStyleSheet(
+                #             self.style_sheet + ' '.join(
+                #         ['QLabel#downElement{',
+                #          f'background-color: {color};',
+                #          'color: black;}',
+                #          ]))
 
         self.adjustSize()
 

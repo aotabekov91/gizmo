@@ -20,6 +20,7 @@ class StackWindow(QtWidgets.QMainWindow):
         self.app=app
         self.stack=StackWidget()
         self.setCentralWidget(self.stack)
+        self.centralWidget().layout().setContentsMargins(0,0,0,0)
         self.setUI(display_class, view_class)
 
     def setUI(self, display_class, view_class):

@@ -48,7 +48,7 @@ class InputBrowser(QWidget):
         self.input.setMaximumHeight(40)
         self.browser = BrowserWidget()
 
-        self.browser.setStyleSheet(self.style_sheet)
+        # self.browser.setStyleSheet(self.style_sheet)
 
         w=QWidget(objectName='browserContainer')
         layout=QHBoxLayout()
@@ -56,7 +56,7 @@ class InputBrowser(QWidget):
         layout.setContentsMargins(7,7,7,7)
         layout.addWidget(self.browser)
         w.setLayout(layout)
-        w.setStyleSheet(self.style_sheet)
+        # w.setStyleSheet(self.style_sheet)
 
         layout=QVBoxLayout()
         layout.setSpacing(15)
@@ -66,7 +66,7 @@ class InputBrowser(QWidget):
         layout.addWidget(w)
 
         self.setLayout(layout)
-        self.setStyleSheet(self.style_sheet)
+        # self.setStyleSheet(self.style_sheet)
 
         self.input.hideWanted.connect(self.hideWanted)
         self.browser.hideWanted.connect(self.hideWanted)

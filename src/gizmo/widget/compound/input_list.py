@@ -71,7 +71,7 @@ class InputList (QtWidgets.QWidget, metaclass=SetKeys):
         layout.addWidget(self.list)
 
         self.setLayout(layout)
-        self.setStyleSheet(style_sheet)
+        # self.setStyleSheet(style_sheet)
 
     def installEventFilter(self, listener):
 

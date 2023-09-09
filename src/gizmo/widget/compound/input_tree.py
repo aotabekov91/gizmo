@@ -23,8 +23,9 @@ class InputTree (QtWidgets.QWidget):
 
         layout, style_sheet=self.setUI()
         self.setLayout(layout)
-        if self.set_base_style:
-            self.setStyleSheet(style_sheet)
+
+        # if self.set_base_style:
+        #     self.setStyleSheet(style_sheet)
 
         self.setMinimumSize(400, 600)
         self.input.hide()

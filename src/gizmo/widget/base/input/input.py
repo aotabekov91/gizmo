@@ -20,6 +20,6 @@ class InputWidget(QLineEdit):
                 }
                 '''
         
-        self.setStyleSheet(self.style_sheet)
+        # self.setStyleSheet(self.style_sheet)
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)

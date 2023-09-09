@@ -26,17 +26,18 @@ class StatusBar(QtWidgets.QStatusBar):
 
         self.container=QtWidgets.QWidget(
                 objectName='Container')
+        self.container.setContentsMargins(0,0,0,0)
+
         self.container_layout=QtWidgets.QVBoxLayout(
                 self.container)
+
         self.container_layout.setSpacing(0)
         self.container_layout.setContentsMargins(0,0,0,0)
         self.container.setLayout(self.container_layout)
 
-        self.bottom=QtWidgets.QWidget(
-                objectName='Bottom')
-        self.bottom.setFixedHeight(20)
+        self.bottom=QtWidgets.QWidget(objectName='Bottom')
+
         blayout=QtWidgets.QHBoxLayout(self.bottom)
-        self.bottom.setLayout(blayout)
         blayout.setSpacing(0)
         blayout.setContentsMargins(0,0,0,0)
 
@@ -47,6 +48,7 @@ class StatusBar(QtWidgets.QStatusBar):
 
         blayout.addWidget(self.mode)
         blayout.addWidget(self.edit)
+        self.bottom.setLayout(blayout)
 
         self.container_layout.addWidget(self.bottom)
         self.addPermanentWidget(self.container, 10)

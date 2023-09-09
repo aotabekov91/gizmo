@@ -178,7 +178,8 @@ class BaseDisplay:
             self.prev=self.view
             self.view=view
             self.focusCurrentView()
-            self.viewChanged.emit(self.view, self.prev)
+            self.viewChanged.emit(
+                    self.view, self.prev)
 
     def incrementUp(self, digit=1): 
 

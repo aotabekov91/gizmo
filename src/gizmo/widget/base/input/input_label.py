@@ -45,7 +45,7 @@ class InputLabelWidget (QWidget):
         self.m_input_label.setLayout(layout)
 
         self.m_edit=InputWidget(self, objectName='label')
-        self.m_edit.setStyleSheet(self.style_sheet)
+        # self.m_edit.setStyleSheet(self.style_sheet)
 
         layout=QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
@@ -69,7 +69,7 @@ class InputLabelWidget (QWidget):
         layout.addWidget(self.m_container)
 
         self.setLayout(layout)
-        self.setStyleSheet(self.style_sheet)
+        # self.setStyleSheet(self.style_sheet)
 
         self.m_edit.textChanged.connect(self.textChanged)
         self.m_edit.returnPressed.connect(self.returnPressed)

@@ -104,13 +104,13 @@ class LeftRightEdit (Item):
             if data.get('left', None):
                 self.setTextLeft(str(data.get('left')))
                 color=data.get('left_color', None)
-                if color: 
-                    self.left.setStyleSheet(f'background-color: {color}; color: black;')
+                # if color: 
+                    # self.left.setStyleSheet(f'background-color: {color}; color: black;')
             if data.get('right', None):
                 self.setTextRight(str(data.get('right')))
                 color=data.get('left_color', None)
-                if color: 
-                    self.left.setStyleSheet(f'background-color: {color}; color: black;')
+                # if color: 
+                    # self.left.setStyleSheet(f'background-color: {color}; color: black;')
             self.adjustSize()
 
     def setFocus(self): 

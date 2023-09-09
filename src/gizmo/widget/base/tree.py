@@ -49,7 +49,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
                 background-color: yellow;
                 }
                 '''
-        self.setStyleSheet(self.style_sheet)
+        # self.setStyleSheet(self.style_sheet)
 
     def setUI(self):
 

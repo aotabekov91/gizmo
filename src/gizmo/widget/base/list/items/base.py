@@ -21,8 +21,8 @@ class Item(QtWidgets.QWidget):
 
         self.setLayout(layout)
 
-        if self.set_base_style:
-            self.setStyleSheet(style_sheet)
+        # if self.set_base_style:
+        #     self.setStyleSheet(style_sheet)
 
         self.setItem()
         self.setData(data)

@@ -34,7 +34,7 @@ class MessageWidget(QWidget):
                 }
                 '''
 
-        self.setStyleSheet(self.style_sheet)
+        # self.setStyleSheet(self.style_sheet)
 
         self.title=QLabel('title')
         self.title.setWordWrap(True)

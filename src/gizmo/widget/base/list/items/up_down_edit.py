@@ -71,9 +71,9 @@ class UpDownEdit (Item):
             if data.get('down', None): self.setTextDown(str(data.get('down')))
             down_color=data.get('down_color', None)
 
-            if down_color: 
-                down_style=self.label_style+f'color: black; background-color: {down_color};'+'}'
-                self.down.setStyleSheet(down_style)
+            # if down_color: 
+            #     down_style=self.label_style+f'color: black; background-color: {down_color};'+'}'
+            #     # self.down.setStyleSheet(down_style)
 
         self.adjustSize()
 

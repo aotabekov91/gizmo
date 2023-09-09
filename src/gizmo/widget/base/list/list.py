@@ -61,7 +61,7 @@ class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
                 border-color: red;
                 }
                 '''
-        self.setStyleSheet(style_sheet)
+        # self.setStyleSheet(style_sheet)
 
     def setUI(self):
 

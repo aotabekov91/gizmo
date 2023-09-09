@@ -33,6 +33,8 @@ class TileLayout:
 
     def getContainer(self, widget):
 
+        return widget
+        # Todo
         return ViewContainer(
                 widget, 
                 parent=self.parent,
