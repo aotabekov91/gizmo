@@ -27,7 +27,6 @@ class StatusBar(QtWidgets.QStatusBar):
         self.container=QtWidgets.QWidget(
                 objectName='Container')
         self.container.setContentsMargins(0,0,0,0)
-
         self.container_layout=QtWidgets.QVBoxLayout(
                 self.container)
 
