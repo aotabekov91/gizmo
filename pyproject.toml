@@ -2,7 +2,7 @@
 name = "gizmo"
 version = "0.0.1"
 description = "Qt UI tool"
-authors = ["AO <adhambek.otabekov.post@gmail.com>"]
+authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

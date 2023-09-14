@@ -12,6 +12,7 @@ class EventListener(QtCore.QObject):
 
     keysSet=QtCore.pyqtSignal(object)
     keysChanged=QtCore.pyqtSignal(str)
+    keyRegistered=QtCore.pyqtSignal(object)
     keyPressed=QtCore.pyqtSignal(object, object)
 
     forceDelisten=QtCore.pyqtSignal()
@@ -159,6 +160,7 @@ class EventListener(QtCore.QObject):
             self.pressed_text+=text
             self.pressed_keys+=[self.pressed]
             self.keysChanged.emit(self.pressed_text)
+        self.keyRegistered.emit(event)
 
     def eventFilter(self, widget, event):
 
