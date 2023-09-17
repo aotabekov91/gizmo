@@ -27,7 +27,7 @@ class EventListener(QtCore.QObject):
             config={},
             leader='',
             special=[],
-            wait_run=10,
+            wait_run=40,
             mode_keys={},
             wait_time=200,
             listening=True,
@@ -61,7 +61,6 @@ class EventListener(QtCore.QObject):
         self.listen_leader=self.parseKey(listen_leader)
         self.command_leader=self.parseKey(command_leader)
         self.setup()
-        print(self.obj, self.listen_leader)
 
     def listen(self):
 
@@ -203,6 +202,7 @@ class EventListener(QtCore.QObject):
             if (mdf & QtCore.Qt.ShiftModifier):
                 pressed+=[QtCore.Qt.ShiftModifier]
         pressed+=[event.key()]
+        print(pressed, text, text.isalpha())
         return tuple(pressed)
 
     def getText(self, pressed):
