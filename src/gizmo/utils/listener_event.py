@@ -107,11 +107,9 @@ class EventListener(QtCore.QObject):
                     self.obj.listenWanted)
         obj=self.obj
         if self.app: 
-            obj=self.app
-            plugman=getattr(self.app, 'plugman', None)
-            if plugman:
-                plugman.plugsLoaded.connect(
-                        self.savePlugKeys)
+            obj=self.app.qapp
+            self.app.plugman.plugsLoaded.connect(
+                    self.savePlugKeys)
         obj.installEventFilter(self)
 
     def setup(self):

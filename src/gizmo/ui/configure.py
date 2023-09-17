@@ -5,6 +5,7 @@ class Configure(Plug):
     def __init__(self, 
                  app, 
                  parent, 
+                 *args,
                  mode_keys={}, 
                  **kwargs): 
 
@@ -13,7 +14,7 @@ class Configure(Plug):
         self.mode_keys=mode_keys
         self.object.modeKey=self.modeKey
 
-        super().__init__(listen_port=False, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.setSettings()
         self.register()

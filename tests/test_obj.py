@@ -1,9 +1,9 @@
 import pytest
-from qapp.plug import PlugObj
+from qapp.plug import Plug
 
 @pytest.fixture
 def plug_obj():
-    return PlugObj()
+    return Plug()
 
 def test_initial(plug_obj):
     assert plug_obj
