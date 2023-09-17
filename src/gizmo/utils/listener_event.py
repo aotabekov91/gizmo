@@ -104,14 +104,15 @@ class EventListener(QtCore.QObject):
         if hasattr(self.obj, 'listenWanted'):
             self.listenWanted.connect(
                     self.obj.listenWanted)
+
         obj=self.obj
         if self.app: 
             obj=self.app.qapp
             self.app.plugman.plugsLoaded.connect(
                     self.savePlugKeys)
-            self.timer=self.app.event_timer
-        else:
-            self.timer=QtCore.QTimer()
+            # self.timer=self.app.event_timer
+        # else:
+            # self.timer=QtCore.QTimer()
         obj.installEventFilter(self)
 
     def toggleMode(self, mode):
@@ -125,6 +126,7 @@ class EventListener(QtCore.QObject):
 
         self.setObj()
         self.saveKeys()
+        self.timer=QtCore.QTimer()
         self.timer.timeout.connect(
                 lambda: self.executeMatch([], [], 0))
         self.backspacePressed.connect(
