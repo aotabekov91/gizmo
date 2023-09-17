@@ -54,7 +54,6 @@ class EventListener(QtCore.QObject):
         self.wait_time=wait_time
         self.listening=listening
         self.mode_keys=mode_keys
-        self.timer=QtCore.QTimer()
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
 
@@ -110,7 +109,17 @@ class EventListener(QtCore.QObject):
             obj=self.app.qapp
             self.app.plugman.plugsLoaded.connect(
                     self.savePlugKeys)
+            self.timer=self.app.event_timer
+        else:
+            self.timer=QtCore.QTimer()
         obj.installEventFilter(self)
+
+    def toggleMode(self, mode):
+
+        if mode==self.obj:
+            self.delistenWanted.emit()
+        else:
+            self.modeWanted.emit(mode)
 
     def setup(self):
 
@@ -383,11 +392,26 @@ class EventListener(QtCore.QObject):
             parsed+=[parse(k)]
         return tuple(parsed)
 
-    def checkLeader(self, event): 
+    def checkLeader(self, event):
 
-        if (self.pressed, ) in self.command_leader:
-            self.obj.toggleCommandMode()
-            return True
+        pressed=(self.pressed,)
+
+        if self.app:
+            ms=self.app.plugman.plugs.items()
+            for _, m in ms:
+                f=getattr(m, 'checkLeader', None)
+                if not f: continue 
+                if m.checkLeader(event, pressed):
+                    self.timer.stop()
+                    self.timer.timeout.disconnect()
+                    func=lambda: self.toggleMode(m)
+                    self.timer.timeout.connect(func)
+                    self.timer.start(self.wait_run)
+                    return True
+        else:
+            if pressed in self.command_leader:
+                self.obj.toggleCommandMode()
+                return True
 
     def checkSpecialCharacters(self, event):
 
