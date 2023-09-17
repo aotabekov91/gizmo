@@ -160,12 +160,10 @@ class BaseDisplay:
     def createView(self, model):
 
         if self.view_class and model:
-
             self.count+=1
             view=self.view_class(self.app)
             view.setModel(model)
             self.views[self.count]=view
-
             return view
 
     def currentView(self): return self.view
