@@ -61,7 +61,7 @@ class EventListener(QtCore.QObject):
         self.listen_leader=self.parseKey(listen_leader)
         self.command_leader=self.parseKey(command_leader)
         self.setup()
-        print(self.name, self.listen_leader)
+        print(self.obj, self.listen_leader)
 
     def listen(self):
 
