@@ -206,12 +206,12 @@ class EventListener(QtCore.QObject):
             pressed+=[QtCore.Qt.AltModifier]
         if (mdf & QtCore.Qt.ControlModifier):
             pressed+=[QtCore.Qt.ControlModifier]
-        text=event.text()
-        if text.isalpha():
-            if (mdf & QtCore.Qt.ShiftModifier):
+        if (mdf & QtCore.Qt.ShiftModifier):
+            if event.text().isalpha():
+                pressed+=[QtCore.Qt.ShiftModifier]
+            elif QtCore.Qt.ControlModifier in pressed:
                 pressed+=[QtCore.Qt.ShiftModifier]
         pressed+=[event.key()]
-        print(pressed, text, text.isalpha())
         return tuple(pressed)
 
     def getText(self, pressed):
