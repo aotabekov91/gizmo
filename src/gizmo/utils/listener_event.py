@@ -404,11 +404,12 @@ class EventListener(QtCore.QObject):
                 f=getattr(m, 'checkLeader', None)
                 if not f: continue 
                 if m.checkLeader(event, pressed):
-                    self.timer.stop()
-                    self.timer.timeout.disconnect()
-                    func=lambda: self.toggleMode(m)
-                    self.timer.timeout.connect(func)
-                    self.timer.start(self.wait_run)
+                    # self.timer.stop()
+                    # self.timer.timeout.disconnect()
+                    # func=lambda: self.toggleMode(m)
+                    # self.timer.timeout.connect(func)
+                    # self.timer.start(self.wait_run)
+                    self.toggleMode(m)
                     return True
         else:
             if pressed in self.command_leader:
