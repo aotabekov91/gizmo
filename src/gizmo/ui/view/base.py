@@ -93,18 +93,22 @@ class View(QtWidgets.QGraphicsView):
 
         self.setContentsMargins(0,0,0,0)
 
-    def setId(self, vid): self.m_id=vid
+    def setId(self, vid):
+        self.m_id=vid
 
-    def id(self): return self.m_id
+    def id(self):
+        return self.m_id
 
     def setLayout(self, layout):
 
         self.m_layout=layout
         self.layoutModeChanged.emit(self)
 
-    def selected(self): return self.m_selected
+    def selected(self):
+        return self.m_selected
 
-    def deselect(self, item=None): self.m_selected=[]
+    def deselect(self, item=None):
+        self.m_selected=[]
 
     def select(self, selections=[]): 
 
@@ -122,7 +126,6 @@ class View(QtWidgets.QGraphicsView):
     def connect(self):
 
         display=self.app.window.main.display
-
         self.mouseDoubleClickOccured.connect(
                 display.viewMouseDoubleClickOccured)
         self.mouseReleaseOccured.connect(
