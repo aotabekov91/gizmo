@@ -331,6 +331,8 @@ class EventListener(QtCore.QObject):
                 in_m=self.obj.name in m.modes
                 if own_m or any_m or in_m:
                     self.setKey(plug, m, fname)
+                    if self.obj.name=='Metadata':
+                        print(plug, m, m.modes, fname)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
