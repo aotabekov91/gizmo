@@ -194,6 +194,7 @@ class EventListener(QtCore.QObject):
             key, digit = self.getKeys()
             matches, partial=self.getMatches(key, digit)
             self.runMatches(matches, partial, key, digit)
+        print(self.obj, matches, partial)
         if matches or partial: 
             return True
         else:
