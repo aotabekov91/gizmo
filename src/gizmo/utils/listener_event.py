@@ -334,7 +334,7 @@ class EventListener(QtCore.QObject):
                 if own_m or any_m or in_m:
                     self.setKey(plug, m, fname)
                     if self.app and self.obj.name=='Metadata':
-                        print(plug, m, fname)
+                        print(plug, m.modes, fname)
         if self.app and self.obj.name=='Metadata':
             print(self.commands)
         self.keysSet.emit(self.commands)
