@@ -117,7 +117,6 @@ class EventListener(QtCore.QObject):
 
     def toggleMode(self, mode):
 
-        print(self.obj, mode)
         if mode==self.obj:
             self.delistenWanted.emit()
         else:
@@ -409,8 +408,8 @@ class EventListener(QtCore.QObject):
             ms=self.app.plugman.plugs.items()
             for _, m in ms:
                 f=getattr(m, 'checkLeader', None)
-                if not f: continue 
-                if m.checkLeader(event, pressed):
+                print(self.obj, f)
+                if f and f(event, pressed):
                     self.timer.stop()
                     self.timer.timeout.disconnect()
                     func=lambda: self.toggleMode(m)
