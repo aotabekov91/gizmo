@@ -194,6 +194,10 @@ class EventListener(QtCore.QObject):
             key, digit = self.getKeys()
             matches, partial=self.getMatches(key, digit)
             self.runMatches(matches, partial, key, digit)
+
+        if self.app and self.obj.name=='Metadata':
+            print(self.commands, matches)
+
         if matches or partial: 
             return True
         else:
