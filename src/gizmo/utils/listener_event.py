@@ -406,6 +406,7 @@ class EventListener(QtCore.QObject):
 
         if self.app:
             ms=self.app.plugman.plugs.items()
+            print(self.obj.name)
             for _, m in ms:
                 f=getattr(m, 'checkLeader', None)
                 if f and f(event, pressed):
