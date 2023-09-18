@@ -117,6 +117,7 @@ class EventListener(QtCore.QObject):
 
     def toggleMode(self, mode):
 
+        print(self.obj, mode)
         if mode==self.obj:
             self.delistenWanted.emit()
         else:
@@ -250,9 +251,6 @@ class EventListener(QtCore.QObject):
         return tuple(key), digit
 
     def getMatches(self, key, digit):
-
-        if self.obj.name=='Metadata':
-            print(key, self.commands)
 
         m, p = [], []
         for v, f in self.commands.items():
