@@ -125,7 +125,7 @@ class EventListener(QtCore.QObject):
     def setup(self):
 
         self.setObj()
-        self.saveKeys()
+        self.saveOwnKeys()
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(
                 lambda: self.executeMatch([], [], 0))
@@ -301,13 +301,6 @@ class EventListener(QtCore.QObject):
             self.keysChanged.emit('')
             self.modeWanted.emit(self.mode_on_exit)
 
-    def saveKeys(self):
-
-        for f in self.obj.__dir__():
-            method=getattr(self.obj, f)
-            if hasattr(method, 'key'):
-                self.setKey(self.obj, method, method.name)
-
     def setKey(self, obj, method, name):
 
         self.methods[name]=method
@@ -323,20 +316,27 @@ class EventListener(QtCore.QObject):
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 
+    def saveOwnKeys(self):
+
+        for f in self.obj.__dir__():
+            m=getattr(self.obj, f)
+            if hasattr(m, 'key'):
+                own_m=len(m.modes)==0
+                in_m=self.obj.name in m.modes
+                if any([own_m, in_m]):
+                    self.setKey(self.obj, m, m.name)
+
     def savePlugKeys(self):
 
         actions=self.app.plugman.actions
         for plug, actions in actions.items():
             for (pname, fname), m in actions.items():
                 own_m=plug==self.obj
-                # print(plug, m.modes, fname)
                 own_m=own_m and len(m.modes)==0
                 any_m='any' in m.modes
                 in_m=self.obj.name in m.modes
-                if own_m or any_m or in_m:
+                if any([own_m, any_m, in_m]):
                     self.setKey(plug, m, fname)
-                    if self.obj.name=='Metadata':
-                        print(plug, m, m.modes, fname)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
