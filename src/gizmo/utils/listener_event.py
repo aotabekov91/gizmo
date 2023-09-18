@@ -325,8 +325,8 @@ class EventListener(QtCore.QObject):
         for plug, actions in actions.items():
             for (pname, fname), m in actions.items():
                 own_m=plug==self.obj
-                print(plug, m.modes, fname)
-                # own_m=len(m.modes)==0
+                # print(plug, m.modes, fname)
+                own_m=own_m and len(m.modes)==0
                 any_m='any' in m.modes
                 in_m=self.obj.name in m.modes
                 if own_m or any_m or in_m:
