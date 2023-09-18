@@ -330,6 +330,8 @@ class EventListener(QtCore.QObject):
                     self.setKey(plug, m, fname)
                     if self.app and self.obj.name=='Metadata':
                         print(plug, m, fname)
+        if self.app and self.obj.name=='Metadata':
+            print(self.commands)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
