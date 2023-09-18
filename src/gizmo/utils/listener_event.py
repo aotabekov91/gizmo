@@ -195,9 +195,6 @@ class EventListener(QtCore.QObject):
             matches, partial=self.getMatches(key, digit)
             self.runMatches(matches, partial, key, digit)
 
-        if self.app and self.obj.name=='Metadata':
-            print(self.commands, matches)
-
         if matches or partial: 
             return True
         else:
@@ -328,15 +325,12 @@ class EventListener(QtCore.QObject):
         for plug, actions in actions.items():
             for (pname, fname), m in actions.items():
                 own_m=plug==self.obj
+                print(plug, m.modes, fname)
                 # own_m=len(m.modes)==0
                 any_m='any' in m.modes
                 in_m=self.obj.name in m.modes
                 if own_m or any_m or in_m:
                     self.setKey(plug, m, fname)
-                    if self.app and self.obj.name=='Metadata':
-                        print(plug, m.modes, fname)
-        if self.app and self.obj.name=='Metadata':
-            print(self.commands)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
