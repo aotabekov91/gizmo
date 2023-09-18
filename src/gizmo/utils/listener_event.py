@@ -234,6 +234,7 @@ class EventListener(QtCore.QObject):
 
     def getKeys(self):
 
+
         key, digit = [], ''
         for i, k in enumerate(self.pressed_keys):
             p=self.key_map[k[0]]
@@ -249,6 +250,9 @@ class EventListener(QtCore.QObject):
         return tuple(key), digit
 
     def getMatches(self, key, digit):
+
+        if self.obj.name=='Metadata':
+            print(key, self.commands)
 
         m, p = [], []
         for v, f in self.commands.items():
