@@ -409,7 +409,7 @@ class EventListener(QtCore.QObject):
             for _, m in ms:
                 f=getattr(m, 'checkLeader', None)
                 if f and f(event, pressed):
-                    if self.obj.name=='AnnotationList':
+                    if self.obj.name=='AnnotateList':
                         print(self.obj, f, m)
                     self.timer.stop()
                     self.timer.timeout.disconnect()
