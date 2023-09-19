@@ -312,6 +312,7 @@ class EventListener(QtCore.QObject):
             prefix=mode_keys.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
+
             if obj_name=='Card':
                 print(obj_name, name, key, mode_keys)
                 print('prefix', prefix)
@@ -329,14 +330,15 @@ class EventListener(QtCore.QObject):
     def savePlugKeys(self):
 
         actions=self.app.plugman.actions
-        for plug, actions in actions.items():
+        for obj, actions in actions.items():
             for (pname, fname), m in actions.items():
-                own_m=plug==self.obj
-                own_m=own_m and len(m.modes)==0
-                any_m='any' in m.modes
-                in_m=self.obj.name in m.modes
-                if any([own_m, any_m, in_m]):
-                    self.setKey(plug, m, fname)
+                any_='any' in m.modes
+                own=obj==self.obj
+                own=own and len(m.modes)==0
+                in_=self.obj.name in m.modes
+                if any([own, any_, in_]):
+                    if obj!=self.obj:
+                        self.setKey(obj, m, fname)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
