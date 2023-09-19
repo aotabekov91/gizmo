@@ -110,9 +110,8 @@ class EventListener(QtCore.QObject):
             obj=self.app.qapp
             self.app.plugman.plugsLoaded.connect(
                     self.savePlugKeys)
-            # self.timer=self.app.event_timer
-        # else:
-            # self.timer=QtCore.QTimer()
+        else:
+            self.saveOwnKeys()
         obj.installEventFilter(self)
 
     def toggleMode(self, mode):
@@ -125,7 +124,7 @@ class EventListener(QtCore.QObject):
     def setup(self):
 
         self.setObj()
-        self.saveOwnKeys()
+        # self.saveOwnKeys()
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(
                 lambda: self.executeMatch([], [], 0))
@@ -300,7 +299,6 @@ class EventListener(QtCore.QObject):
 
     def setKey(self, obj, method, name):
 
-
         obj_name=getattr(obj, 'name', None)
         if obj_name=='Card':
             print(obj.event_listener.mode_keys)
@@ -337,8 +335,8 @@ class EventListener(QtCore.QObject):
                 own=own and len(m.modes)==0
                 in_=self.obj.name in m.modes
                 if any([own, any_, in_]):
-                    if obj!=self.obj:
-                        self.setKey(obj, m, fname)
+                    # if obj!=self.obj:
+                    self.setKey(obj, m, fname)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
