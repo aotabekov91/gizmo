@@ -25,7 +25,6 @@ class EventListener(QtCore.QObject):
             app=None, 
             obj=None, 
             config={},
-            leader='',
             special=[],
             wait_run=40,
             mode_keys={},
@@ -46,7 +45,6 @@ class EventListener(QtCore.QObject):
         self.commands={}
         self.pressed=None
         self.config=config
-        self.leader=leader
         self.pressed_text=''
         self.special=special
         self.pressed_keys=[]
@@ -399,9 +397,7 @@ class EventListener(QtCore.QObject):
         if type(key)==str: 
             key=[key]
         for k in key: 
-            k=f"{prefix}{k}".replace(
-                    '<leader>', self.leader)
-            parsed+=[parse(k)]
+            parsed+=[parse(f"{prefix}{k}")]
         return tuple(parsed)
 
     def checkLeader(self, event):
