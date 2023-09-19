@@ -309,9 +309,6 @@ class EventListener(QtCore.QObject):
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 
-            if obj_name=='Card':
-                print(prefix, key, name, mode_keys)
-
     def saveOwnKeys(self):
 
         for f in self.obj.__dir__():
