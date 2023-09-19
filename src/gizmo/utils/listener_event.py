@@ -308,10 +308,12 @@ class EventListener(QtCore.QObject):
                 mode_keys_l=getattr(
                         obj.event_listener, 'mode_keys', {})
                 mode_keys.update(mode_keys_l)
-            name=getattr(self.obj, 'name', None)
-            prefix=mode_keys.get(name, '')
+            obj_name=getattr(self.obj, 'name', None)
+            prefix=mode_keys.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
+            if obj_name=='Card':
+                print(obj_name, name, prefix, key, match)
 
     def saveOwnKeys(self):
 
@@ -392,8 +394,10 @@ class EventListener(QtCore.QObject):
             return tuple(parsed) 
 
         parsed=[]
-        if not key: return () 
-        if type(key)==str: key=[key]
+        if not key: 
+            return () 
+        if type(key)==str: 
+            key=[key]
         for k in key: 
             k=f"{prefix}{k}".replace(
                     '<leader>', self.leader)
