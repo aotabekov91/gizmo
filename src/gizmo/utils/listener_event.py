@@ -317,7 +317,6 @@ class EventListener(QtCore.QObject):
             if obj_name=='Card':
                 print(obj_name, name, key, 
                         mode_keys, 
-                        elisten.mode_keys,
                         {'prefix': prefix},
                         )
 
