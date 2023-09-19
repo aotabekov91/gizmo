@@ -313,7 +313,8 @@ class EventListener(QtCore.QObject):
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
             if obj_name=='Card':
-                print(obj_name, name, prefix, key, match)
+                print(obj_name, name, key, mode_keys)
+                print('prefix', prefix)
 
     def saveOwnKeys(self):
 
