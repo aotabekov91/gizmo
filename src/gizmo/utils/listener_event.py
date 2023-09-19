@@ -300,8 +300,10 @@ class EventListener(QtCore.QObject):
 
     def setKey(self, obj, method, name):
 
+
+        obj_name=getattr(obj, 'name', None)
         if obj_name=='Card':
-            print(self.mode_keys)
+            print(obj.event_listener.mode_keys)
 
         self.methods[name]=method
         key=getattr(method, 'key')
