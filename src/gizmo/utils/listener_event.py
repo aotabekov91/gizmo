@@ -300,6 +300,9 @@ class EventListener(QtCore.QObject):
 
     def setKey(self, obj, method, name):
 
+        if obj_name=='Card':
+            print(self.mode_keys)
+
         self.methods[name]=method
         key=getattr(method, 'key')
         if key:
@@ -307,19 +310,10 @@ class EventListener(QtCore.QObject):
             obj_name=getattr(self.obj, 'name', None)
             elisten=getattr(obj, 'event_listener', None)
             if elisten: 
-                print('Elisten', elisten.mode_keys)
                 mode_keys.update(elisten.mode_keys)
-
             prefix=mode_keys.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
-
-            if obj_name=='Card':
-                print(obj_name, name, key, 
-                        mode_keys, 
-                        {'prefix': prefix},
-                        )
-
 
     def saveOwnKeys(self):
 
