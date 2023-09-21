@@ -135,7 +135,8 @@ class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
             data=item.itemData
             found=item
             for k, v in condDict.items():
-                if data.get(k, None)!=v: return
+                if data.get(k, None)!=v: 
+                    return False
             self.setCurrentItem(found)
 
     def setList(self, dlist, limit=30):
@@ -188,14 +189,17 @@ class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
     def isin(self, text, data):
 
         for f in self.check_fields:
-            field_text= str(data.get(f, ''))
+            ft= str(data.get(f, ''))
             if self.exact_match:
-                if field_text and text==field_text[:len(text)]: return True
+                if ft and text==ft[:len(text)]: 
+                    return True
             else:
                 if self.ignore_case:
-                    if field_text and text.lower() in field_text.lower(): return True
+                    if ft and text.lower() in ft.lower(): 
+                        return True
                 else:
-                    if field_text and text in field_text: return True
+                    if ft and text in ft: 
+                        return True
         return False
 
     def dataList(self): return self.dlist
