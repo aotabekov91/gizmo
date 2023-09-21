@@ -140,7 +140,8 @@ class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
 
     def setList(self, dlist, limit=30):
 
-        if dlist is None: dlist=[]
+        if dlist is None: 
+            dlist=[]
         self.dlist=dlist
         self.flist=dlist
         self.addItems(dlist, limit=limit)
