@@ -16,9 +16,7 @@ class Item(QtWidgets.QWidget):
 
         self.list=listWidget
         self.set_base_style=set_base_style
-
         layout, style_sheet=self.setUI()
-
         self.setLayout(layout)
 
         # if self.set_base_style:
@@ -50,13 +48,10 @@ class Item(QtWidgets.QWidget):
         self.up = QtWidgets.QLabel(
                 objectName='ListItemUp')
         self.up.setWordWrap(True)
-
         layout = QtWidgets.QVBoxLayout()
-
         layout.setSpacing(0)
         layout.addWidget(self.up)
         layout.setContentsMargins(4, 4, 4, 4)
-
         return layout, style_sheet
 
     def setTextUp(self, text):
@@ -65,37 +60,30 @@ class Item(QtWidgets.QWidget):
         self.up.setText(str(text))
         self.up.adjustSize()
 
-    def textUp(self): return self.up.text()
+    def textUp(self): 
+        return self.up.text()
 
-    def listItem(self): return self.item
+    def listItem(self): 
+        return self.item
 
     def setData(self, data):
 
         self.data=data
         self.item.itemData=data
-
         if data:
-
             if data.get('up', None): 
                 self.setTextUp(str(data.get('up')))
-
             style=data.get('style', None)
             if style:
                 style=str(style).replace("'", "")
                 self.style_sheet+style
                 self.setStyleSheet(style)
-
             up_color=data.get('style', None)
-
             if up_color: 
-
                 up_style=self.label_style+f'color: black; background-color: {up_color};'+'}'
                 self.up.setStyleSheet(up_style)
-
             color=data.get('item_color', None)
-
             if color: 
-
                 self.style_sheet+='QWidget {background-color: '+f'{color}; '+' color: black}'
                 self.setStyleSheet(self.style_sheet)
 

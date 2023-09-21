@@ -25,7 +25,6 @@ class EventListener(QtCore.QObject):
             app=None, 
             obj=None, 
             config={},
-            leader='',
             special=[],
             wait_run=40,
             mode_keys={},
@@ -46,7 +45,6 @@ class EventListener(QtCore.QObject):
         self.commands={}
         self.pressed=None
         self.config=config
-        self.leader=leader
         self.pressed_text=''
         self.special=special
         self.pressed_keys=[]
@@ -110,9 +108,8 @@ class EventListener(QtCore.QObject):
             obj=self.app.qapp
             self.app.plugman.plugsLoaded.connect(
                     self.savePlugKeys)
-            # self.timer=self.app.event_timer
-        # else:
-            # self.timer=QtCore.QTimer()
+        else:
+            self.saveOwnKeys()
         obj.installEventFilter(self)
 
     def toggleMode(self, mode):
@@ -125,7 +122,7 @@ class EventListener(QtCore.QObject):
     def setup(self):
 
         self.setObj()
-        self.saveOwnKeys()
+        # self.saveOwnKeys()
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(
                 lambda: self.executeMatch([], [], 0))
@@ -304,12 +301,11 @@ class EventListener(QtCore.QObject):
         key=getattr(method, 'key')
         if key:
             mode_keys=getattr(obj, 'mode_keys', {})
-            if hasattr(obj, 'event_listener'):
-                mode_keys_l=getattr(
-                        obj.event_listener, 'mode_keys', {})
-                mode_keys.update(mode_keys_l)
-            name=getattr(self.obj, 'name', None)
-            prefix=mode_keys.get(name, '')
+            obj_name=getattr(self.obj, 'name', None)
+            elisten=getattr(obj, 'event_listener', None)
+            if elisten: 
+                mode_keys.update(elisten.mode_keys)
+            prefix=mode_keys.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 
@@ -326,14 +322,15 @@ class EventListener(QtCore.QObject):
     def savePlugKeys(self):
 
         actions=self.app.plugman.actions
-        for plug, actions in actions.items():
+        for obj, actions in actions.items():
             for (pname, fname), m in actions.items():
-                own_m=plug==self.obj
-                own_m=own_m and len(m.modes)==0
-                any_m='any' in m.modes
-                in_m=self.obj.name in m.modes
-                if any([own_m, any_m, in_m]):
-                    self.setKey(plug, m, fname)
+                any_='any' in m.modes
+                own=obj==self.obj
+                own=own and len(m.modes)==0
+                in_=self.obj.name in m.modes
+                if any([own, any_, in_]):
+                    # if obj!=self.obj:
+                    self.setKey(obj, m, fname)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
@@ -392,12 +389,12 @@ class EventListener(QtCore.QObject):
             return tuple(parsed) 
 
         parsed=[]
-        if not key: return () 
-        if type(key)==str: key=[key]
+        if not key: 
+            return () 
+        if type(key)==str: 
+            key=[key]
         for k in key: 
-            k=f"{prefix}{k}".replace(
-                    '<leader>', self.leader)
-            parsed+=[parse(k)]
+            parsed+=[parse(f"{prefix}{k}")]
         return tuple(parsed)
 
     def checkLeader(self, event):
