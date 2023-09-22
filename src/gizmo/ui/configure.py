@@ -33,4 +33,4 @@ class Configure(Plug):
 
     def register(self):
 
-        self.app.plugman.register(self.object, self.actions)
+        self.app.plugman.saveActions(self.object, self.actions)
