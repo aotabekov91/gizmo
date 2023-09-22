@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
 from .dock import Dock
-from plug.utils import register
 from ..configure import Configure
 
 class Docks(QtCore.QObject):
@@ -144,43 +143,36 @@ class Docks(QtCore.QObject):
             self.current.resize(factor=factor)
             self.current.setFocus()
 
-    @register('h', modes=['command', 'normal'])
     def focusLeftDock(self): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.focus('left')
 
-    @register('l', modes=['command', 'normal'])
     def focusRightDock(self): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.focus('right')
 
-    @register('k', modes=['command', 'normal'])
     def focusTopDock(self): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.focus('top')
 
-    @register('j', modes=['command', 'normal'])
     def focusBottomDock(self): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.focus('bottom') 
 
-    @register('f', modes=['command', 'normal'])
     def toggleDockFullscreen(self): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.toggleFullscreen()
 
-    @register('zi', modes=['command', 'normal'])
     def zoomInDock(self, digit=1): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
         self.zoom('in', digit)
 
-    @register('zo', modes=['command', 'normal'])
     def zoomOutDock(self, digit=1): 
 
         self.window.app.plugman.plugs.command.delisten_wanted=None
