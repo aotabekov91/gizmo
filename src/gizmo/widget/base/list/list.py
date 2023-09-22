@@ -1,9 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
-from gizmo.utils import SetKeys, register
+from gizmo.utils import MetaKey, register
 
 from .items import IconUpDown
 
-class ListWidget(QtWidgets.QListWidget, metaclass=SetKeys):
+class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
 
     hideWanted=QtCore.pyqtSignal()
     openWanted=QtCore.pyqtSignal()

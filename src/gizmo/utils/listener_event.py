@@ -329,7 +329,6 @@ class EventListener(QtCore.QObject):
                 own=own and len(m.modes)==0
                 in_=self.obj.name in m.modes
                 if any([own, any_, in_]):
-                    # if obj!=self.obj:
                     self.setKey(obj, m, fname)
         self.keysSet.emit(self.commands)
 

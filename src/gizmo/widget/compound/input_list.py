@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets, QtCore
 
-from gizmo.utils import SetKeys, register
+from gizmo.utils import MetaKey, register
 
 from ..base import IconUpDown, ListWidget, InputLabelWidget
 
-class InputList (QtWidgets.QWidget, metaclass=SetKeys):
+class InputList (QtWidgets.QWidget, metaclass=MetaKey):
 
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()

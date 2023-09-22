@@ -1,8 +1,8 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from gizmo.utils import SetKeys, register
+from gizmo.utils import MetaKey, register
 
-class TreeWidget(QtWidgets.QTreeView, metaclass=SetKeys):
+class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
 
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()

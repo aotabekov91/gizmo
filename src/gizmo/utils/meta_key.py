@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from .listener_event import EventListener
 
-class SetKeys(type(QtCore.QObject)):
+class MetaKey(type(QtCore.QObject)):
 
     def __call__(cls, *args, **kwargs):
 
