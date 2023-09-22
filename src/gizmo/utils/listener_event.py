@@ -302,7 +302,7 @@ class EventListener(QtCore.QObject):
         if key:
             mode_keys=getattr(obj, 'mode_keys', {})
             obj_name=getattr(self.obj, 'name', None)
-            elisten=getattr(obj, 'event_listener', None)
+            elisten=getattr(obj, 'ear', None)
             if elisten: 
                 mode_keys.update(elisten.mode_keys)
             prefix=mode_keys.get(obj_name, '')
