@@ -550,7 +550,7 @@ message_hidden	src/gizmo/widget/todo/components/qmessage.py	/^    message_hidden
 message_hidden	src/gizmo/widget/todo/widgets_/components/qmessage.py	/^    message_hidden=pyqtSignal()$/;"	v	class:MessageMainWindow
 mode	src/gizmo/widget/base/nvim.py	/^    def mode(self):$/;"	m	class:NVim
 mode	tests/test_mode.py	/^def mode(): return Mode()$/;"	f
-modeKey	src/gizmo/ui/configure.py	/^    def modeKey(self, mode): return self.mode_keys.get(mode, '')$/;"	m	class:Configure
+modeKey	src/gizmo/ui/configure.py	/^    def modeKey(self, mode): return self.prefix_key.get(mode, '')$/;"	m	class:Configure
 model	src/gizmo/ui/view/base.py	/^    def model(self): return self.m_model$/;"	m	class:View
 modelChanged	src/gizmo/widget/todo/itemmodel_.py	/^    modelChanged = pyqtSignal()$/;"	v	class:ItemModel
 modelChanged	src/gizmo/widget/todo/widgets_/rest/itemmodel_.py	/^    modelChanged = pyqtSignal()$/;"	v	class:ItemModel

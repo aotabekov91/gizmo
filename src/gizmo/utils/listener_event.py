@@ -27,7 +27,7 @@ class EventListener(QtCore.QObject):
             config={},
             special=[],
             wait_run=40,
-            mode_keys={},
+            prefix_key={},
             wait_time=200,
             listening=True,
             listen_leader=None, 
@@ -51,7 +51,7 @@ class EventListener(QtCore.QObject):
         self.wait_run=wait_run
         self.wait_time=wait_time
         self.listening=listening
-        self.mode_keys=mode_keys
+        self.prefix_key=prefix_key
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
 
@@ -300,12 +300,12 @@ class EventListener(QtCore.QObject):
         self.methods[name]=method
         key=getattr(method, 'key')
         if key:
-            mode_keys=getattr(obj, 'mode_keys', {})
+            prefix_key=getattr(obj, 'prefix_key', {})
             obj_name=getattr(self.obj, 'name', None)
             elisten=getattr(obj, 'ear', None)
             if elisten: 
-                mode_keys.update(elisten.mode_keys)
-            prefix=mode_keys.get(obj_name, '')
+                prefix_key.update(elisten.prefix_key)
+            prefix=prefix_key.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 
