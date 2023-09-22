@@ -1,7 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
 from ..display import Display
-from ..configure import Configure
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -16,11 +15,9 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         self.app=app
-        self.configure=Configure(
-                app=app, 
-                name='Window', 
-                parent=self)
-
+        self.name=self.__class__.__name__
+        self.s_settings=app.config.get(
+                self.name, {})
 
         self.setUI(display_class, view_class)
 

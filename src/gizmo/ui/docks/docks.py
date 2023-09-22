@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
 from .dock import Dock
-from ..configure import Configure
 
 class Docks(QtCore.QObject):
 
@@ -19,12 +18,9 @@ class Docks(QtCore.QObject):
         self.window.installEventFilter(self)
 
         self.createDocks()
-
-        self.configure=Configure(
-                app=window.app, 
-                name='Docks', 
-                parent=self, 
-                mode_keys={'command':'d', 'normal':'d'})
+        self.name=self.__class__.__name__
+        self.s_settings=window.app.config.get(
+                self.name, {})
 
     def createDocks(self):
 

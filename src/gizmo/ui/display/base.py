@@ -1,7 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from ..configure import Configure
-
 class BaseDisplay:
 
     viewCreated=QtCore.pyqtSignal(object)
@@ -52,11 +50,9 @@ class BaseDisplay:
         self.prev=None
         self.cursor_visible=True
         
-        self.configure=Configure(
-                app=self.app, 
-                name='Display', 
-                parent=self, 
-                mode_keys={'command': 'w'})
+        self.name=self.__class__.__name__
+        self.s_settings=app.config.get(
+                self.name, {})
 
         self.setUI()
         self.app.installEventFilter(self)

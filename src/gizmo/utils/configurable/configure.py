@@ -17,13 +17,6 @@ class Configure(Plug):
         super().__init__(*args, **kwargs)
 
         self.setSettings()
-        self.register()
-
-    def setActions(self): 
-        super().setActions(obj=self.object)
-
-    def modeKey(self, mode): 
-        return self.mode_keys.get(mode, '')
 
     def getSettings(self): 
         return self.settings
@@ -33,8 +26,3 @@ class Configure(Plug):
         self.settings=None
         if self.app.config.get(f'{self.name}'):
             self.settings=self.app.config[f'{self.name}']
-
-    def register(self):
-
-        self.app.plugman.saveActions(
-                self.object, self.actions)
