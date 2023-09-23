@@ -27,7 +27,7 @@ class EventListener(QtCore.QObject):
             config={},
             special=[],
             wait_run=40,
-            prefix_key={},
+            prefix_keys={},
             wait_time=200,
             listening=True,
             listen_leader=None, 
@@ -51,7 +51,7 @@ class EventListener(QtCore.QObject):
         self.wait_run=wait_run
         self.wait_time=wait_time
         self.listening=listening
-        self.prefix_key=prefix_key
+        self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
 
@@ -102,6 +102,9 @@ class EventListener(QtCore.QObject):
         if hasattr(self.obj, 'listenWanted'):
             self.listenWanted.connect(
                     self.obj.listenWanted)
+        self.setActions()
+
+    def setActions(self):
 
         obj=self.obj
         if self.app: 
@@ -300,12 +303,12 @@ class EventListener(QtCore.QObject):
         self.methods[name]=method
         key=getattr(method, 'key')
         if key:
-            prefix_key=getattr(obj, 'prefix_key', {})
+            prefix_keys=getattr(obj, 'prefix_keys', {})
             obj_name=getattr(self.obj, 'name', None)
             elisten=getattr(obj, 'ear', None)
             if elisten: 
-                prefix_key.update(elisten.prefix_key)
-            prefix=prefix_key.get(obj_name, '')
+                prefix_keys.update(elisten.prefix_keys)
+            prefix=prefix_keys.get(obj_name, '')
             match=self.parseKey(key, prefix=prefix)
             self.commands[match]=method
 

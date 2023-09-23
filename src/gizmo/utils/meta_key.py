@@ -7,5 +7,5 @@ class MetaKey(type(QtCore.QObject)):
 
         obj=type.__call__(cls, *args, **kwargs)
         obj.name=obj.__class__.__name__
-        obj.listener=EventListener(obj=obj)
+        obj.ear=EventListener(obj=obj)
         return obj
