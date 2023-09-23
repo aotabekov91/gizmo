@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, QtCore
 from gizmo.widget.layout import TileLayout
 
 from .base import BaseDisplay
+from gizmo.widget import ViewContainer
 
 class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
@@ -41,10 +42,15 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
                 self.m_layout.focusWidget(w)
                 prev=self.m_layout.focus('prev')
                 if prev:
-                    view=prev.widget.view
                     self.m_layout.removeWidget(w)
-                    self.setCurrentView(view)
+                    self.setCurrentView(prev.widget)
                 return w
+
+    def setCurrentView(self, widget):
+
+        if type(widget)==ViewContainer:
+            widget=widget.view
+        super().setCurrentView(widget)
 
     def setView(self, 
                 view, 

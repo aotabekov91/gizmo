@@ -166,7 +166,8 @@ class BaseDisplay:
 
             return view
 
-    def currentView(self): return self.view
+    def currentView(self): 
+        return self.view
 
     def setCurrentView(self, view):
 
@@ -179,19 +180,23 @@ class BaseDisplay:
 
     def incrementUp(self, digit=1): 
 
-        for d in range(digit): self.view.incrementUp()
+        for d in range(digit): 
+            self.view.incrementUp()
 
     def incrementDown(self, digit=1): 
 
-        for d in range(digit): self.view.incrementDown()
+        for d in range(digit): 
+            self.view.incrementDown()
 
     def incrementLeft(self, digit=1): 
 
-        for d in range(digit): self.view.incrementLeft()
+        for d in range(digit): 
+            self.view.incrementLeft()
 
     def incrementRight(self, digit=1): 
 
-        for d in range(digit): self.view.incrementRight()
+        for d in range(digit): 
+            self.view.incrementRight()
 
     def zoomIn(self, digit=1): 
         
@@ -203,40 +208,46 @@ class BaseDisplay:
         for d in range(digit): 
             self.view.changeScale(kind='zoomOut')
 
-    def adjust(self): self.view.readjust()
+    def adjust(self): 
+        self.view.readjust()
 
     def keyPressEvent(self, event):
 
         if event.key()==QtCore.Qt.Key_Escape:
-            if self.view: self.view.cleanUp()
+            if self.view: 
+                self.view.cleanUp()
         else:
             super().keyPressEvent(event)
     
     def toggleCursor(self): 
 
         if self.cursor_visible:
-            cursor=QtGui.QCursor(QtCore.Qt.BlankCursor)
+            c=QtGui.QCursor(QtCore.Qt.BlankCursor)
         else:
-            cursor=QtGui.QCursor(QtCore.Qt.ArrowCursor)
+            c=QtGui.QCursor(QtCore.Qt.ArrowCursor)
 
         self.cursor_visible=not self.cursor_visible
-        self.app.setOverrideCursor(cursor)
+        self.app.setOverrideCursor(c)
 
-    def focusUp(self): self.focus(-1)
+    def focusUp(self): 
+        self.focus(-1)
 
-    def focusDown(self): self.focus(+1)
+    def focusDown(self): 
+        self.focus(+1)
 
     def focusCurrentView(self): 
 
         self.deactivate(focusView=False)
         self.setFocus()
         view=self.app.window.main.display.view
-        if view: view.setFocus()
+        if view: 
+            view.setFocus()
 
     def deactivate(self, focusView=True):
 
         self.activated=False
-        if focusView: self.focusCurrentView()
+        if focusView: 
+            self.focusCurrentView()
 
     def activate(self):
 
@@ -253,12 +264,15 @@ class BaseDisplay:
 
     def cleanUp(self): 
 
-        if self.view: self.view.cleanUp()
+        if self.view: 
+            self.view.cleanUp()
 
     def incrementFold(self): 
         
-        if self.view: self.view.incrementFold()
+        if self.view: 
+            self.view.incrementFold()
 
     def decrementFold(self): 
         
-        if self.view: self.view.decrementFold()
+        if self.view: 
+            self.view.decrementFold()

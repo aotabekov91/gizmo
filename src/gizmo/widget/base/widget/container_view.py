@@ -34,17 +34,5 @@ class ViewContainer(QtWidgets.QWidget):
 
         self.view=view
         view.container=self
-        view.setFocus=self.setFocus
-        view.setFocus=self.insider.setFocus
-
-    @property
-    def layoutMargin(self):
-
-        return self.layout_margin
-
-    @layoutMargin.setter
-    def layoutMargin(self, margin):
-
-        self.layout_margin=margin
-        self.insider.m_layout.setContentsMargins(
-                margin, margin, margin, margin)
+        # view.setFocus=self.setFocus
+        # view.setFocus=self.insider.setFocus
