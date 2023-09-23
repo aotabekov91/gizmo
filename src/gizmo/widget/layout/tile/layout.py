@@ -1,4 +1,4 @@
-from .node import Node
+from .leaf import Leaf
 from ....widget import ViewContainer
 
 class TileLayout:
@@ -7,33 +7,34 @@ class TileLayout:
 
         self.delta=10
         self.ratio=1.6
-        self.root = Node()
+        self.root = Leaf()
         self.parent=parent
         self.lower_right=True
         self.current = self.root
 
-    def getNode(self, widget):
+    def getLeaf(self, widget):
 
-        for n in self.root:
-            if widget is n.widget: return n
+        for leaf in self.root:
+            if widget is leaf.widget: 
+                return leaf
 
-    def focusNode(self, node):
+    def focusLeaf(self, leaf):
 
-        if node:
-            self.current=node
-            if node.widget: 
-                node.widget.setFocus()
+        if leaf:
+            self.current=leaf
+            if leaf.widget: 
+                leaf.widget.setFocus()
 
     def focusWidget(self, widget):
 
         if widget:
-            node=self.getNode(widget)
-            self.focusNode(node)
-            return node
+            leaf=self.getLeaf(widget)
+            self.focusLeaf(leaf)
+            return leaf
 
     def getContainer(self, widget):
 
-        return widget
+        # return widget
         # Todo
         return ViewContainer(
                 widget, 
@@ -43,10 +44,10 @@ class TileLayout:
 
     def addWidget(self, widget, hsplit=False):
 
-        node = self.current
-        node.hsplit=hsplit
+        leaf = self.current
+        leaf.hsplit=hsplit
         widget.setParent(self.parent)
-        self.current = node.insert(
+        self.current = leaf.insert(
                 self.getContainer(widget), 
                 int(self.lower_right), 
                 self.ratio)
@@ -59,22 +60,22 @@ class TileLayout:
 
     def removeWidget(self, widget):
 
-        node = self.getNode(widget)
+        leaf = self.getLeaf(widget)
         widget.hide()
-        if node:
-            if node.parent:
-                node = node.parent.remove(node)
-                newwidget = next(node.widgets(), None)
+        if leaf:
+            if leaf.parent:
+                leaf = leaf.parent.remove(leaf)
+                newwidget = next(leaf.widgets(), None)
                 if newwidget is None:
                     self.current = self.root
                 else:
-                    self.current = self.getNode(newwidget)
-                if node.parent: 
-                    node.parent.update()
+                    self.current = self.getLeaf(newwidget)
+                if leaf.parent: 
+                    leaf.parent.update()
                 else:
                     self.root.update()
                 return (newwidget, widget)
-            node.widget = None
+            leaf.widget = None
             self.current = self.root
         return (None, widget)
 
@@ -105,7 +106,7 @@ class TileLayout:
                 idx=max(0, idx-1)
             return widgets[(idx)]
 
-    def findNode(self, d):
+    def findLeaf(self, d):
 
         l = self.current
         p = l.parent
@@ -174,9 +175,9 @@ class TileLayout:
 
         pos=['right', 'left', 'down', 'up']
         if kind in pos:
-            node = self.findNode(kind)
-            self.focusNode(node)
-            return node
+            leaf = self.findLeaf(kind)
+            self.focusLeaf(leaf)
+            return leaf
         elif kind == 'next':
             widget = self.findSibling(
                     self.current.widget, 'next')
@@ -195,29 +196,29 @@ class TileLayout:
 
     def move(self, d):
 
-        node = self.findNode(d)
-        if node:
-            nw, cw= self.current.widget, node.widget
-            node.widget, self.current.widget = nw, cw
-            self.current = node
+        leaf = self.findLeaf(d)
+        if leaf:
+            nw, cw= self.current.widget, leaf.widget
+            leaf.widget, self.current.widget = nw, cw
+            self.current = leaf
             self.update()
         elif self.current is not self.root:
-            node = self.current
-            self.removeWidget(node.widget)
-            newroot = Node()
+            leaf = self.current
+            self.removeWidget(leaf.widget)
+            newroot = Leaf()
 
             newroot.hsplit = True
             if d in ['up', 'down']:
                 newroot.hsplit = False
 
-            newroot.leaves = [self.root, node]
+            newroot.leaves = [self.root, leaf]
             if d in ['left', 'up']:
-                newroot.leaves = [node, self.root]
+                newroot.leaves = [leaf, self.root]
 
             self.root.parent = newroot
-            node.parent = newroot
+            leaf.parent = newroot
             self.root = newroot
-            self.current = node
+            self.current = leaf
             self.update()
 
     def flip(self, d):

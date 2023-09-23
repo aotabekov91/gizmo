@@ -36,13 +36,15 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
             view=self.currentView()
         if not vid and view:
             vid=view.id()
-        for w in range(self.m_layout.root.widgets()):
-            if w.id()==vid:
+        for w in self.m_layout.root.widgets():
+            if w.view.id()==vid:
                 self.m_layout.focusWidget(w)
-                cw=self.m_layout.focusPrevious()
-                self.m_layout.removeWidget(w)
-                self.setCurrentView(cw)
-                self.focusCurrent()
+                prev=self.m_layout.focus('prev')
+                if prev:
+                    view=prev.widget.view
+                    self.m_layout.removeWidget(w)
+                    self.setCurrentView(view)
+                return w
 
     def setView(self, 
                 view, 
@@ -61,7 +63,8 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
                     view, **kwargs)
         self.show()
         view.show()
-        if focus: self.focusView(view)
+        if focus: 
+            self.focusView(view)
 
     def focusView(self, view):
 

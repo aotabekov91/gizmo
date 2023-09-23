@@ -29,9 +29,10 @@ class ViewContainer(QtWidgets.QWidget):
         self.insider.m_layout.addWidget(view)
         self.m_layout.addWidget(self.insider)
 
-        # self.resizeEvent=view.resizeEvent
-        # self.insider.resizeEvent=view.resizeEvent
+        self.resizeEvent=view.resizeEvent
+        self.insider.resizeEvent=view.resizeEvent
 
+        self.view=view
         view.container=self
         view.setFocus=self.setFocus
         view.setFocus=self.insider.setFocus

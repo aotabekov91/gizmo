@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QObject
 
-class Node(QObject):
+class Leaf(QObject):
 
     def __init__(self, parent=None):
 
@@ -61,7 +61,7 @@ class Node(QObject):
             self.widget = widget
             return self
 
-        self.leaves = [Node(self), Node(self)]
+        self.leaves = [Leaf(self), Leaf(self)]
         self.leaves[1 - idx].widget = self.widget
         self.leaves[idx].widget = widget
         self.widget = None
