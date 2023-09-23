@@ -42,6 +42,7 @@ class EventListener(QtCore.QObject):
         self.obj=obj
         self.app=app
         self.methods={}
+        self.matches={}
         self.commands={}
         self.pressed=None
         self.config=config
@@ -304,12 +305,13 @@ class EventListener(QtCore.QObject):
         key=getattr(method, 'key')
         if key:
             prefix_keys=getattr(obj, 'prefix_keys', {})
-            obj_name=getattr(self.obj, 'name', None)
-            elisten=getattr(obj, 'ear', None)
-            if elisten: 
-                prefix_keys.update(elisten.prefix_keys)
-            prefix=prefix_keys.get(obj_name, '')
+            ear=getattr(obj, 'ear', None)
+            if ear: 
+                prefix_keys.update(ear.prefix_keys)
+            oname=getattr(self.obj, 'name', None)
+            prefix=prefix_keys.get(oname, '')
             match=self.parseKey(key, prefix=prefix)
+            self.matches[name]=match
             self.commands[match]=method
 
     def saveOwnKeys(self):
