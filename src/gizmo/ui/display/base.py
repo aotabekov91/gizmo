@@ -152,7 +152,8 @@ class BaseDisplay:
 
         view=self.createView(model)
         if view: 
-            self.setView(view, how, focus, **kwargs)
+            self.setView(
+                    view, how, focus, **kwargs)
             self.viewCreated.emit(view)
 
     def createView(self, model):

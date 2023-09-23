@@ -28,37 +28,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.main_layout=QtWidgets.QVBoxLayout()
         self.main_layout.setContentsMargins(0,0,0,0)
         self.main_layout.setSpacing(0)
-
         self.main_widget.setLayout(self.main_layout)
-
-        if not display_class: display_class=Display
-
+        if not display_class: 
+            display_class=Display
         self.display=display_class(self.app, self, view_class)
         self.display.viewCreated.connect(self.viewCreated)
-
         self.main_layout.addWidget(self.display)
         self.setCentralWidget(self.main_widget)
 
     def setUI(self, display_class, view_class):
 
-        # Order matters
         self.setDisplay(display_class, view_class)
-
-        # stl='''
-        #     QWidget {
-        #         color: white;
-        #         border-color: transparent;
-        #         background-color: transparent;
-        #         }
-        #        ''' 
-        # self.setStyleSheet(stl)
-
         self.setAcceptDrops(True)
         self.setContentsMargins(0, 0, 0, 0)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-    def close(self): self.app.exit()
+    def close(self): 
+        self.app.exit()
 
     def open(self, filePath, how='reset', focus=True): 
 
