@@ -39,49 +39,34 @@ class BaseDisplay:
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
-    def setup(self, app, window, view_class):
+    def setup(self, app):
 
         self.app=app
-        self.win=window
-        self.view_class=view_class
         self.count=-1
         self.views={}
         self.view=None
         self.prev=None
-        self.cursor_visible=True
-        
-        self.name=self.__class__.__name__
-        self.s_settings=app.config.get(
-                self.name, {})
-
+        self.viewers=[]
         self.setUI()
-        self.app.installEventFilter(self)
 
-    def eventFilter(self, widget, event):
-
-        if event.type()==QtCore.QEvent.MouseMove:
-            if not self.cursor_visible:
-                event.accept()
-                return True
-        return False
+    def addViewer(self, viewer):
+        self.viewers+=[viewer]
 
     def setUI(self):
 
         self.setContentsMargins(0,0,0,0)
         self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.m_layout=QtWidgets.QVBoxLayout(self)#.m_hsplit)
+        self.m_layout=QtWidgets.QVBoxLayout(self)
         self.m_layout.setSpacing(0)
         self.m_layout.setContentsMargins(0,0,0,0)
 
-    def setViewClass(self, view_class): 
-
-        self.view_class=view_class
-
     def clear(self):
 
-        for index in range(self.m_layout.count(),-1, -1):
+        count=self.m_layout.count()
+        for index in range(count,-1, -1):
             item=self.m_layout.takeAt(index)
-            if item: item.widget().hide()
+            if item: 
+                item.widget().hide()
         self.hide()
 
     def setView(self, view, how=None, focus=True):
@@ -158,14 +143,12 @@ class BaseDisplay:
 
     def createView(self, model):
 
-        if self.view_class and model:
-
-            self.count+=1
-            view=self.view_class(self.app)
-            view.setModel(model)
-            self.views[self.count]=view
-
-            return view
+        for v in self.viewers:
+            view=v.getView(model)
+            if view: 
+                self.count+=1
+                self.views[self.count]=view
+                return view
 
     def currentView(self): 
         return self.view
@@ -220,16 +203,6 @@ class BaseDisplay:
         else:
             super().keyPressEvent(event)
     
-    def toggleCursor(self): 
-
-        if self.cursor_visible:
-            c=QtGui.QCursor(QtCore.Qt.BlankCursor)
-        else:
-            c=QtGui.QCursor(QtCore.Qt.ArrowCursor)
-
-        self.cursor_visible=not self.cursor_visible
-        self.app.setOverrideCursor(c)
-
     def focusUp(self): 
         self.focus(-1)
 
@@ -239,10 +212,8 @@ class BaseDisplay:
     def focusCurrentView(self): 
 
         self.deactivate(focusView=False)
-        self.setFocus()
-        view=self.app.display.view
-        if view: 
-            view.setFocus()
+        if self.view: 
+            self.view.setFocus()
 
     def deactivate(self, focusView=True):
 

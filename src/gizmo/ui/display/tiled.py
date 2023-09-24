@@ -9,14 +9,15 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
     def __init__(self, 
                  app,
-                 window,
-                 view_class=None,
                  objectName='Display',
                  ):
 
-        super().__init__(parent=window)
-        self.setup(app, window, view_class)
-        window.resized.connect(
+        super().__init__(
+                parent=app.window,
+                objectName=objectName,
+                )
+        self.setup(app)
+        self.app.window.main.resized.connect(
                 self.m_layout.update)
 
     def setUI(self):

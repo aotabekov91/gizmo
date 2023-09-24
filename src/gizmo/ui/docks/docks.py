@@ -12,15 +12,10 @@ class Docks(QtCore.QObject):
 
         self.prev=None
         self.current=None
-        self.fullscreen=False
-
         self.window=window
+        self.fullscreen=False
         self.window.installEventFilter(self)
-
         self.createDocks()
-        self.name=self.__class__.__name__
-        self.s_settings=window.app.config.get(
-                self.name, {})
 
     def createDocks(self):
 

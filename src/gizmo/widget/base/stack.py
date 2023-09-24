@@ -11,9 +11,11 @@ class StackWidget(QtWidgets.QStackedWidget):
     keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
 
-    def __init__ (self):
+    def __init__ (self, *args, **kwargs):
 
-        super(StackWidget, self).__init__()
+        super(StackWidget, self).__init__(
+                *args, **kwargs
+                )
 
         self.main=None
         self.current=None
