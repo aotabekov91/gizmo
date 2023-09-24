@@ -45,7 +45,8 @@ class View(QtWidgets.QGraphicsView):
 
     def __init__(self, app, layout, scene_class=None):
 
-        super().__init__(app.window.main)
+        # super().__init__(app.window.main)
+        super().__init__()
 
         self.app=app
         self.m_model=None
@@ -123,7 +124,7 @@ class View(QtWidgets.QGraphicsView):
 
     def connect(self):
 
-        display=self.app.window.main.display
+        display=self.app.display
         self.mouseDoubleClickOccured.connect(
                 display.viewMouseDoubleClickOccured)
         self.mouseReleaseOccured.connect(
@@ -301,7 +302,7 @@ class View(QtWidgets.QGraphicsView):
         if event.type()==QtCore.QEvent.Enter:
             self.setFocus()
             self.focusGained.emit(self)
-            self.app.window.main.display.setCurrentView(self)
+            self.app.display.setCurrentView(self)
             self.app.plugman.set('normal')
         return super().event(event)
 

@@ -2,7 +2,7 @@ import re
 from PyQt5 import QtCore
 from inspect import signature
 
-class EventListener(QtCore.QObject):
+class Ear(QtCore.QObject):
 
     tabPressed=QtCore.pyqtSignal()
     escapePressed=QtCore.pyqtSignal()
@@ -29,7 +29,7 @@ class EventListener(QtCore.QObject):
             wait_run=40,
             prefix_keys={},
             wait_time=200,
-            listening=True,
+            listening=False,
             listen_leader=None, 
             command_leader=None,
             mode_on_exit='normal',
@@ -109,9 +109,9 @@ class EventListener(QtCore.QObject):
 
         obj=self.obj
         if self.app: 
-            obj=self.app.qapp
             self.app.plugman.plugsLoaded.connect(
                     self.savePlugKeys)
+            obj=self.app.uiman.qapp
         else:
             self.saveOwnKeys()
         obj.installEventFilter(self)
@@ -126,7 +126,6 @@ class EventListener(QtCore.QObject):
     def setup(self):
 
         self.setObj()
-        # self.saveOwnKeys()
         self.timer=QtCore.QTimer()
         self.timer.timeout.connect(
                 lambda: self.executeMatch([], [], 0))

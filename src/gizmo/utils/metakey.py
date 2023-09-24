@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from .listener_event import EventListener
+from gizmo.utils.ear import Ear
 
 class MetaKey(type(QtCore.QObject)):
 
@@ -7,5 +7,6 @@ class MetaKey(type(QtCore.QObject)):
 
         obj=type.__call__(cls, *args, **kwargs)
         obj.name=obj.__class__.__name__
-        obj.ear=EventListener(obj=obj)
+        obj.ear=Ear(obj=obj)
+        obj.ear.listen()
         return obj

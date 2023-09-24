@@ -240,7 +240,7 @@ class BaseDisplay:
 
         self.deactivate(focusView=False)
         self.setFocus()
-        view=self.app.window.main.display.view
+        view=self.app.display.view
         if view: 
             view.setFocus()
 
