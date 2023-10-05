@@ -6,10 +6,9 @@ class InputTree (QtWidgets.QWidget):
 
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
+    keysChanged=QtCore.pyqtSignal(str)
     inputTextChanged=QtCore.pyqtSignal()
     inputReturnPressed=QtCore.pyqtSignal()
-
-    keysChanged=QtCore.pyqtSignal(str)
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__(self, 
@@ -20,7 +19,6 @@ class InputTree (QtWidgets.QWidget):
         super(InputTree, self).__init__()
 
         self.set_base_style=set_base_style
-
         layout, style_sheet=self.setUI()
         self.setLayout(layout)
 

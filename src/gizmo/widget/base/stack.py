@@ -2,13 +2,14 @@ from PyQt5 import QtWidgets, QtCore
 
 class StackWidget(QtWidgets.QStackedWidget):
 
+    focusLost=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     showWanted=QtCore.pyqtSignal()
-    focusLost=QtCore.pyqtSignal()
-    focusGained=QtCore.pyqtSignal()
-
-    resizeEventOccurred=QtCore.pyqtSignal()
     keysChanged=QtCore.pyqtSignal(str)
+    focusGained=QtCore.pyqtSignal(object)
+    widgetAdded=QtCore.pyqtSignal(object)
+    earingStarted=QtCore.pyqtSignal(object)
+    resizeEventOccurred=QtCore.pyqtSignal()
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__ (self, *args, **kwargs):
@@ -20,14 +21,15 @@ class StackWidget(QtWidgets.QStackedWidget):
         self.main=None
         self.current=None
         self.previous=None
-        self.centered=False
-
         self.listener=None
+        self.centered=False
+        self.setWindowFlags(
+                QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(
+                QtCore.Qt.WA_TranslucentBackground)
 
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-
-    def setCentered(self, cond=False): self.centered=cond
+    def setCentered(self, cond=False): 
+        self.centered=cond
 
     def installEventFilter(self, listener):
 
@@ -70,6 +72,7 @@ class StackWidget(QtWidgets.QStackedWidget):
             widget.keysChanged.connect(self.keysChanged)
         if self.listener: 
             widget.installEventFilter(self.listener)
+        self.widgetAdded.emit(widget)
         return widget.sid
 
     def removeWidget(self, widget):

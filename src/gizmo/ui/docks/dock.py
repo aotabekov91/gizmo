@@ -29,31 +29,31 @@ class Dock(QtWidgets.QDockWidget):
 
         super().setFocus()
 
-        if not widget: widget=self.current()
+        if not widget: 
+            widget=self.current()
         if widget:
             self.docks.setCurrent(self)
             self.show()
-            self.tab.setCurrentIndex(widget.index)
+            self.tab.setCurrentIndex(
+                    widget.index)
             self.tab.show()
             widget.setFocus()
-            widget.focusGained.emit()
+            widget.focusGained.emit(widget)
 
     def activate(self, widget): 
 
-        if not self.widgets or self.widgets[-1]!=widget: self.widgets+=[widget]
+        if not self.widgets or self.widgets[-1]!=widget: 
+            self.widgets+=[widget]
 
         self.setFocus(widget)
-
         widget.show()
-
         widget.setFixedSize(self.tab.size())
         widget.prev_size=self.tab.size()
         widget.adjustSize()
-
         widget.dock.show()
         widget.dock.tab.show()
         widget.setFocus()
-        widget.focusGained.emit()
+        widget.focusGained.emit(widget)
 
         self.docks.adjustDocks()
 
@@ -61,7 +61,6 @@ class Dock(QtWidgets.QDockWidget):
 
         if widget in self.widgets: 
             self.widgets.pop(self.widgets.index(widget))
-
         if restore and self.widgets:
             prev=self.widgets[-1]
             widget.dock.tab.setCurrentIndex(prev.index)
@@ -70,22 +69,24 @@ class Dock(QtWidgets.QDockWidget):
             self.hide()
             self.docks.adjustDocks()
             self.parent().main.setFocus()
-
         self.docks.adjustDocks()
 
     def event(self, event):
 
         if event.type()==QtCore.QEvent.Enter:
             current=self.current()
-            if current: current.focusGained.emit()
+            if current: 
+                current.focusGained.emit(current)
         if event.type()==QtCore.QEvent.Leave:
             current=self.current()
-            if current: current.focusLost.emit()
+            if current: 
+                current.focusLost.emit()
         return super().event(event)
 
     def current(self):
 
-        if self.widgets: return self.widgets[-1]
+        if self.widgets: 
+            return self.widgets[-1]
 
     def installEventFilter(self, listener):
 

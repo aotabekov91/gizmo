@@ -1,6 +1,6 @@
 import re
-from PyQt5 import QtCore
 from inspect import signature
+from PyQt5 import QtCore, QtWidgets
 
 class Ear(QtCore.QObject):
 
@@ -9,16 +9,15 @@ class Ear(QtCore.QObject):
     returnPressed=QtCore.pyqtSignal()
     backspacePressed=QtCore.pyqtSignal()
     carriageReturnPressed=QtCore.pyqtSignal()
-
     keysSet=QtCore.pyqtSignal(object)
     keysChanged=QtCore.pyqtSignal(str)
     keyRegistered=QtCore.pyqtSignal(object)
     keyPressed=QtCore.pyqtSignal(object, object)
-
     forceDelisten=QtCore.pyqtSignal()
     delistenWanted=QtCore.pyqtSignal()
     modeWanted=QtCore.pyqtSignal(object)
     listenWanted=QtCore.pyqtSignal(object)
+    earingStarted=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -55,7 +54,6 @@ class Ear(QtCore.QObject):
         self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
-
         self.listen_leader=self.parseKey(listen_leader)
         self.command_leader=self.parseKey(command_leader)
         self.setup()
@@ -64,6 +62,10 @@ class Ear(QtCore.QObject):
 
         self.listening=True
         self.clearKeys()
+        self.earingStarted.emit(self)
+        qapp=QtWidgets.QApplication.instance()
+        if qapp:
+            qapp.earGained.emit(self)
 
     def delisten(self):
 
@@ -134,6 +136,9 @@ class Ear(QtCore.QObject):
         self.escapePressed.connect(
                 self.on_escapePressed)
         self.setKeyMap()
+        qapp=QtWidgets.QApplication.instance()
+        if qapp:
+            qapp.earSet.emit(self)
 
     def setKeyMap(self):
 

@@ -8,9 +8,9 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
     keysChanged=QtCore.pyqtSignal(str)
-    keyPressed=QtCore.pyqtSignal(object, object)
     itemChanged=QtCore.pyqtSignal(object)
     indexChanged=QtCore.pyqtSignal(object)
+    keyPressed=QtCore.pyqtSignal(object, object)
     keyPressEventOccurred=QtCore.pyqtSignal(object)
 
     def __init__(self, 
@@ -71,14 +71,14 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                 return m.itemFromIndex(index)
 
     @register('k')
-    def moveUp(self, digit=1):
+    def up(self, digit=1):
 
         if self.currentIndex(): 
             for d in range(digit): 
                 self.customMove('MoveUp')
 
     @register('j')
-    def moveDown(self, digit=1):
+    def down(self, digit=1):
 
         if self.currentIndex(): 
             for d in range(digit): 
@@ -203,13 +203,13 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         parent=index.parent()
         if parent.isValid(): self.setCurrentIndex(parent)
 
-    @register('sd')
+    @register('gs')
     def gotoSiblingDown(self, digit=1):
 
         for d in range(digit):
             self.gotoSibling(kind='down')
 
-    @register('su')
+    @register('gS')
     def gotoSiblingUp(self, digit=1):
 
         for d in range(digit):
@@ -217,30 +217,47 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
 
     def gotoSibling(self, kind='up'):
 
-        index=self.currentIndex()
-        parent=index.parent()
-
+        idx=self.currentIndex()
+        parent=idx.parent()
         if kind=='up':
-            new=parent.child(index.row()-1, 0)
+            new=parent.child(
+                    idx.row()-1, 0)
         else:
-            new=parent.child(index.row()+1, 0)
+            new=parent.child(
+                    idx.row()+1, 0)
         if new.isValid(): 
-            self.setCurrentIndex(new )
+            self.setCurrentIndex(new)
 
-    def setCurrentIndex(self, index):
+    @register('G')
+    def goto(self, digit=1):
 
-        super().setCurrentIndex(index)
-        if self.model() is None: return
-        if self.currentItem() is None: return
-        self.indexChanged.emit(index)
+        def getRowIndex(row):
+            idx = self.model().index(0, 0)
+            for i in range(row):
+                idx = self.indexBelow(idx)
+            return idx
 
-        self.itemChanged.emit(self.currentItem())
+        idx=getRowIndex(digit)
+        print(idx.isValid())
+        self.setCurrentIndex(idx)
+
+    def setCurrentIndex(self, idx):
+
+        super().setCurrentIndex(idx)
+        if self.model() is None: 
+            return
+        if self.currentItem() is None: 
+            return
+        self.indexChanged.emit(
+                idx)
+        self.itemChanged.emit(
+                self.currentItem())
         self.selectionModel().select(
-                index, QtCore.QItemSelectionModel.Current)
+                idx, 
+                QtCore.QItemSelectionModel.Current)
         if hasattr(self.model(), 'itemChanged'):
             self.model().itemChanged.emit(
-                    self.currentItem()
-                    )
+                    self.currentItem())
 
     def event(self, event):
 
