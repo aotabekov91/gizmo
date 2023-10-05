@@ -238,7 +238,6 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             return idx
 
         idx=getRowIndex(digit)
-        print(idx.isValid())
         self.setCurrentIndex(idx)
 
     def setCurrentIndex(self, idx):

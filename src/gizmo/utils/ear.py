@@ -197,8 +197,10 @@ class Ear(QtCore.QObject):
         matches, partial = [], []
         if self.pressed:
             key, digit = self.getKeys()
-            matches, partial=self.getMatches(key, digit)
-            self.runMatches(matches, partial, key, digit)
+            matches, partial=self.getMatches(
+                    key, digit)
+            self.runMatches(
+                    matches, partial, key, digit)
 
         if matches or partial: 
             return True
