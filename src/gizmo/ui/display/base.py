@@ -2,15 +2,22 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class BaseDisplay:
 
-    viewCreated=QtCore.pyqtSignal(object)
-    viewChanged=QtCore.pyqtSignal(object, object)
-
-    itemChanged = QtCore.pyqtSignal(object, object)
+    annotationAdded=QtCore.pyqtSignal(
+            object)
+    annotationCreated=QtCore.pyqtSignal(
+            object)
+    annotationRegistered=QtCore.pyqtSignal(
+            object)
+    viewCreated=QtCore.pyqtSignal(
+            object)
+    viewChanged=QtCore.pyqtSignal(
+            object, object)
+    itemChanged = QtCore.pyqtSignal(
+            object, object)
     itemPainted = QtCore.pyqtSignal(
             object, object, object, object, object)
     positionChanged = QtCore.pyqtSignal(
             object, object, object, object)
-
     itemKeyPressOccured=QtCore.pyqtSignal(
             [object, object, object])
     itemHoverMoveOccured=QtCore.pyqtSignal(
@@ -23,7 +30,6 @@ class BaseDisplay:
             [object, object, object])
     itemMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object, object])
-
     viewSelection=QtCore.pyqtSignal(
             [object, object])
     viewKeyPressOccurred=QtCore.pyqtSignal(
