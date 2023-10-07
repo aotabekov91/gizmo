@@ -303,7 +303,7 @@ class View(QtWidgets.QGraphicsView):
             self.setFocus()
             self.focusGained.emit(self)
             self.app.display.setCurrentView(self)
-            self.app.plugman.set('normal')
+            self.app.moder.set('normal')
         return super().event(event)
 
     def visibleItems(self): return self.items(self.viewport().rect())

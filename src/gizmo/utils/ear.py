@@ -111,7 +111,7 @@ class Ear(QtCore.QObject):
 
         obj=self.obj
         if self.app: 
-            self.app.plugman.plugsLoaded.connect(
+            self.app.moder.plugsLoaded.connect(
                     self.savePlugKeys)
             obj=self.app.uiman.qapp
         else:
@@ -332,7 +332,7 @@ class Ear(QtCore.QObject):
 
     def savePlugKeys(self):
 
-        actions=self.app.plugman.actions
+        actions=self.app.moder.actions
         for obj, actions in actions.items():
             for (pname, fname), m in actions.items():
                 any_='any' in m.modes
@@ -412,7 +412,7 @@ class Ear(QtCore.QObject):
         pressed=(self.pressed,)
 
         if self.app:
-            ms=self.app.plugman.plugs.items()
+            ms=self.app.moder.plugs.items()
             for _, m in ms:
                 f=getattr(m, 'checkLeader', None)
                 if f and f(event, pressed):

@@ -136,35 +136,35 @@ class Docks(QtCore.QObject):
 
     def focusLeftDock(self): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.focus('left')
 
     def focusRightDock(self): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.focus('right')
 
     def focusTopDock(self): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.focus('top')
 
     def focusBottomDock(self): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.focus('bottom') 
 
     def toggleDockFullscreen(self): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.toggleFullscreen()
 
     def zoomInDock(self, digit=1): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.zoom('in', digit)
 
     def zoomOutDock(self, digit=1): 
 
-        self.window.app.plugman.plugs.command.delisten_wanted=None
+        self.window.app.moder.plugs.command.delisten_wanted=None
         self.zoom('out', digit)
