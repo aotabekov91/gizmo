@@ -129,8 +129,8 @@ class Ear(QtCore.QObject):
 
         self.setObj()
         self.timer=QtCore.QTimer()
-        self.timer.timeout.connect(
-                lambda: self.executeMatch([], [], 0))
+        f=lambda: self.executeMatch([], [], 0)
+        self.timer.timeout.connect(f)
         self.backspacePressed.connect(
                 self.clearKeys)
         self.escapePressed.connect(
@@ -323,24 +323,27 @@ class Ear(QtCore.QObject):
     def saveOwnKeys(self):
 
         for f in self.obj.__dir__():
-            m=getattr(self.obj, f)
-            if hasattr(m, 'key'):
-                own_m=len(m.modes)==0
-                in_m=self.obj.name in m.modes
+            mode=getattr(self.obj, f)
+            if hasattr(mode, 'key'):
+                own_m=len(mode.modes)==0
+                in_m=self.obj.name in mode.modes
                 if any([own_m, in_m]):
-                    self.setKey(self.obj, m, m.name)
+                    self.setKey(
+                            self.obj, 
+                            mode, 
+                            mode.name)
 
     def savePlugKeys(self):
 
         actions=self.app.moder.actions
-        for obj, actions in actions.items():
-            for (pname, fname), m in actions.items():
+        for obj, col in actions.items():
+            for (pn, fn), m in col.items():
                 any_='any' in m.modes
                 own=obj==self.obj
                 own=own and len(m.modes)==0
                 in_=self.obj.name in m.modes
                 if any([own, any_, in_]):
-                    self.setKey(obj, m, fname)
+                    self.setKey(obj, m, fn)
         self.keysSet.emit(self.commands)
 
     def parseKey(self, key, prefix=''):
