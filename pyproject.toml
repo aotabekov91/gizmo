@@ -6,7 +6,7 @@ authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "<4.0"
 pynvim = ">=0.4.3"
 pyqt5-qt5 = "==5.15.2"
 PyQtWebEngine = ">=5.15.6"
