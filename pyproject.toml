@@ -6,10 +6,10 @@ authors = ["A O <adhambek.otabekov.post@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = "^3.9"
 pynvim = ">=0.4.3"
-PyQt5  = ">=5.15.6"
-PyQtWebEngine = ">=5.15.6"
+pyqt5-qt5 = "==5.15.2"
+PyQtWebEngine = "==5.15.6"
 
 [build-system]
 requires = ["poetry-core"]

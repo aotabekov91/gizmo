@@ -1,0 +1,68 @@
+import pynvim
+from tempfile import NamedTemporaryFile
+
+class NVim():
+
+    def __init__(self):
+
+        self.nvim = pynvim.attach(
+                'child', 
+                argv=[
+                    '/bin/env', 
+                    'nvim', 
+                    '--embed', 
+                    '--headless'
+                    ])
+
+        self.inputDoneFile = NamedTemporaryFile()
+        self.inputId = 0
+
+    def setText(self, text):
+        self.buffer()[:] = text.split('\n')
+
+    def text(self):
+        return '\n'.join(self.buffer()[:])
+
+    def buffer(self):
+        return self.nvim.current.buffer
+
+    def cursorPosition(self):
+        return self.nvim.windows[0].cursor
+
+    def cursorAnchor(self):
+
+        return [self.nvim.eval('line("v")'), 
+                self.nvim.eval('col("v")')]
+
+    def keyPress(self, key):
+
+        self.inputId += 1
+        self.nvim.input(key)
+        self.nvim.call('writefile', 
+                       [self.inputId], 
+                       self.inputDoneFile.name, 
+                       async_=True)
+
+    def mode(self):
+        return self.eval('mode()')
+
+    def commandLine(self):
+        return self.eval('getcmdline()')
+
+    def commandLineType(self):
+        return self.eval('getcmdtype()')
+
+    def byte(self, row, col):
+
+        cmd='line2byte(' + str(row) + ')'
+        return self.eval(cmd) + col - 1
+
+    def eval(self, expr):
+        return self.nvim.eval(expr)
+
+    def isBlocked(self):
+
+        with open(self.inputDoneFile.name, 'r') as f:
+            data = f.read().strip()
+            return data != str(self.inputId)
+        return False
