@@ -45,9 +45,8 @@ class BaseDisplay:
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
-    def setup(self):#, app):
+    def setup(self):
 
-        # self.app=app
         self.count=-1
         self.views={}
         self.view=None
@@ -242,10 +241,10 @@ class BaseDisplay:
 
     def toggle(self):
 
-        if not self.activated:
-            self.activate()
-        else:
+        if self.activated:
             self.deactivate()
+        else:
+            self.activate()
 
     def cleanUp(self): 
 

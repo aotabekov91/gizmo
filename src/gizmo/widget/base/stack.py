@@ -115,6 +115,7 @@ class StackWidget(QtWidgets.QStackedWidget):
 
         if event.type()==QtCore.QEvent.Enter: 
             self.setFocus()
+            self.focusGained.emit(self)
         elif event.type()==QtCore.QEvent.Resize:
             self.resized.emit()
         return super().event(event)
@@ -138,4 +139,5 @@ class StackWidget(QtWidgets.QStackedWidget):
     def hide(self):
 
         super().hide()
-        if self.centered: self.setLocation('center')
+        if self.centered: 
+            self.setLocation('center')

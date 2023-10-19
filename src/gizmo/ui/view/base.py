@@ -4,11 +4,14 @@ from ..scene import Scene
 
 class View(QtWidgets.QGraphicsView):
 
-    resized=QtCore.pyqtSignal(object, object)
-    modelModified = QtCore.pyqtSignal(object)
-    layoutModeChanged = QtCore.pyqtSignal(object)
-    focusGained=QtCore.pyqtSignal(object)
-
+    focusGained=QtCore.pyqtSignal(
+            object)
+    resized=QtCore.pyqtSignal(
+            object, object)
+    modelModified = QtCore.pyqtSignal(
+            object)
+    layoutModeChanged = QtCore.pyqtSignal(
+            object)
     selection=QtCore.pyqtSignal(
             object, object)
     itemChanged = QtCore.pyqtSignal(
@@ -17,10 +20,8 @@ class View(QtWidgets.QGraphicsView):
             object, object, object, object, object)
     positionChanged = QtCore.pyqtSignal(
             object, object, object, object)
-
     keyPressOccurred=QtCore.pyqtSignal(
             [object, object])
-
     hoverMoveOccured = QtCore.pyqtSignal(
             [object, object])
     mouseMoveOccured = QtCore.pyqtSignal(
@@ -31,7 +32,6 @@ class View(QtWidgets.QGraphicsView):
             [object, object])
     mouseDoubleClickOccured = QtCore.pyqtSignal(
             [object, object])
-
     itemHoverMoveOccured = QtCore.pyqtSignal(
             [object, object, object])
     itemMouseMoveOccured = QtCore.pyqtSignal(
@@ -58,15 +58,13 @@ class View(QtWidgets.QGraphicsView):
 
         self.m_foldlevel=0
         self.m_cursor=QtCore.Qt.ArrowCursor
-
         self.zoom=1
         self.zoomInFactor=1.25
         self.zoomOutFactor=0.75
         self.zoomRange=[-10, 10]
-
-        self.name=self.__class__.__name__
         self.s_settings=app.config.get(
-                self.name, {})
+                self.__class__.__name__,
+                {})
 
         self.setup(scene_class, layout)
         self.connect()
@@ -287,15 +285,8 @@ class View(QtWidgets.QGraphicsView):
             else:
                 self.zoom = self.zoomRange[0]
 
-    def toggleCursor(self):
-
-        if self.m_cursor==QtCore.Qt.BlankCursor:
-            self.m_cursor=QtCore.Qt.ArrowCursor
-        else:
-            self.m_cursor=QtCore.Qt.BlankCursor
-        self.setCursor(self.m_cursor)
-
-    def name(self): return id(self)
+    def name(self): 
+        return id(self)
 
     def event(self, event):
 

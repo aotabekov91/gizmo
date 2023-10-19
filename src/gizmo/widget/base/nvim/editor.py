@@ -60,6 +60,8 @@ class VimEditor(QtWidgets.QTextEdit):
         mode = self.nvim.mode()
         row, col = self.nvim.cursorPosition()
         cursor = QtGui.QTextCursor(self.document())
+        pos=self.nvim.byte(row, col)
+        print(pos, (row, col))
         cursor.setPosition(self.nvim.byte(row, col))
         self.setTextCursor(cursor)
         selections = []
@@ -97,9 +99,7 @@ class VimEditor(QtWidgets.QTextEdit):
                     end -= 1
 
                 selection = QtWidgets.QTextEdit.ExtraSelection()
-
                 selection.cursor = QtGui.QTextCursor(self.document())
-
                 selection.cursor.setPosition(begin)
                 if mode == 'V':
                     if begin <= end:
