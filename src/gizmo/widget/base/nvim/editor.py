@@ -1,13 +1,13 @@
+from gizmo.widget.base.nvim import NVim
 from gizmo.utils import setEditorTabSize
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-from gizmo.widget.base.nvim import NVim
-
 class VimEditor(QtWidgets.QTextEdit):
+
+    modeChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
-            bar=None, 
             nvim=NVim, 
             parent = None, 
             tab_stop = 4,
@@ -19,8 +19,8 @@ class VimEditor(QtWidgets.QTextEdit):
                 objectName='NVimEditor'
                 )
 
-        self.bar = bar
         self.nvim = nvim
+        self.mode = None
         self.abort = False
         self.tab_stop=tab_stop
         self.setFont(QtGui.QFont(font))
@@ -35,18 +35,24 @@ class VimEditor(QtWidgets.QTextEdit):
                 QtWidgets.QApplication.processEvents()
                 if self.abort: return
             self.update()
+            self.updateMode()
 
     def text(self):
-
         return self.nvim.text()
 
     def clear(self):
 
         super().clear()
         self.nvim.setText('')
-
         #TODO: instead of jk [which is custom-specific] send Escape to return to normal mode from insert mode
         self.nvim.keyPress('jk') 
+
+    def updateMode(self):
+
+        mode = self.nvim.mode()
+        if self.mode!=mode:
+            self.mode=mode
+            self.modeChanged.emit(mode)
 
     def update(self):
 
@@ -119,10 +125,4 @@ class VimEditor(QtWidgets.QTextEdit):
                 selection.format.setBackground(QtCore.Qt.black)
                 selection.format.setForeground(QtCore.Qt.white)
                 selections.append(selection)
-
         self.setExtraSelections(selections)
-
-        bar_data={'info': f"[{mode}]"}
-        cmd=self.nvim.commandLine()
-        if cmd: bar_data['detail']=cmd
-        self.bar.setData(bar_data)

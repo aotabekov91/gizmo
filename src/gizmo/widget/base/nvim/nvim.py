@@ -1,10 +1,11 @@
 import pynvim
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile as TmpFile
 
 class NVim():
 
     def __init__(self):
 
+        self.inputId = 0
         self.nvim = pynvim.attach(
                 'child', 
                 argv=[
@@ -14,8 +15,7 @@ class NVim():
                     '--headless'
                     ])
 
-        self.inputDoneFile = NamedTemporaryFile()
-        self.inputId = 0
+        self.inputDoneFile = TmpFile()
 
     def setText(self, text):
         self.buffer()[:] = text.split('\n')
@@ -38,10 +38,12 @@ class NVim():
 
         self.inputId += 1
         self.nvim.input(key)
-        self.nvim.call('writefile', 
-                       [self.inputId], 
-                       self.inputDoneFile.name, 
-                       async_=True)
+        self.nvim.call(
+                'writefile', 
+                [self.inputId], 
+                self.inputDoneFile.name, 
+                async_=True
+                )
 
     def mode(self):
         return self.eval('mode()')
