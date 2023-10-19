@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 
 class StackWidget(QtWidgets.QStackedWidget):
 
+    resized=QtCore.pyqtSignal()
     focusLost=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     showWanted=QtCore.pyqtSignal()
@@ -9,7 +10,6 @@ class StackWidget(QtWidgets.QStackedWidget):
     focusGained=QtCore.pyqtSignal(object)
     widgetAdded=QtCore.pyqtSignal(object)
     earingStarted=QtCore.pyqtSignal(object)
-    resizeEventOccurred=QtCore.pyqtSignal()
     keyPressed=QtCore.pyqtSignal(object, object)
 
     def __init__ (self, *args, **kwargs):
@@ -40,7 +40,6 @@ class StackWidget(QtWidgets.QStackedWidget):
 
     def setFixedWidth(self, width):
 
-        print(width)
         super().setFixedWidth(width)
         for i in range(self.count()): 
             self.widget(i).setFixedWidth(width)
@@ -90,8 +89,8 @@ class StackWidget(QtWidgets.QStackedWidget):
     def show(self, widget=None, focus=True):
 
         super().show()
-
-        if not widget: widget=self.main
+        if not widget: 
+            widget=self.main
         if widget:
             if self.current!=widget:
                 self.previous=self.current
@@ -100,22 +99,24 @@ class StackWidget(QtWidgets.QStackedWidget):
                 self.current=widget
             self.setCurrentIndex(widget.sid)
             self.current.show()
-            if focus: self.setFocus()
-
-        if self.centered: self.setLocation('center')
+            if focus: 
+                self.setFocus()
+        if self.centered: 
+            self.setLocation('center')
         self.showWanted.emit()
 
     def setFocus(self):
 
         super().setFocus()
-        if self.current: self.current.setFocus()
+        if self.current: 
+            self.current.setFocus()
 
     def event(self, event):
 
         if event.type()==QtCore.QEvent.Enter: 
             self.setFocus()
         elif event.type()==QtCore.QEvent.Resize:
-            self.resizeEventOccurred.emit()
+            self.resized.emit()
         return super().event(event)
 
     def adjustSize(self):

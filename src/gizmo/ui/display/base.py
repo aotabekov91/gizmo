@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 class BaseDisplay:
 
@@ -45,9 +45,9 @@ class BaseDisplay:
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
-    def setup(self, app):
+    def setup(self):#, app):
 
-        self.app=app
+        # self.app=app
         self.count=-1
         self.views={}
         self.view=None
@@ -131,20 +131,27 @@ class BaseDisplay:
                 self.setCurrentView(view)
                 self.focusCurrentView()
 
-    def open(self, 
-             model=None, 
-             how='reset', 
-             focus=True,
-             **kwargs):
+    def open(
+            self, 
+            model=None, 
+            how='reset', 
+            focus=True, 
+            **kwargs
+            ):
 
         if how=='reset':
-            if self.view and self.view.model()==model: 
-                return
+            if self.view:
+                cmodel=self.view.model()
+                if cmodel==model: return
 
         view=self.createView(model)
         if view: 
             self.setView(
-                    view, how, focus, **kwargs)
+                    view, 
+                    how, 
+                    focus, 
+                    **kwargs
+                    )
             self.viewCreated.emit(view)
 
     def createView(self, model):

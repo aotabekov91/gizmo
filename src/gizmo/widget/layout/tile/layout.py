@@ -3,7 +3,10 @@ from ....widget import ViewContainer
 
 class TileLayout:
 
-    def __init__(self, parent=None):
+    def __init__(
+            self, 
+            parent=None
+            ):
 
         self.delta=10
         self.ratio=1.6
@@ -34,8 +37,6 @@ class TileLayout:
 
     def getContainer(self, widget):
 
-        # return widget
-        # Todo
         return ViewContainer(
                 widget, 
                 parent=self.parent,
@@ -244,11 +245,9 @@ class TileLayout:
         l = self.current
         p = l.parent
         while p:
-
             cond = not p.hsplit
             if d in ['left', 'right']: 
                 cond = p.hsplit
-
             if d in ['right', 'down']:
                 cond = cond and l is p.leaves[0]
                 ratio=max(5, p.ratio - self.delta)

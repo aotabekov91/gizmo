@@ -7,14 +7,17 @@ from gizmo.ui.statusbar import StatusBar
 
 class StackWindow(QtWidgets.QMainWindow):
 
-    windowResized=QtCore.pyqtSignal()
+    resized=QtCore.pyqtSignal()
 
     def __init__(self):
 
         super().__init__()
         self.stack=StackWidget(
                 objectName='StackedWindow')
-        self.setCentralWidget(self.stack)
+        self.stack.resized.connect(
+                self.resized)
+        self.setCentralWidget(
+                self.stack)
         self.setContentsMargins(
                 0, 0, 0, 0)
         self.centralWidget().layout().setContentsMargins(
@@ -34,4 +37,4 @@ class StackWindow(QtWidgets.QMainWindow):
     def resizeEvent(self, event):
 
         super().resizeEvent(event)
-        self.windowResized.emit()
+        self.resized.emit()

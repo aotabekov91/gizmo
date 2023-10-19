@@ -1,24 +1,28 @@
 from PyQt5 import QtWidgets, QtCore
 
-from gizmo.widget.layout import TileLayout
-
-from .base import BaseDisplay
 from gizmo.widget import ViewContainer
+from gizmo.ui.display import BaseDisplay
+from gizmo.widget.layout import TileLayout
 
 class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
-    def __init__(self, 
-                 app,
-                 objectName='Display',
-                 ):
+    def __init__(
+            self, 
+            window=None,
+            objectName='Display',
+            ):
 
         super().__init__(
-                parent=app.window,
+                parent=window,
                 objectName=objectName,
                 )
-        self.setup(app)
-        self.app.window.main.resized.connect(
-                self.m_layout.update)
+        self.setup()
+        self.window=window
+        self.window.resized.connect(
+                self.update)
+
+    def update(self):
+        self.m_layout.update()
 
     def setUI(self):
 
@@ -53,11 +57,13 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
             widget=widget.view
         super().setCurrentView(widget)
 
-    def setView(self, 
-                view, 
-                how=None, 
-                focus=True, 
-                **kwargs):
+    def setView(
+            self, 
+            view, 
+            how=None, 
+            focus=True, 
+            **kwargs
+            ):
 
         self.setCurrentView(view)
         if how=='reset':
@@ -82,9 +88,11 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
         self.m_layout.addWidget(widget, hsplit)
 
-    def equalize(self): self.m_layout.equalize()
+    def equalize(self):
+        self.m_layout.equalize()
 
-    def toggleSplit(self): self.m_layout.toggleSplit()
+    def toggleSplit(self): 
+        self.m_layout.toggleSplit()
 
     def removeWidget(self):
 
@@ -102,15 +110,12 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
         return node
 
     def move(self, kind):
-
         return self.m_layout.move(kind)
 
     def flip(self, kind):
-
         return self.m_layout.flip(kind)
 
     def resize(self, direction, kind):
-
         return self.m_layout.resize(direction, kind)
 
     def split(self, hsplit=False): 
