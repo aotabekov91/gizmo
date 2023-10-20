@@ -1,5 +1,4 @@
 from PyQt5 import QtCore
-
 from ..base import StackWidget
 from ..compound import CommandList
 
@@ -7,12 +6,20 @@ class CommandStack(StackWidget):
 
     commandExecuted=QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(
+            self, 
+            *args, 
+            **kwargs
+            ):
 
-        super(CommandStack, self).__init__()
-        super().addWidget(CommandList(), 'commands')
-        self.commands.commandExecuted.connect(
+        super().__init__(
+                *args, 
+                **kwargs
+                )
+        c=CommandList()
+        c.commandExecuted.connect(
                 self.commandExecuted)
+        self.addWidget(c, 'commands')
 
     def toggleCommands(self):
 

@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 
 from ..base import TreeWidget, InputLabelWidget
 
-class InputTree (QtWidgets.QWidget):
+class InputTree(QtWidgets.QWidget):
 
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
@@ -11,21 +11,18 @@ class InputTree (QtWidgets.QWidget):
     inputReturnPressed=QtCore.pyqtSignal()
     keyPressed=QtCore.pyqtSignal(object, object)
 
-    def __init__(self, 
+    def __init__(
+            self, 
             *args, 
-            set_base_style=True,
-            **kwargs): 
+            **kwargs
+            ): 
 
-        super(InputTree, self).__init__()
-
-        self.set_base_style=set_base_style
+        super().__init__(
+                *args, 
+                **kwargs
+                )
         layout, style_sheet=self.setUI()
         self.setLayout(layout)
-
-        # if self.set_base_style:
-        #     self.setStyleSheet(style_sheet)
-
-        self.setMinimumSize(400, 600)
         self.input.hide()
         self.setup()
 
@@ -52,9 +49,7 @@ class InputTree (QtWidgets.QWidget):
                 background-color: transparent; 
                 }
                 '''
-        self.tree=TreeWidget(
-                set_base_style=self.set_base_style,
-                )
+        self.tree=TreeWidget()
         self.input=InputLabelWidget()
         self.tree.hideWanted.connect(
                 self.hideWanted)

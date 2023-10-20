@@ -59,11 +59,9 @@ class VimEditor(QtWidgets.QTextEdit):
         self.setPlainText(self.nvim.text())
         mode = self.nvim.mode()
         row, col = self.nvim.cursorPosition()
-        cursor = QtGui.QTextCursor(self.document())
-        pos=self.nvim.byte(row, col)
-        print(pos, (row, col))
-        cursor.setPosition(self.nvim.byte(row, col))
-        self.setTextCursor(cursor)
+        c = QtGui.QTextCursor(self.document())
+        c.setPosition(self.nvim.byte(row, col))
+        self.setTextCursor(c)
         selections = []
         cond=mode != 'i' 
         cond=cond and mode != 'v' 
@@ -78,7 +76,7 @@ class VimEditor(QtWidgets.QTextEdit):
         
         if cond:
             selection = QtWidgets.QTextEdit.ExtraSelection()
-            selection.cursor = cursor
+            selection.cursor = c
             selection.cursor.movePosition(
                     QtGui.QTextCursor.NextCharacter, 
                     QtGui.QTextCursor.KeepAnchor)

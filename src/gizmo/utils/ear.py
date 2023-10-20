@@ -123,6 +123,7 @@ class Ear(QtCore.QObject):
         if mode==self.obj:
             self.delistenWanted.emit()
         else:
+            mode.activate()
             self.modeWanted.emit(mode)
 
     def setup(self):
@@ -152,6 +153,7 @@ class Ear(QtCore.QObject):
 
     def on_escapePressed(self): 
 
+        self.clearKeys()
         if self.delisten_on_exec: 
             self.modeWanted.emit(self.mode_on_exit)
         else:
@@ -183,10 +185,14 @@ class Ear(QtCore.QObject):
         if event.type()!=QtCore.QEvent.KeyPress:
             return False
         self.registerKey(event)
-        if self.checkLeader(event):
+        if self.checkSpecial(event):
             event.accept()
             return True
-        elif self.checkSpecialCharacters(event):
+        elif self.checkLeader(event):
+            event.accept()
+            return True
+        elif event.key()==QtCore.Qt.Key_Escape:
+            self.escapePressed.emit()
             event.accept()
             return True
         return self.addKeys(event)
@@ -201,7 +207,6 @@ class Ear(QtCore.QObject):
                     key, digit)
             self.runMatches(
                     matches, partial, key, digit)
-
         if matches or partial: 
             return True
         else:
@@ -413,7 +418,6 @@ class Ear(QtCore.QObject):
     def checkLeader(self, event):
 
         pressed=(self.pressed,)
-
         if self.app:
             ms=self.app.moder.plugs.items()
             for _, m in ms:
@@ -429,31 +433,36 @@ class Ear(QtCore.QObject):
             if pressed in self.command_leader:
                 self.obj.toggleCommandMode()
                 return True
+    
+    def checkSpecial(self, event):
 
-    def checkSpecialCharacters(self, event):
-
-        special=None
+        matched=False
         enter=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
         if event.key() in enter: 
-            self.returnPressed.emit()
-            special='return'
+            if 'return' in self.special:
+                self.returnPressed.emit()
+                matched=True
         elif event.key()==QtCore.Qt.Key_Backspace:
-            self.backspacePressed.emit()
-            special='backspace'
+            if 'backspace' in self.special:
+                self.backspacePressed.emit()
+                matched=True
         elif event.key()==QtCore.Qt.Key_Escape:
-            self.escapePressed.emit()
-            special='escape'
+            if 'escape' in self.special:
+                self.escapePressed.emit()
+                matched=True
         elif event.key()==QtCore.Qt.Key_Tab:
-            self.tabPressed.emit()
-            special='tab'
+            if 'tab' in self.special:
+                self.tabPressed.emit()
+                matched=True
         elif event.modifiers()==QtCore.Qt.ControlModifier:
             if event.key()==QtCore.Qt.Key_BracketLeft:
-                self.escapePressed.emit()
-                special='escape_bracket'
+                if 'escape_bracket' in self.special:
+                    self.escapePressed.emit()
+                    matched=True
             elif event.key()==QtCore.Qt.Key_M:
-                self.carriageReturnPressed.emit()
-                special='carriage'
-        if special in self.special:
-            return True
-        else:
-            return False
+                if 'carriage' in self.special:
+                    self.carriageReturnPressed.emit()
+                    matched=True
+        if matched: 
+            self.clearKeys()
+        return matched

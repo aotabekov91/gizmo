@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 class Overlay (QWidget):
+
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.setPalette(QPalette(Qt.transparent))

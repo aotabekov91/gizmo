@@ -13,48 +13,21 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     keyPressed=QtCore.pyqtSignal(object, object)
     keyPressEventOccurred=QtCore.pyqtSignal(object)
 
-    def __init__(self, 
+    def __init__(
+            self, 
             *args, 
-            set_base_style=True,
-            **kwargs): 
+            **kwargs
+            ): 
 
-        super().__init__(*args, **kwargs)
-        self.set_base_style=set_base_style
+        super().__init__(
+                *args, 
+                **kwargs
+                )
         self.setHeaderHidden(True)
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
-        self.setUI()
-
-    def setBaseStyleSheet(self):
-
-        self.style_sheet = '''
-            QTreeView{
-                border-width: 0px;
-                color: transparent;
-                border-color: transparent; 
-                background-color: transparent; 
-                show-decoration-selected: 0;
-                }
-            QTreeView::item{
-                color: white;
-                border-color: transparent;
-                background-color: transparent;
-                border-radius: 0px;
-                padding: 5px 5px 5px 10px;
-                }
-            QTreeView::item:selected{
-                color: black;
-                background-color: yellow;
-                }
-                '''
-        # self.setStyleSheet(self.style_sheet)
-
-    def setUI(self):
-
-        if self.set_base_style:
-            self.setBaseStyleSheet()
 
     def currentItem(self):
 
@@ -67,7 +40,8 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                 return m.itemFromIndex(
                         self.currentIndex())
             elif type(m)==QtCore.QSortFilterProxyModel:
-                index=m.mapToSource(self.currentIndex())
+                index=m.mapToSource(
+                        self.currentIndex())
                 return m.itemFromIndex(index)
 
     @register('k')
@@ -87,8 +61,10 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     @register('l')
     def expand(self, index=None):
 
-        if index: self.setCurrentIndex(index)
-        super().expand(self.currentIndex())
+        if index: 
+            self.setCurrentIndex(index)
+        super().expand(
+                self.currentIndex())
 
     @register('e')
     def expandAll(self, index=None):
@@ -122,17 +98,21 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     @register('H')
     def collapseAllInside(self, item=None):
 
-        if item is None: item=self.currentItem()
-        if item is None: return
-        super().collapse(item.index())
-        for i in range(item.rowCount()):
-            self.collapseAllInside(item.child(i))
+        if item is None: 
+            item=self.currentItem()
+        if item:
+            super().collapse(item.index())
+            for i in range(item.rowCount()):
+                self.collapseAllInside(
+                        item.child(i))
 
     @register('h')
     def collapse(self, index=None):
 
-        if index is None: index=self.currentIndex()
-        if index: super().collapse(index)
+        if index is None: 
+            index=self.currentIndex()
+        if index: 
+            super().collapse(index)
 
     @register('d')
     def rootDown(self, digit=1):
@@ -151,13 +131,18 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         for d in range(digit):
             index=self.rootIndex()
             if index.parent().isValid():
-                self.setRootIndex(index.parent())
-                self.setCurrentIndex(index)
+                self.setRootIndex(
+                        index.parent())
+                self.setCurrentIndex(
+                        index)
 
     def customMove(self, direction):
 
         move=getattr(QtWidgets.QAbstractItemView, direction)
-        index=self.moveCursor(move, QtCore.Qt.NoModifier)
+        index=self.moveCursor(
+                move, 
+                QtCore.Qt.NoModifier
+                )
         self.setCurrentIndex(index)
 
     @register('gg')

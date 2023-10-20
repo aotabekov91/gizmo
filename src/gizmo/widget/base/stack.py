@@ -2,27 +2,31 @@ from PyQt5 import QtWidgets, QtCore
 
 class StackWidget(QtWidgets.QStackedWidget):
 
-    resized=QtCore.pyqtSignal()
     focusLost=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     showWanted=QtCore.pyqtSignal()
+    resized=QtCore.pyqtSignal(object)
     keysChanged=QtCore.pyqtSignal(str)
     focusGained=QtCore.pyqtSignal(object)
     widgetAdded=QtCore.pyqtSignal(object)
     earingStarted=QtCore.pyqtSignal(object)
     keyPressed=QtCore.pyqtSignal(object, object)
 
-    def __init__ (self, *args, **kwargs):
-
-        super(StackWidget, self).__init__(
-                *args, **kwargs
-                )
+    def __init__(
+            self, 
+            *args, 
+            **kwargs
+            ):
 
         self.main=None
         self.current=None
         self.previous=None
         self.listener=None
         self.centered=False
+        super().__init__(
+                *args, 
+                **kwargs
+                )
         self.setWindowFlags(
                 QtCore.Qt.FramelessWindowHint)
         self.setAttribute(
@@ -62,31 +66,44 @@ class StackWidget(QtWidgets.QStackedWidget):
         setattr(self, name, widget)
         if main: self.main=widget
         if hasattr(widget, 'hideWanted'):
-            widget.hideWanted.connect(self.hideWanted)
+            widget.hideWanted.connect(
+                    self.hideWanted)
         if hasattr(widget, 'showWanted'):
-            widget.showWanted.connect(self.showWanted)
+            widget.showWanted.connect(
+                    self.showWanted)
         if hasattr(widget, 'keyPressed'):
-            widget.keyPressed.connect(self.keyPressed)
+            widget.keyPressed.connect(
+                    self.keyPressed)
         if hasattr(widget, 'keysChanged'):
-            widget.keysChanged.connect(self.keysChanged)
+            widget.keysChanged.connect(
+                    self.keysChanged)
         if self.listener: 
-            widget.installEventFilter(self.listener)
+            widget.installEventFilter(
+                    self.listener)
         self.widgetAdded.emit(widget)
         return widget.sid
 
     def removeWidget(self, widget):
 
         setattr(self, widget.name, None)
-        if self.main==widget: setattr(self, 'main', None)
+        if self.main==widget: 
+            setattr(self, 'main', None)
         if hasattr(widget, 'hideWanted'):
-            widget.hideWanted.disconnect(self.hideWanted)
+            widget.hideWanted.disconnect(
+                    self.hideWanted)
         if hasattr(widget, 'showWanted'):
-            widget.showWanted.disconnect(self.showWanted)
+            widget.showWanted.disconnect(
+                    self.showWanted)
         if self.listener: 
-            widget.removeEventFilter(self.listener)
+            widget.removeEventFilter(
+                    self.listener)
         widget.sid=None
 
-    def show(self, widget=None, focus=True):
+    def show(
+            self, 
+            widget=None, 
+            focus=True
+            ):
 
         super().show()
         if not widget: 
@@ -117,7 +134,7 @@ class StackWidget(QtWidgets.QStackedWidget):
             self.setFocus()
             self.focusGained.emit(self)
         elif event.type()==QtCore.QEvent.Resize:
-            self.resized.emit()
+            self.resized.emit(event)
         return super().event(event)
 
     def adjustSize(self):

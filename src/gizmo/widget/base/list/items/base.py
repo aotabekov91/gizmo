@@ -2,34 +2,31 @@ from PyQt5 import QtWidgets
 
 class Item(QtWidgets.QWidget):
 
-    def __init__(self, 
-                 listWidget, 
-                 data={},
-                 set_base_style=True,
-                 **kwargs,
-                 ):
+    def __init__(
+            self, 
+            listWidget, 
+            data={},
+            **kwargs,
+            ):
 
         super(Item, self).__init__(
                 parent=listWidget,
                 objectName='ListItemWidget', 
-                **kwargs)
+                **kwargs
+                )
 
         self.list=listWidget
-        self.set_base_style=set_base_style
         layout, style_sheet=self.setUI()
         self.setLayout(layout)
-
-        # if self.set_base_style:
-        #     self.setStyleSheet(style_sheet)
-
         self.setItem()
         self.setData(data)
 
     def setItem(self):
 
-        self.item = QtWidgets.QListWidgetItem(self.list)
-        self.item.widget=self
+        self.item = QtWidgets.QListWidgetItem(
+                self.list)
         self.item.sizeHint=self.sizeHint
+        self.item.widget=self
 
     def setUI(self):
 

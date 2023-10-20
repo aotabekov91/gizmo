@@ -18,7 +18,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
                  enable_filter=True,
                  field_rematch=lambda x: x,
                  text_non_found='No match found',
-                 set_base_style=True,
                  item_position='PositionAtCenter',
                  objectName='List',
                  **kwargs):
@@ -37,7 +36,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
         self.enable_filter=enable_filter
         self.item_position=item_position
         self.text_non_found=text_non_found
-        self.set_base_style=set_base_style
         self.setUI()
 
     def setBaseStyleSheet(self):
@@ -74,8 +72,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
                 QtCore.Qt.FramelessWindowHint)
         self.setAttribute(
                 QtCore.Qt.WA_TranslucentBackground)
-        if self.set_base_style:
-            self.setBaseStyleSheet()
 
     def installEventFilter(self, listener):
 
@@ -83,14 +79,12 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
         self.listener=listener
         for i in range(self.count()):
             item=self.item(i)
-            item.widget.installEventFilter(self.listener)
+            item.widget.installEventFilter(
+                    self.listener)
 
     def addItem(self, data):
 
-        widget = self.item_widget(
-                self, 
-                data, 
-                set_base_style=self.set_base_style)
+        widget = self.item_widget(self, data,) 
         if self.listener: 
             widget.installEventFilter(self.listener)
         super().addItem(widget.listItem())
