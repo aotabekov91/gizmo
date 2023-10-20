@@ -10,17 +10,19 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
     returnPressed=QtCore.pyqtSignal()
     widgetDataChanged=QtCore.pyqtSignal(object)
 
-    def __init__(self, 
-                 item_widget=IconUpDown, 
-                 check_fields=['up', 'down'],
-                 ignore_case=True,
-                 exact_match=False,
-                 enable_filter=True,
-                 field_rematch=lambda x: x,
-                 text_non_found='No match found',
-                 item_position='PositionAtCenter',
-                 objectName='List',
-                 **kwargs):
+    def __init__(
+            self, 
+            objectName='List', 
+            ignore_case=True, 
+            exact_match=False, 
+            enable_filter=True, 
+            item_widget=IconUpDown, 
+            field_rematch=lambda x: x, 
+            check_fields=['up', 'down'], 
+            text_non_found='No match found', 
+            item_position='PositionAtCenter', 
+            **kwargs
+            ):
 
         super(ListWidget, self).__init__(
                 objectName=objectName,
@@ -37,29 +39,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
         self.item_position=item_position
         self.text_non_found=text_non_found
         self.setUI()
-
-    def setBaseStyleSheet(self):
-
-        style_sheet = '''
-            QListWidget{
-                border-width: 0px;
-                color: transparent;
-                border-color: transparent; 
-                background-color: transparent; 
-                }
-            QListWidget::item{
-                border-radius: 10px;
-                border-style: outset;
-                padding: 0px 0px 0px 0px;
-                color: transparent;
-                background-color: #101010;
-                }
-            QListWidget::item:selected {
-                border-width: 3px;
-                border-color: red;
-                }
-                '''
-        # self.setStyleSheet(style_sheet)
 
     def setUI(self):
 
@@ -96,7 +75,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
 
     def move(self, crement=-1):
 
-        # self.setFocus()
         crow = self.currentRow()
         if crow==None: return
         crow += crement
@@ -150,7 +128,6 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
         self.setCurrentRow(crow)
 
     def setEnableFilter(self, condition): 
-
         self.enable_filter=condition
 
     def unfilter(self): 
@@ -170,8 +147,8 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
                 else:
                     dlist=[]
                     for data in self.dlist:
-                        if self.isin(text, data): dlist+=[data]
-
+                        if self.isin(text, data): 
+                            dlist+=[data]
             self.setFilterList(dlist)
             self.setCurrentRow(0)
 
