@@ -2,10 +2,11 @@ from PyQt5 import QtWidgets, QtCore
 
 from gizmo.utils import MetaKey, register
 
-from ..base import IconUpDown, ListWidget, InputLabelWidget
+from ..base import IconUpDown, ListView, InputLabelWidget
 
 class InputList (QtWidgets.QWidget, metaclass=MetaKey):
 
+    openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
     inputTextChanged=QtCore.pyqtSignal()
@@ -13,7 +14,7 @@ class InputList (QtWidgets.QWidget, metaclass=MetaKey):
     listReturnPressed=QtCore.pyqtSignal()
 
     def __init__(self, 
-                 list_class=ListWidget,
+                 list_class=ListView,
                  input_class=InputLabelWidget, 
                  **kwargs): 
 
@@ -31,7 +32,8 @@ class InputList (QtWidgets.QWidget, metaclass=MetaKey):
         if list_class:
             self.list=list_class(**kwargs)
             self.list.hideWanted.connect(self.hideWanted)
-            self.list.openWanted.connect(self.list.focusItem)
+            # self.list.openWanted.connect(self.list.focusItem)
+            self.list.openWanted.connect(self.openWanted)
             self.list.returnPressed.connect(self.returnPressed)
             self.list.returnPressed.connect(self.listReturnPressed)
 
