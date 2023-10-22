@@ -23,9 +23,9 @@ class Item(QtWidgets.QWidget):
 
     def setItem(self):
 
-        self.item = QtGui.QStandardItem()
-        # self.item = QtWidgets.QListWidgetItem(
-                # self.list)
+        # self.item = QtGui.QStandardItem()
+        self.item = QtWidgets.QListWidgetItem(
+                self.list)
         self.item.sizeHint=self.sizeHint
         self.item.widget=self
 

@@ -36,7 +36,6 @@ class InputLabelWidget (QWidget):
                 '''
 
         self.m_label= QLabel(objectName='label')
-
         layout=QVBoxLayout()
         layout.setContentsMargins(0,0,0,0)
         layout.addWidget(self.m_label)

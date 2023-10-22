@@ -1,15 +1,19 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 class Delegate(QtWidgets.QItemDelegate):
 
-    def paint(self, painter, option, index):
+    def paint(self, painter, opt, idx):
 
         painter.save()
-        item=self.model().item(index)
-        item.widget.render(
-                painter, 
-                QtCore.QPoint(), 
-                QtCore.QRegion(), 
-                QtWidgets.QWidget.DrawChildren
-                )
+        proxy=idx.model()
+        model=proxy.sourceModel()
+        index=proxy.mapToSource(idx)
+        item=model.itemFromIndex(index)
+        if item:
+            item.widget.render(
+                    painter, 
+                    QtCore.QPoint(), 
+                    QtGui.QRegion(), 
+                    QtWidgets.QWidget.DrawChildren
+                    )
         painter.restore()

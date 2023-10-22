@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtWidgets
 from gizmo.utils import MetaKey, register
 
-from .items import IconUpDown
+from ..items import IconUpDown
 
 class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
 
@@ -24,7 +24,7 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
             **kwargs
             ):
 
-        super(ListWidget, self).__init__(
+        super().__init__(
                 objectName=objectName,
                 **kwargs)
         self.dlist = []

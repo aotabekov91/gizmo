@@ -13,13 +13,18 @@ class StackWindow(QtWidgets.QMainWindow):
     def __init__(
             self,
             *args, 
+            objectName='StackedWindow',
             **kwargs,
             ):
 
-        super().__init__(*args, **kwargs)
+        super().__init__(
+                *args, 
+                objectName=objectName,
+                **kwargs
+                )
         self.stack=StackWidget(
                 parent=self,
-                objectName='StackedWindow'
+                objectName='StackedWidget',
                 )
         self.stack.resized.connect(
                 self.resized)

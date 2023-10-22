@@ -1,25 +1,30 @@
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtWidgets
 
-class InputWidget(QLineEdit):
+class InputWidget(QtWidgets.QLineEdit):
 
-    def __init__ (self, *args, **kwargs): 
+    hideWanted=QtCore.pyqtSignal()
+    returnPressed=QtCore.pyqtSignal()
 
-        super().__init__(*args, **kwargs) 
+    def __init__ (
+            self, 
+            *args, 
+            objectName='InputLineEdit',
+            **kwargs
+            ): 
 
-        self.style_sheet='''
-            QLineEdit{
-                color: black;
-                background-color: white;
-                border-color: green;
-                border-width: 3px;
-                border-radius: 15px;
-                border-style: outset;
-                padding: 0 0 0 10px;
-                }
-                '''
-        
-        # self.setStyleSheet(self.style_sheet)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        super().__init__(
+                *args, 
+                objectName=objectName,
+                **kwargs
+                ) 
+
+        self.setWindowFlags(
+                QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(
+                QtCore.Qt.WA_TranslucentBackground)
+
+    def setLabel(self, text):
+        self.setPlaceholderText(text)
+
+    def hideLabel(self):
+        self.clear()

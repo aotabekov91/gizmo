@@ -26,8 +26,8 @@ class Ear(QtCore.QObject):
             config={},
             special=[],
             wait_run=40,
-            prefix_keys={},
             wait_time=200,
+            prefix_keys={},
             listening=False,
             listen_leader=None, 
             command_leader=None,
@@ -315,11 +315,13 @@ class Ear(QtCore.QObject):
         self.methods[name]=method
         key=getattr(method, 'key')
         if key:
-            prefix_keys=getattr(obj, 'prefix_keys', {})
+            oname=getattr(
+                    self.obj, 'name', None)
+            prefix_keys=getattr(
+                    obj, 'prefix_keys', {})
             ear=getattr(obj, 'ear', None)
             if ear: 
                 prefix_keys.update(ear.prefix_keys)
-            oname=getattr(self.obj, 'name', None)
             prefix=prefix_keys.get(oname, '')
             match=self.parseKey(key, prefix=prefix)
             self.matches[name]=match
