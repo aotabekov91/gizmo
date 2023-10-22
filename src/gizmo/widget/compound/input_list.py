@@ -66,6 +66,7 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
                     self.on_inputChanged)
             self.input.textChanged.connect(
                     self.inputTextChanged)
+            self.input.setLabel('Filter')
             self.input.hide()
 
     def setUI(self):

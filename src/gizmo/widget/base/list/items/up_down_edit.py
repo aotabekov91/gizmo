@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtWidgets
-
 from gizmo.utils import setEditorTabSize
 
 from .base import ItemWidget
