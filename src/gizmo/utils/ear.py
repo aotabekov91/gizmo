@@ -37,7 +37,6 @@ class Ear(QtCore.QObject):
             ):
 
         super().__init__(obj)
-
         self.obj=obj
         self.app=app
         self.methods={}
@@ -54,14 +53,16 @@ class Ear(QtCore.QObject):
         self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
-        self.listen_leader=self.parseKey(listen_leader)
-        self.command_leader=self.parseKey(command_leader)
+        self.listen_leader=self.parseKey(
+                listen_leader)
+        self.command_leader=self.parseKey(
+                command_leader)
         self.setup()
 
     def listen(self):
 
-        self.listening=True
         self.clearKeys()
+        self.listening=True
         self.earingStarted.emit(self)
         qapp=QtWidgets.QApplication.instance()
         if qapp:
@@ -119,12 +120,7 @@ class Ear(QtCore.QObject):
         obj.installEventFilter(self)
 
     def toggleMode(self, mode):
-
-        if mode==self.obj:
-            self.delistenWanted.emit()
-        else:
-            mode.activate()
-            self.modeWanted.emit(mode)
+        mode.toggle()
 
     def setup(self):
 
@@ -148,14 +144,16 @@ class Ear(QtCore.QObject):
             c1 = n.startswith('Key_')
             c2 = n.endswith('Modifier')
             if c1 or c2: 
-                if c1: n=n.replace('Key_', '').lower()
+                if c1: 
+                    n=n.replace('Key_', '').lower()
                 self.key_map[v]=n
 
     def on_escapePressed(self): 
 
         self.clearKeys()
         if self.delisten_on_exec: 
-            self.modeWanted.emit(self.mode_on_exit)
+            self.modeWanted.emit(
+                    self.mode_on_exit)
         else:
             self.delistenWanted.emit()
             if hasattr(self.obj, 'deactivate'):
@@ -178,7 +176,11 @@ class Ear(QtCore.QObject):
             self.keysChanged.emit(self.pressed_text)
         self.keyRegistered.emit(event)
 
-    def eventFilter(self, widget, event):
+    def eventFilter(
+            self, 
+            widget, 
+            event
+            ):
 
         if not self.listening:
             return False
@@ -191,11 +193,20 @@ class Ear(QtCore.QObject):
         elif self.checkLeader(event):
             event.accept()
             return True
-        elif event.key()==QtCore.Qt.Key_Escape:
+        elif self.checkEscape(event):
             self.escapePressed.emit()
             event.accept()
             return True
         return self.addKeys(event)
+
+    def checkEscape(self, event):
+
+        if event.key()==QtCore.Qt.Key_Escape:
+            return True
+        elif event.modifiers()==QtCore.Qt.ControlModifier:
+            if event.key()==QtCore.Qt.Key_BracketLeft:
+                return True
+        return False
 
     def addKeys(self, event):
 
@@ -246,7 +257,6 @@ class Ear(QtCore.QObject):
 
     def getKeys(self):
 
-
         key, digit = [], ''
         for i, k in enumerate(self.pressed_keys):
             p=self.key_map[k[0]]
@@ -277,7 +287,12 @@ class Ear(QtCore.QObject):
                         p+=[f]
         return m, p
 
-    def runMatches(self, matches, partial, key, digit):
+    def runMatches(
+            self, 
+            matches, 
+            partial, 
+            key, 
+            digit):
 
         self.timer.timeout.disconnect()
         self.timer.timeout.connect(
@@ -289,7 +304,12 @@ class Ear(QtCore.QObject):
             if self.wait_time: 
                 self.timer.start(self.wait_time)
 
-    def executeMatch(self, matches, partial, digit):
+    def executeMatch(
+            self, 
+            matches, 
+            partial, 
+            digit
+            ):
 
         if not partial:
             if len(matches)<2: 
@@ -308,7 +328,8 @@ class Ear(QtCore.QObject):
 
         if self.delisten_on_exec: 
             self.keysChanged.emit('')
-            self.modeWanted.emit(self.mode_on_exit)
+            self.modeWanted.emit(
+                    self.mode_on_exit)
 
     def setKey(self, obj, method, name):
 

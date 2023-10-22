@@ -10,14 +10,13 @@ class Dock(QtWidgets.QDockWidget):
 
         super().__init__(
                 objectName=objectName)
-
         self.loc=loc
         self.name=loc
         self.widgets=[]
         self.docks=docks
-
         self.createTab()
-        self.setContentsMargins(0, 0, 0, 0)
+        self.setContentsMargins(
+                0, 0, 0, 0)
 
     def createTab(self):
 
@@ -28,7 +27,6 @@ class Dock(QtWidgets.QDockWidget):
     def setFocus(self, widget=None):
 
         super().setFocus()
-
         if not widget: 
             widget=self.current()
         if widget:
@@ -38,13 +36,12 @@ class Dock(QtWidgets.QDockWidget):
                     widget.index)
             self.tab.show()
             widget.setFocus()
-            widget.focusGained.emit(widget)
+            # widget.focusGained.emit(widget)
 
     def activate(self, widget): 
 
         if not self.widgets or self.widgets[-1]!=widget: 
             self.widgets+=[widget]
-
         self.setFocus(widget)
         widget.show()
         widget.setFixedSize(self.tab.size())
@@ -53,8 +50,7 @@ class Dock(QtWidgets.QDockWidget):
         widget.dock.show()
         widget.dock.tab.show()
         widget.setFocus()
-        widget.focusGained.emit(widget)
-
+        # widget.focusGained.emit(widget)
         self.docks.adjustDocks()
 
     def deactivate(self, widget, restore=False):
@@ -71,27 +67,25 @@ class Dock(QtWidgets.QDockWidget):
             self.parent().main.setFocus()
         self.docks.adjustDocks()
 
-    def event(self, event):
-
-        if event.type()==QtCore.QEvent.Enter:
-            current=self.current()
-            if current: 
-                current.focusGained.emit(current)
-        if event.type()==QtCore.QEvent.Leave:
-            current=self.current()
-            if current: 
-                current.focusLost.emit()
-        return super().event(event)
+    # def event(self, event):
+    #     if event.type()==QtCore.QEvent.Enter:
+    #         current=self.current()
+    #         if current: 
+    #             current.focusGained.emit(current)
+    #     if event.type()==QtCore.QEvent.Leave:
+    #         current=self.current()
+    #         if current: 
+    #             current.focusLost.emit()
+    #     return super().event(event)
 
     def current(self):
 
         if self.widgets: 
             return self.widgets[-1]
 
-    def installEventFilter(self, listener):
-
-        super().installEventFilter(listener)
-        self.tab.installEventFilter(listener)
+    # def installEventFilter(self, listener):
+    #     super().installEventFilter(listener)
+    #     self.tab.installEventFilter(listener)
 
     def resize(self, 
                factor=1.2, 
