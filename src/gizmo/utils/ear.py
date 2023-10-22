@@ -29,6 +29,7 @@ class Ear(QtCore.QObject):
             wait_time=200,
             prefix_keys={},
             listening=False,
+            report_keys=True,
             listen_leader=None, 
             command_leader=None,
             mode_on_exit='normal',
@@ -50,6 +51,7 @@ class Ear(QtCore.QObject):
         self.wait_run=wait_run
         self.wait_time=wait_time
         self.listening=listening
+        self.report_keys=report_keys
         self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_on_exec=delisten_on_exec
@@ -173,7 +175,9 @@ class Ear(QtCore.QObject):
             text=self.getText(self.pressed)
             self.pressed_text+=text
             self.pressed_keys+=[self.pressed]
-            self.keysChanged.emit(self.pressed_text)
+            if self.report_keys:
+                self.keysChanged.emit(
+                        self.pressed_text)
         self.keyRegistered.emit(event)
 
     def eventFilter(

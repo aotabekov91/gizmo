@@ -4,9 +4,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .base import Item
+from .base import ItemWidget
 
-class Icon(Item):
+class Icon(ItemWidget):
 
     def installEventFilter(self, listener):
 

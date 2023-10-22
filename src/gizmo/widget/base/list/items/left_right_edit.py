@@ -2,9 +2,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from .base import Item
+from .base import ItemWidget
 
-class LeftRightEdit (Item):
+class LeftRightEdit (ItemWidget):
 
     def __init__(self, *args, **kwargs):
 

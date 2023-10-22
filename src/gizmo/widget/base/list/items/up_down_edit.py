@@ -2,98 +2,76 @@ from PyQt5 import QtCore, QtWidgets
 
 from gizmo.utils import setEditorTabSize
 
-from .base import Item
+from .base import ItemWidget
 
-class UpDownEdit (Item):
+class UpDownEdit (ItemWidget):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+            self, 
+            *args, 
+            **kwargs
+            ):
 
         self.timer=QtCore.QTimer()
-        self.timer.timeout.connect(self.emit_signal)
+        self.timer.timeout.connect(
+                self.emitSignal)
+        super().__init__(
+                *args, **kwargs)
 
-        super().__init__(*args, **kwargs)
+    def getLayout(self):
 
-    def setUI(self):
-
-        layout, style_sheet=super().setUI()
-
-        style_sheet += 'QPlainTextEdit{padding: 0px 10px 0px 10px;}'
-
-        self.down = QtWidgets.QPlainTextEdit(objectName='downEdit')
-        self.down.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.down.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.down.textChanged.connect(self.on_contentChanged)
-
+        layout =super().getLayout()
+        self.down = QtWidgets.QTextEdit(
+                objectName='downEdit')
+        self.down.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.down.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.down.textChanged.connect(
+                self.on_downChanged)
         setEditorTabSize(self.down, 4)
-
         layout.addWidget(self.down, 70)
-
-        return layout, style_sheet
+        return layout
 
     def setTextDown(self, text):
 
         self.down.show()
         self.down.setPlainText(text)
+        self.down.adjustSize()
 
-    def textDown(self): return self.down.toPlainText()
+    def textDown(self): 
+        return self.down.toPlainText()
 
-    def getDownSize(self):
+    def setDownSize(self):
 
-        size=self.down.document().size()
-        width=int(size.width())
-        if size.height()==1.0:
-            times=int(width/self.down.size().width())
-        else:
-            times=size.height()
-        if times==0: times=1
-        height=int(25*times)
-        if height<50: height=50
-        size=QtCore.QSize(width, height)
-        return size
-
-    def setFixedWidth(self, width):
-
-        super().setFixedWidth(width)
-        self.down.setFixedWidth(width-12) # minus padding
-        self.adjustSize()
-
-    def sizeHint(self):
-
-        size=self.up.size()
-        s=self.getDownSize()
-        size.setHeight(int(size.height()+s.height()+15))
-        return size
+        doc=self.down.document()
+        doc.adjustSize()
+        size=doc.size().toSize()
+        self.down.setFixedHeight(
+                size.height())
 
     def setData(self, data):
 
         super().setData(data)
         if data:
-            if data.get('down', None): self.setTextDown(str(data.get('down')))
-            down_color=data.get('down_color', None)
+            if data.get('down', None): 
+                text=str(data.get('down'))
+                self.setTextDown(text)
+            self.adjustSize()
 
-            # if down_color: 
-            #     down_style=self.label_style+f'color: black; background-color: {down_color};'+'}'
-            #     # self.down.setStyleSheet(down_style)
-
-        self.adjustSize()
-
-    def on_contentChanged(self): 
+    def on_downChanged(self): 
 
         self.timer.stop()
         text=self.textDown()
+        self.setDownSize()
         if text!=str(self.data['down']):
             self.data['down']=self.textDown()
-            self.list.adjustSize()
             self.timer.start(500)
 
-    def emit_signal(self):
+    def emitSignal(self):
 
         self.timer.stop()
         self.list.widgetDataChanged.emit(self)
 
-    def setFocus(self): self.down.setFocus()
-
-    def installEventFilter(self, listener):
-
-        super().installEventFilter(listener)
-        self.down.installEventFilter(listener)
+    def setFocus(self): 
+        self.down.setFocus()

@@ -7,7 +7,8 @@ from ..items import IconUpDown
 class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
 
     hideWanted=QtCore.pyqtSignal()
-    openWanted=QtCore.pyqtSignal()
+    openWanted=QtCore.pyqtSignal(
+            object)
     returnPressed=QtCore.pyqtSignal()
     widgetDataChanged=QtCore.pyqtSignal(
             object)
@@ -116,15 +117,10 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
 
         self.clear()
         for i, d in enumerate(dlist):
-            # w=d.get('widget', None)
-            # if not w:
-                # w = self.widget(self, d) 
-                # d['widget']=w
             w = self.widget(self, d) 
-            d['widget']=w
-            i = w.listItem()
-            super().addItem(i)
-            super().setItemWidget(i, w)
+            super().addItem(w.item)
+            super().setItemWidget(
+                    w.item, w)
         # self.adjustSize()
 
     @register(['<c-j>', '<c-n>'])
@@ -138,14 +134,15 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
             digit=-1*digit
         self.move(digit)
 
-    @register(['<c-[>', '<Escape>'])
-    def wantHide(self): 
-        self.hideWanted.emit()
-
     @register('<c-l>')
-    def wantOpen(self):
-        self.openWanted.emit()
+    def setFocusItem(self):
 
-    @register(['<c-m>', '<Enter>'])
-    def pressReturn(self): 
-        self.returnPressed.emit()
+        i=self.currentItem()
+        if i: 
+            w=self.itemWidget(i)
+            print(w)
+            w.setFocus()
+
+    @register('<c-h>')
+    def setFocus(self):
+        super().setFocus()

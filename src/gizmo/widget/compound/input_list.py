@@ -42,8 +42,6 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
                     **kwargs)
             self.list.hideWanted.connect(
                     self.hideWanted)
-            # self.list.openWanted.connect(
-            #       self.list.focusItem)
             self.list.openWanted.connect(
                     self.openWanted)
             self.list.returnPressed.connect(
@@ -113,14 +111,6 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
         else:
             self.list.setFocus()
 
-    @register(['<c-j>', '<c-n>'])
-    def moveListDown(self, digit=1):
-        self.list.moveDown(digit)
-
-    @register(['<c-k>', '<c-p>'])
-    def moveListUp(self, digit=1):
-        self.list.moveUp(digit)
-
     @register('<c-f>')
     def toggleFilter(self):
 
@@ -130,27 +120,17 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
             self.input.show()
         self.setFocus()
 
-    @register('<c-l>')
-    def focusItem(self):
+    # def resizeEvent(self, event): 
+    #     super().resizeEvent(event)
+    #     self.adjustSize()
 
-        i=self.list.currentItem()
-        if i: 
-            w=self.list.itemWidget(i)
-            w.setFocus()
-
-    def resizeEvent(self, event): 
-
-        super().resizeEvent(event)
-        self.adjustSize()
-
-    def adjustSize(self):
-
-        width=self.size().width()
-        height=self.size().height()
-        if self.parent(): 
-            width=self.parent().size().width()
-            height=self.parent().size().height()
-        height=height-self.input.size().height()-5
-        self.input.setFixedWidth(width)
-        # self.list.adjustSize(width, height)
-        super().adjustSize()
+    # def adjustSize(self):
+    #     width=self.size().width()
+    #     height=self.size().height()
+    #     if self.parent(): 
+    #         width=self.parent().size().width()
+    #         height=self.parent().size().height()
+    #     height=height-self.input.size().height()-5
+    #     self.input.setFixedWidth(width)
+    #     # self.list.adjustSize(width, height)
+    #     super().adjustSize()

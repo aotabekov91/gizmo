@@ -8,45 +8,29 @@ from .up_down import UpDown
 
 class IconUpDown (UpDown):
 
-    def setUI(self):
+    def getLayout(self):
 
-        up_down_layout, style_sheet=super().setUI()
-
-        style_sheet += '''
-            QWidget#iconTextContainer{
-                border-style: outset;
-                border-width: 0px;
-                border-radius: 10px;
-                color: transparent;
-                background-color: transparent;
-                }
-            QLabel#iconLabel{
-                padding: 5 5 5 10;
-                background-color: transparent;
-                }
-                '''
-        self.icon = QLabel(objectName='iconLabel')
-        self.icon.setFixedWidth(int(0.15*self.size().width()))
-
-        up_down_container=QWidget(objectName='upDownContainer')
-        up_down_container.setLayout(up_down_layout)
-
+        layout =super().getLayout()
+        self.icon=QLabel()
+        up_down_container=QWidget(
+                objectName='upDownContainer')
+        up_down_container.setLayout(
+                layout)
         icon_text_layout = QHBoxLayout()
         icon_text_layout.setSpacing(10)
-
-        icon_text_layout.addWidget(self.icon)
-        icon_text_layout.addWidget(up_down_container)
-
-        icon_text_container=QWidget(objectName='iconTextContainer')
-        icon_text_container.setLayout(icon_text_layout)
-
+        icon_text_layout.addWidget(
+                self.icon)
+        icon_text_layout.addWidget(
+                up_down_container)
+        icon_text_container=QWidget(
+                objectName='iconTextContainer')
+        icon_text_container.setLayout(
+                icon_text_layout)
         layout=QHBoxLayout()
         layout.setContentsMargins(0,0,0,0)
         layout.addWidget(icon_text_container)
-
         self.icon.hide()
-
-        return layout, style_sheet
+        return layout
 
     def setIcon(self, imagePath):
 
