@@ -52,8 +52,9 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
             self.scrollToItem(
                     self.currentItem(), 
                     hint=self.hint)
-            self.itemChanged.emit(
-                    self.currentItem())
+            c=self.currentItem()
+            self.itemChanged.emit(c)
+
 
     def sizeHint(self):
 
@@ -77,6 +78,16 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
         self.flist=flist
         self.addItems(flist)
         self.setCurrentRow(0)
+
+    def setCurrentRow(self, row):
+
+        prev=self.currentItem()
+        super().setCurrentRow(row)
+        current=self.currentItem()
+        if prev:
+            prev.widget.select(False)
+        if current:
+            current.widget.select(True)
 
     def refresh(self, clear=False):
 

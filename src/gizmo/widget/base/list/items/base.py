@@ -11,7 +11,7 @@ class ItemWidget(QtWidgets.QWidget):
 
         super(ItemWidget, self).__init__(
                 parent=listWidget,
-                objectName='ListItemWidget', 
+                objectName='ListWidgetItem', 
                 **kwargs
                 )
 
@@ -31,7 +31,7 @@ class ItemWidget(QtWidgets.QWidget):
     def getLayout(self):
 
         self.up = QtWidgets.QLabel(
-                objectName='ListItemUp')
+                objectName='Up')
         self.up.setWordWrap(True)
         layout = QtWidgets.QVBoxLayout()
         layout.setSpacing(0)
@@ -70,3 +70,6 @@ class ItemWidget(QtWidgets.QWidget):
 
     def setFocus(self):
         self.up.setFocus()
+
+    def select(self, cond):
+        pass

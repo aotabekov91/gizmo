@@ -21,7 +21,7 @@ class UpDownEdit (ItemWidget):
 
         layout =super().getLayout()
         self.down = QtWidgets.QTextEdit(
-                objectName='downEdit')
+                objectName='Down')
         self.down.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.down.setVerticalScrollBarPolicy(
@@ -87,3 +87,9 @@ class UpDownEdit (ItemWidget):
         cur.movePosition(
                 QtGui.QTextCursor.End)
         self.down.setTextCursor(cur)
+
+    def select(self, cond):
+
+        self.down.setProperty('selected', cond)
+        self.down.style().unpolish(self.down)
+        self.down.style().polish(self.down)
