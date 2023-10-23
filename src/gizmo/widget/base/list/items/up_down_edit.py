@@ -36,7 +36,15 @@ class UpDownEdit (ItemWidget):
 
         self.down.show()
         self.down.setPlainText(text)
+        self.setDownWidth()
         self.adjustDownSize()
+
+    def setDownWidth(self):
+
+        hint=self.up.size()
+        doc=self.down.document()
+        doc.setTextWidth(hint.width()-10)
+        doc.adjustSize()
 
     def textDown(self): 
         return self.down.toPlainText()
@@ -44,9 +52,7 @@ class UpDownEdit (ItemWidget):
     def adjustDownSize(self):
 
         doc=self.down.document()
-        doc.adjustSize()
-        hint=self.up.size()
-        doc.setTextWidth(hint.width())
+        # doc.adjustSize()
         size=doc.size().toSize()
         self.down.setFixedHeight(
                 size.height())
