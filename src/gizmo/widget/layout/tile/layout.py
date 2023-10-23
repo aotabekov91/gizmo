@@ -82,12 +82,12 @@ class TileLayout:
 
     def update(self):
 
-        screen_rect=self.parent.rect()
+        rect=self.parent.rect()
         self.root.calc_geom(
-                screen_rect.x(),
-                screen_rect.y(),
-                screen_rect.width(), 
-                screen_rect.height())
+                rect.x(),
+                rect.y(),
+                rect.width(), 
+                rect.height())
 
     def toggleSplit(self):
 

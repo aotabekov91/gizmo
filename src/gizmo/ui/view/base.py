@@ -45,7 +45,6 @@ class View(QtWidgets.QGraphicsView):
 
     def __init__(self, app, layout, scene_class=None):
 
-        # super().__init__(app.window.main)
         super().__init__()
 
         self.app=app
@@ -66,20 +65,21 @@ class View(QtWidgets.QGraphicsView):
                 self.__class__.__name__,
                 {})
 
-        self.setup(scene_class, layout)
+        self.setup(
+                scene_class, layout)
         self.connect()
 
     def setup(self, scene_class, layout):
 
-        if not scene_class: scene_class=Scene
-
+        if not scene_class: 
+            scene_class=Scene
         self.m_scene=scene_class()
-        self.m_scene.itemAdded.connect(self.on_itemAdded)
-
+        self.m_scene.itemAdded.connect(
+                self.on_itemAdded)
         self.setScene(self.m_scene)
         self.m_layout = layout(self)
-        self.scene().setBackgroundBrush(QtGui.QColor('black'))
-
+        self.scene().setBackgroundBrush(
+                QtGui.QColor('black'))
         self.setAcceptDrops(False)
         self.setDragMode(
                 QtWidgets.QGraphicsView.ScrollHandDrag)
@@ -87,7 +87,6 @@ class View(QtWidgets.QGraphicsView):
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
-
         self.setContentsMargins(0,0,0,0)
 
     def setId(self, vid):
@@ -151,12 +150,13 @@ class View(QtWidgets.QGraphicsView):
             display.positionChanged)
         self.itemPainted.connect(
                 display.itemPainted)
+        self.resized.connect(
+                self.readjust)
 
     def resizeEvent(self, event):
 
         super().resizeEvent(event)
         self.resized.emit(self, event)
-        self.readjust()
 
     def mouseMoveEvent(self, event):
         
@@ -211,77 +211,108 @@ class View(QtWidgets.QGraphicsView):
     def on_itemHoverMoveOccured(self, item, event):
         self.itemHoverMoveOccured.emit(self, item, event)
 
-    def readjust(self): pass
+    def readjust(self): 
+        pass
 
-    def left(self): pass
+    def left(self): 
+        pass
 
-    def right(self): pass
+    def right(self): 
+        pass
 
-    def down(self): pass
+    def down(self): 
+        pass
 
-    def up(self): pass
+    def up(self): 
+        pass
 
-    def pageUp(self): pass
+    def pageUp(self): 
+        pass
 
-    def pageDown(self): pass
+    def pageDown(self): 
+        pass
     
-    def pageLeft(self): pass
+    def pageLeft(self): 
+        pass
 
-    def pageRight(self): pass
+    def pageRight(self): 
+        pass
 
-    def incrementRight(self): pass
+    def incrementRight(self): 
+        pass
 
-    def incrementLeft(self): pass
+    def incrementLeft(self): 
+        pass
 
-    def incrementUp(self): pass
+    def incrementUp(self): 
+        pass
     
-    def incrementDown(self): pass
+    def incrementDown(self): 
+        pass
 
-    def prev(self): pass
+    def prev(self): 
+        pass
 
-    def next(self): pass
+    def next(self): 
+        pass
 
-    def goto(self, digit): pass
+    def goto(self, digit): 
+        pass
 
-    def gotoEnd(self): pass
+    def gotoEnd(self): 
+        pass
 
-    def gotoBegin(self): pass
+    def gotoBegin(self): 
+        pass
 
-    def setFoldLevel(self, level): self.m_foldlevel=max(level, 0)
+    def setFoldLevel(self, level): 
+        self.m_foldlevel=max(level, 0)
 
-    def foldLevel(self): return self.m_foldlevel
+    def foldLevel(self): 
+        return self.m_foldlevel
 
-    def incrementFold(self): self.setFoldLevel(self.foldLevel()+1)
+    def incrementFold(self): 
+        self.setFoldLevel(self.foldLevel()+1)
 
-    def decrementFold(self): self.setFoldLevel(self.foldLevel()-1)
+    def decrementFold(self): 
+        self.setFoldLevel(self.foldLevel()-1)
 
-    def save(self): pass
+    def save(self): 
+        pass
 
-    def cleanUp(self): pass
+    def cleanUp(self): 
+        pass
 
-    def model(self): return self.m_model
+    def model(self): 
+        return self.m_model
 
     def setModel(self, model):
 
         self.scene().clear()
         self.m_model=model
 
-    def zoomIn(self): self._zoom(kind='in')
+    def zoomIn(self): 
+        self._zoom(kind='in')
 
-    def zoomOut(self): self._zoom(kind='out')
+    def zoomOut(self): 
+        self._zoom(kind='out')
 
     def _zoom(self, kind):
 
         if kind=='in':
             self.zoom += 1 
             if self.zoom <= self.zoomRange[1]:
-                self.scale(self.zoomInFactor, self.zoomInFactor)
+                self.scale(
+                        self.zoomInFactor, 
+                        self.zoomInFactor)
             else:
                 self.zoom = self.zoomRange[1]
         elif kind=='out':
             self.zoom -= 1 
             if self.zoom >= self.zoomRange[0]:
-                self.scale(self.zoomOutFactor, self.zoomOutFactor)
+                self.scale(
+                        self.zoomOutFactor, 
+                        self.zoomOutFactor)
             else:
                 self.zoom = self.zoomRange[0]
 
@@ -297,6 +328,8 @@ class View(QtWidgets.QGraphicsView):
             self.app.moder.set('normal')
         return super().event(event)
 
-    def visibleItems(self): return self.items(self.viewport().rect())
+    def visibleItems(self): 
+        return self.items(self.viewport().rect())
 
-    def paint(self): pass
+    def paint(self): 
+        pass

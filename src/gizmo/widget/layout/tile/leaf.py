@@ -109,19 +109,21 @@ class Leaf(QObject):
         self.y = y
         self.w = w
         self.h = h
-
         if len(self.leaves) > 1:
             leaves=self.leaves
             if self.hsplit:
                 w0 = int(self.ratio * w * 0.01 + 0.5)
-                leaves[0].calc_geom(x, y, w0, h)
-                leaves[1].calc_geom(x + w0, y, w - w0, h)
+                leaves[0].calc_geom(
+                        x, y, w0, h)
+                leaves[1].calc_geom(
+                        x + w0, y, w - w0, h)
             else:
                 h0 = int(self.ratio * h * 0.01 + 0.5)
-                leaves[0].calc_geom(x, y, w, h0)
-                leaves[1].calc_geom(x, y + h0, w, h - h0)
+                leaves[0].calc_geom(
+                        x, y, w, h0)
+                leaves[1].calc_geom(
+                        x, y + h0, w, h - h0)
         if self.widget:
             self.widget.setGeometry(
-                    # self.x-5, self.y-5, self.w-5, self.h-5)
-                    self.x, self.y, self.w, self.h)
+                    x, y, w, h)
             self.widget.show()

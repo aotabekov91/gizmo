@@ -13,12 +13,11 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
             ):
 
         super().__init__(
-                parent=window,
+                parent=window.main,
                 objectName=objectName,
                 )
         self.setup()
-        self.window=window
-        self.window.resized.connect(
+        window.resized.connect(
                 self.update)
 
     def update(self):
