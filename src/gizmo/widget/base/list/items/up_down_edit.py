@@ -36,18 +36,22 @@ class UpDownEdit (ItemWidget):
 
         self.down.show()
         self.down.setPlainText(text)
-        self.down.adjustSize()
+        self.adjustDownSize()
 
     def textDown(self): 
         return self.down.toPlainText()
 
-    def setDownSize(self):
+    def adjustDownSize(self):
 
         doc=self.down.document()
         doc.adjustSize()
+        hint=self.up.size()
+        doc.setTextWidth(hint.width())
         size=doc.size().toSize()
         self.down.setFixedHeight(
                 size.height())
+        self.item.setSizeHint(
+                self.sizeHint())
 
     def setData(self, data):
 
@@ -61,8 +65,8 @@ class UpDownEdit (ItemWidget):
     def on_downChanged(self): 
 
         self.timer.stop()
+        self.adjustDownSize()
         text=self.textDown()
-        self.setDownSize()
         if text!=str(self.data['down']):
             self.data['down']=self.textDown()
             self.timer.start(500)
