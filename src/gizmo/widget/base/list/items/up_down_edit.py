@@ -52,17 +52,9 @@ class UpDownEdit (ItemWidget):
 
     def adjustDownSize(self):
 
-        # # doc.adjustSize()
-        # if self.textDown():
-
         doc=self.down.document()
         size=doc.size().toSize()
-        height=size.height() 
-
-        # else:
-        #     height=10
-        # print(height)
-
+        height=max(40, size.height())
         self.down.setFixedHeight(
                 height)
         self.item.setSizeHint(
