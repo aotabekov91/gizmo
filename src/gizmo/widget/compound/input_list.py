@@ -29,6 +29,7 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
                 input_class)
         self.setListWidget(
                 list_class, **kwargs)
+        self.kwargs=kwargs
         self.setUI()
 
     def setListWidget(

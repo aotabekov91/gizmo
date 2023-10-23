@@ -48,13 +48,7 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
             rnum += digit
             if rnum<0: rnum=c-1
             if rnum>c-1: rnum=0
-            self.setCurrentRow(rnum)
-            self.scrollToItem(
-                    self.currentItem(), 
-                    hint=self.hint)
-            c=self.currentItem()
-            self.itemChanged.emit(c)
-
+            self.goto(rnum+1)
 
     def sizeHint(self):
 
@@ -133,6 +127,27 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
             super().setItemWidget(
                     w.item, w)
         # self.adjustSize()
+
+    @register('gg')
+    def gotoFirst(self): 
+        self.goto(1)
+
+    @register('G')
+    def gotoLast(self):
+
+        last=self.count()
+        self.goto(last)
+
+    @register('g')
+    def goto(self, digit=0):
+
+        digit-=1
+        self.setCurrentRow(digit)
+        self.scrollToItem(
+                self.currentItem(), 
+                hint=self.hint)
+        c=self.currentItem()
+        self.itemChanged.emit(c)
 
     @register(['j', 'n'])
     def moveDown(self, digit=1): 

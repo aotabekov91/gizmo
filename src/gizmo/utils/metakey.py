@@ -7,6 +7,7 @@ class MetaKey(type(QtCore.QObject)):
 
         obj=type.__call__(cls, *args, **kwargs)
         obj.name=obj.__class__.__name__
-        obj.ear=Ear(obj=obj)
+        kwargs=getattr(obj, 'kwargs', {})
+        obj.ear=Ear(obj=obj, **kwargs)
         obj.ear.listen()
         return obj
