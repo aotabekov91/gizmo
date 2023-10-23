@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from gizmo.utils import setEditorTabSize
 
 from .base import ItemWidget
@@ -73,4 +73,13 @@ class UpDownEdit (ItemWidget):
         self.list.widgetDataChanged.emit(self)
 
     def setFocus(self): 
+
         self.down.setFocus()
+        self.setCursorAtEnd()
+
+    def setCursorAtEnd(self):
+
+        cur=self.down.textCursor()
+        cur.movePosition(
+                QtGui.QTextCursor.End)
+        self.down.setTextCursor(cur)
