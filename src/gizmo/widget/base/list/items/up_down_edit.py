@@ -36,6 +36,7 @@ class UpDownEdit (ItemWidget):
 
         self.down.show()
         self.down.setPlainText(text)
+        self.down.adjustSize()
         self.setDownWidth()
         self.adjustDownSize()
 
@@ -51,11 +52,19 @@ class UpDownEdit (ItemWidget):
 
     def adjustDownSize(self):
 
+        # # doc.adjustSize()
+        # if self.textDown():
+
         doc=self.down.document()
-        # doc.adjustSize()
         size=doc.size().toSize()
+        height=size.height() 
+
+        # else:
+        #     height=10
+        # print(height)
+
         self.down.setFixedHeight(
-                size.height())
+                height)
         self.item.setSizeHint(
                 self.sizeHint())
 
@@ -63,9 +72,8 @@ class UpDownEdit (ItemWidget):
 
         super().setData(data)
         if data:
-            if data.get('down', None): 
-                text=str(data.get('down'))
-                self.setTextDown(text)
+            text=data.get('down', '') 
+            self.setTextDown(text)
             self.adjustSize()
 
     def on_downChanged(self): 
@@ -96,6 +104,6 @@ class UpDownEdit (ItemWidget):
 
     def select(self, cond):
 
-        self.down.setProperty('selected', cond)
+        super().select(cond)
         self.down.style().unpolish(self.down)
         self.down.style().polish(self.down)

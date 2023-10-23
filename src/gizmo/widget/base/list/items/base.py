@@ -72,4 +72,7 @@ class ItemWidget(QtWidgets.QWidget):
         self.up.setFocus()
 
     def select(self, cond):
-        pass
+
+        self.setProperty('selected', cond)
+        self.up.style().unpolish(self.up)
+        self.up.style().polish(self.up)
