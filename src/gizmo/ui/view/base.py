@@ -319,14 +319,13 @@ class View(QtWidgets.QGraphicsView):
     def name(self): 
         return id(self)
 
-    def event(self, event):
-
-        if event.type()==QtCore.QEvent.Enter:
-            self.setFocus()
-            self.focusGained.emit(self)
-            self.app.display.setCurrentView(self)
-            self.app.moder.set('normal')
-        return super().event(event)
+    # def event(self, event):
+    #     if event.type()==QtCore.QEvent.Enter:
+    #         # self.setFocus()
+    #         # self.focusGained.emit(self)
+    #         self.app.display.setCurrentView(self)
+    #         # self.app.moder.set('normal')
+    #     return super().event(event)
 
     def visibleItems(self): 
         return self.items(self.viewport().rect())

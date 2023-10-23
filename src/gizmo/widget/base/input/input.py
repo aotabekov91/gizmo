@@ -17,7 +17,6 @@ class InputWidget(QtWidgets.QLineEdit):
                 objectName=objectName,
                 **kwargs
                 ) 
-
         self.setWindowFlags(
                 QtCore.Qt.FramelessWindowHint)
         self.setAttribute(

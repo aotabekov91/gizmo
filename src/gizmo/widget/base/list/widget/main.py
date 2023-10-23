@@ -123,24 +123,23 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
                     w.item, w)
         # self.adjustSize()
 
-    @register(['<c-j>', '<c-n>'])
+    @register(['j', 'n'])
     def moveDown(self, digit=1): 
         self.move(digit)
 
-    @register(['<c-k>', '<c-p>'])
+    @register(['k', 'p'])
     def moveUp(self, digit=1): 
 
         if digit>0: 
             digit=-1*digit
         self.move(digit)
 
-    @register('<c-l>')
+    @register('l')
     def setFocusItem(self):
 
         i=self.currentItem()
         if i: 
             w=self.itemWidget(i)
-            print(w)
             w.setFocus()
 
     @register('<c-h>')

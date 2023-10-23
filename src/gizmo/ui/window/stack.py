@@ -9,6 +9,7 @@ from gizmo.ui.window.overlay import Overlay
 class StackWindow(QtWidgets.QMainWindow):
 
     resized=QtCore.pyqtSignal()
+    focusGained=QtCore.pyqtSignal()
 
     def __init__(
             self,
@@ -30,6 +31,8 @@ class StackWindow(QtWidgets.QMainWindow):
                 self.resized)
         self.stack.resized.connect(
                 self.on_stackResized)
+        self.stack.focusGained.connect(
+                self.focusGained)
         self.setCentralWidget(
                 self.stack)
         self.setContentsMargins(
@@ -40,23 +43,34 @@ class StackWindow(QtWidgets.QMainWindow):
 
     def setUI(self):
 
-        self.docks=Docks(self)
-        self.bar=StatusBar(self)
-        self.setStatusBar(self.bar)
+        self.docks=Docks(
+                self)
+        self.bar=StatusBar(
+                self)
+        self.setStatusBar(
+                self.bar)
         self.main=MainWindow()
         self.overlay=Overlay(
                 parent=self)
         self.stack.addWidget(
-                self.main, 'main', main=True)
+                self.main, 
+                'main', 
+                main=True
+                )
         self.bar.hide()
 
-    def on_stackResized(self, event):
+    def on_stackResized(
+            self, event):
 
-        self.overlay.resize(event.size())
+        self.overlay.resize(
+                event.size())
         self.resized.emit()
 
-    def resizeEvent(self, event):
+    def resizeEvent(
+            self, event):
 
-        super().resizeEvent(event)
-        self.overlay.resize(event.size())
+        super().resizeEvent(
+                event)
+        self.overlay.resize(
+                event.size())
         self.resized.emit()

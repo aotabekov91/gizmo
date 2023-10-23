@@ -112,10 +112,22 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
         else:
             self.list.setFocus()
 
+    @register(['<c-j>', '<c-n>'])
+    def moveDown(self, digit=1): 
+        self.list.moveDown(digit)
+
+    @register(['<c-k>', '<c-p>'])
+    def moveUp(self, digit=1): 
+        self.list.moveUp(digit)
+
+    @register('<c-l>')
+    def setFocusItem(self):
+        self.list.setFocusItem()
+
     @register('<c-f>')
     def toggleFilter(self):
 
-        if self.input.isVisible():
+        if self.input.hasFocus():
             self.input.hide()
         else:
             self.input.show()

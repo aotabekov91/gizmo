@@ -4,9 +4,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     resized=QtCore.pyqtSignal()
     
-    def __init__(self):
+    def __init__(
+            self, 
+            *args, 
+            **kwargs):
 
-        super().__init__()
+        super().__init__(
+                *args, 
+                **kwargs,
+                )
         self.setUI()
 
     def setUI(self):
@@ -14,7 +20,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.container=QtWidgets.QWidget(
                 objectName='MainWindowContainer'
                 )
-
         self.m_layout=QtWidgets.QVBoxLayout()
         self.m_layout.setContentsMargins(
                 0,0,0,0)
@@ -25,8 +30,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.setAcceptDrops(True)
         self.setContentsMargins(0, 0, 0, 0)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setWindowFlags(
+                QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(
+                QtCore.Qt.WA_TranslucentBackground)
 
     def resizeEvent(self, event):
 
