@@ -29,14 +29,12 @@ class VimEditor(QtWidgets.QTextEdit):
 
     def setVim(self, nvim=None):
 
-        if not nvim: 
-            nvim=NVim()
+        if not nvim: nvim=NVim()
         self.nvim=nvim
 
     def setText(self, text):
 
         super().setText(text)
-        self.document().adjustSize()
         self.nvim.setText(text)
 
     def keyPressEvent(self, e):

@@ -8,6 +8,7 @@ class Ear(QtCore.QObject):
     escapePressed=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
     backspacePressed=QtCore.pyqtSignal()
+    escapeBracketPressed=QtCore.pyqtSignal()
     carriageReturnPressed=QtCore.pyqtSignal()
     keysSet=QtCore.pyqtSignal(object)
     keysChanged=QtCore.pyqtSignal(str)
@@ -31,9 +32,9 @@ class Ear(QtCore.QObject):
             listening=False,
             report_keys=True,
             listen_leader=None, 
-            command_leader=None,
             mode_on_exit='normal',
             delisten_on_exec=False,
+            delisten_keys=['escape', 'escape_bracket'],
             **kwargs,
             ):
 
@@ -54,11 +55,10 @@ class Ear(QtCore.QObject):
         self.report_keys=report_keys
         self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
+        self.delisten_keys=delisten_keys
         self.delisten_on_exec=delisten_on_exec
         self.listen_leader=self.parseKey(
                 listen_leader)
-        self.command_leader=self.parseKey(
-                command_leader)
         self.setup()
 
     def listen(self):
@@ -190,27 +190,19 @@ class Ear(QtCore.QObject):
             return False
         if event.type()!=QtCore.QEvent.KeyPress:
             return False
+        m, p  = self.checkSpecial(event)
+        if m:
+            event.accept()
+            return True
         self.registerKey(event)
-        if self.checkSpecial(event):
+        if self.checkLeader(event):
             event.accept()
             return True
-        elif self.checkLeader(event):
-            event.accept()
-            return True
-        elif self.checkEscape(event):
+        elif p in self.delisten_keys:
             self.escapePressed.emit()
             event.accept()
             return True
         return self.addKeys(event)
-
-    def checkEscape(self, event):
-
-        if event.key()==QtCore.Qt.Key_Escape:
-            return True
-        elif event.modifiers()==QtCore.Qt.ControlModifier:
-            if event.key()==QtCore.Qt.Key_BracketLeft:
-                return True
-        return False
 
     def addKeys(self, event):
 
@@ -456,40 +448,42 @@ class Ear(QtCore.QObject):
                     self.timer.timeout.connect(func)
                     self.timer.start(self.wait_run)
                     return True
-        else:
-            if pressed in self.command_leader:
-                self.obj.toggleCommandMode()
-                return True
-    
+
     def checkSpecial(self, event):
 
-        matched=False
-        enter=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
-        if event.key() in enter: 
-            if 'return' in self.special:
+        m, p = False, None
+        e=[QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return]
+        if event.key() in e: 
+            p='return'
+            if p in self.special:
+                m=True
                 self.returnPressed.emit()
-                matched=True
         elif event.key()==QtCore.Qt.Key_Backspace:
-            if 'backspace' in self.special:
+            p='backspace'
+            if p in self.special:
+                m=True
                 self.backspacePressed.emit()
-                matched=True
         elif event.key()==QtCore.Qt.Key_Escape:
-            if 'escape' in self.special:
+            p='escape'
+            if p in self.special:
+                m=True
                 self.escapePressed.emit()
-                matched=True
         elif event.key()==QtCore.Qt.Key_Tab:
-            if 'tab' in self.special:
+            p='tab'
+            if p in self.special:
+                m=True
                 self.tabPressed.emit()
-                matched=True
         elif event.modifiers()==QtCore.Qt.ControlModifier:
             if event.key()==QtCore.Qt.Key_BracketLeft:
-                if 'escape_bracket' in self.special:
-                    self.escapePressed.emit()
-                    matched=True
+                p='escape_bracket'
+                if p in self.special:
+                    m=True
+                    self.escapeBracketPressed.emit()
             elif event.key()==QtCore.Qt.Key_M:
-                if 'carriage' in self.special:
+                p='carriage'
+                if p in self.special:
+                    m=True
                     self.carriageReturnPressed.emit()
-                    matched=True
-        if matched: 
+        if m: 
             self.clearKeys()
-        return matched
+        return m, p
