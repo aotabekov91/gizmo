@@ -59,22 +59,30 @@ class BaseDisplay:
 
     def setUI(self):
 
-        self.setContentsMargins(0,0,0,0)
-        self.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.m_layout=QtWidgets.QVBoxLayout(self)
+        self.setContentsMargins(
+                0,0,0,0)
+        self.setContextMenuPolicy(
+                QtCore.Qt.NoContextMenu)
+        self.m_layout=QtWidgets.QVBoxLayout(
+                self)
         self.m_layout.setSpacing(0)
-        self.m_layout.setContentsMargins(0,0,0,0)
+        self.m_layout.setContentsMargins(
+                0,0,0,0)
 
     def clear(self):
 
-        count=self.m_layout.count()
-        for index in range(count,-1, -1):
-            item=self.m_layout.takeAt(index)
-            if item: 
-                item.widget().hide()
+        c=self.m_layout.count()
+        for j in range(c,-1, -1):
+            i=self.m_layout.takeAt(j)
+            if i: i.widget().hide()
         self.hide()
 
-    def setView(self, view, how=None, focus=True):
+    def setView(
+            self, 
+            view, 
+            how=None, 
+            focus=True
+            ):
 
         self.setCurrentView(view)
         if how=='reset':
@@ -86,10 +94,6 @@ class BaseDisplay:
         view.show()
         if focus: 
             view.setFocus()
-
-    def addView(self, view):
-
-        self.m_layout.addWidget(view)
 
     def focus(self, increment=1):
 
@@ -107,28 +111,31 @@ class BaseDisplay:
             view=self.widget(index)
             self.setCurrentView(view)
 
-    def closeView(self, view=None, vid=None):
+    def closeView(
+            self, 
+            view=None, 
+            vid=None
+            ):
 
         if not view:
             view=self.currentView()
         if not vid and view:
             vid=view.id()
-        index=None
-        for f in range(self.m_layout.count()):
-            item=self.m_layout.itemAt(f)
-            if item and item.widget().id()==vid:
-                view=item.widget()
-                index=f
+        idx=None
+        l=self.m_layout
+        for f in range(l.count()):
+            i=l.itemAt(f)
+            if i and i.widget().id()==vid:
+                idx=f
+                view=i.widget()
                 break
-        if not index is None:
-            self.m_layout.removeWidget(view)
+        if not idx is None:
+            l.removeWidget(view)
             view.close()
-            index-=1
-            if index<0: index=0
-            if self.m_layout.count()>0:
-                view=self.widget(index)
+            idx=max(idx-1, 0)
+            if l.count()>0:
+                view=self.widget(idx)
                 self.setCurrentView(view)
-                self.focusCurrentView()
 
     def open(
             self, 
@@ -169,94 +176,24 @@ class BaseDisplay:
 
         if view!=self.view: 
             self.prev=self.view
+            self.select(
+                    self.prev, False)
             self.view=view
-            self.focusCurrentView()
+            self.select(
+                    self.view, True)
             self.viewChanged.emit(
                     self.view, self.prev)
 
-    def incrementUp(self, digit=1): 
+    def select(self, view, cond):
 
-        for d in range(digit): 
-            self.view.incrementUp()
+        if view:
+            view.setProperty(
+                    'selected', cond)
+            view.style().unpolish(view)
+            view.style().polish(view)
 
-    def incrementDown(self, digit=1): 
+    def addView(self, view):
+        self.m_layout.addWidget(view)
 
-        for d in range(digit): 
-            self.view.incrementDown()
-
-    def incrementLeft(self, digit=1): 
-
-        for d in range(digit): 
-            self.view.incrementLeft()
-
-    def incrementRight(self, digit=1): 
-
-        for d in range(digit): 
-            self.view.incrementRight()
-
-    def zoomIn(self, digit=1): 
-        
-        for d in range(digit): 
-            self.view.changeScale(kind='zoomIn')
-
-    def zoomOut(self, digit=1): 
-        
-        for d in range(digit): 
-            self.view.changeScale(kind='zoomOut')
-
-    def adjust(self): 
-        self.view.readjust()
-
-    def keyPressEvent(self, event):
-
-        if event.key()==QtCore.Qt.Key_Escape:
-            if self.view: 
-                self.view.cleanUp()
-        else:
-            super().keyPressEvent(event)
-    
-    def focusUp(self): 
-        self.focus(-1)
-
-    def focusDown(self): 
-        self.focus(+1)
-
-    def focusCurrentView(self): 
-
-        self.deactivate(focusView=False)
-        if self.view: 
-            self.view.setFocus()
-
-    def deactivate(self, focusView=True):
-
-        self.activated=False
-        if focusView: 
-            self.focusCurrentView()
-
-    def activate(self):
-
-        self.activated=True
-        self.show()
-        self.setFocus()
-
-    def toggle(self):
-
-        if self.activated:
-            self.deactivate()
-        else:
-            self.activate()
-
-    def cleanUp(self): 
-
-        if self.view: 
-            self.view.cleanUp()
-
-    def incrementFold(self): 
-        
-        if self.view: 
-            self.view.incrementFold()
-
-    def decrementFold(self): 
-        
-        if self.view: 
-            self.view.decrementFold()
+    def split(self, cond):
+        pass

@@ -1,5 +1,5 @@
 from .leaf import Leaf
-from ....widget import ViewContainer
+# from ....widget import ViewContainer
 
 class TileLayout:
 
@@ -35,13 +35,13 @@ class TileLayout:
             self.focusLeaf(leaf)
             return leaf
 
-    def getContainer(self, widget):
-
-        return ViewContainer(
-                widget, 
-                parent=self.parent,
-                objectName='ViewContainer',
-                )
+    # def getContainer(self, widget):
+    #     return widget
+    #     return ViewContainer(
+    #             widget, 
+    #             parent=self.parent,
+    #             objectName='ViewContainer',
+    #             )
 
     def addWidget(self, widget, hsplit=False):
 
@@ -49,7 +49,8 @@ class TileLayout:
         leaf.hsplit=hsplit
         widget.setParent(self.parent)
         self.current = leaf.insert(
-                self.getContainer(widget), 
+                widget,
+                # self.getContainer(widget), 
                 int(self.lower_right), 
                 self.ratio)
         self.update()

@@ -5,20 +5,27 @@ from PyQt5 import QtCore, QtWidgets
 class Ear(QtCore.QObject):
 
     tabPressed=QtCore.pyqtSignal()
+    keysSet=QtCore.pyqtSignal(
+            object)
+    keysChanged=QtCore.pyqtSignal(
+            str)
+    keyRegistered=QtCore.pyqtSignal(
+            object)
+    keyPressed=QtCore.pyqtSignal(
+            object, object)
+    modeWanted=QtCore.pyqtSignal(
+            object)
+    listenWanted=QtCore.pyqtSignal(
+            object)
+    earingStarted=QtCore.pyqtSignal(
+            object)
     escapePressed=QtCore.pyqtSignal()
     returnPressed=QtCore.pyqtSignal()
+    forceDelisten=QtCore.pyqtSignal()
+    delistenWanted=QtCore.pyqtSignal()
     backspacePressed=QtCore.pyqtSignal()
     escapeBracketPressed=QtCore.pyqtSignal()
     carriageReturnPressed=QtCore.pyqtSignal()
-    keysSet=QtCore.pyqtSignal(object)
-    keysChanged=QtCore.pyqtSignal(str)
-    keyRegistered=QtCore.pyqtSignal(object)
-    keyPressed=QtCore.pyqtSignal(object, object)
-    forceDelisten=QtCore.pyqtSignal()
-    delistenWanted=QtCore.pyqtSignal()
-    modeWanted=QtCore.pyqtSignal(object)
-    listenWanted=QtCore.pyqtSignal(object)
-    earingStarted=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -247,9 +254,13 @@ class Ear(QtCore.QObject):
             elif n == 'ShiftModifier':
                 shift=True
             else:
-                if shift: n=n.upper()
+                if shift: 
+                    n=n.upper()
                 p+=[n]
-        return '-'.join(p)
+        if len(p)==1:
+            return p[0]
+        return f'<{"-".join(p)}>'
+        
 
     def getKeys(self):
 

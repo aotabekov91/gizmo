@@ -25,8 +25,7 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
             ):
 
         super().__init__(
-                objectName=objectName,
-                **kwargs)
+                objectName=objectName)
         self.dlist = []
         self.flist = []
         self.listener=None

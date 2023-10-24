@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-from gizmo.widget import ViewContainer
+# from gizmo.widget import ViewContainer
 from gizmo.ui.display import BaseDisplay
 from gizmo.widget.layout import TileLayout
 
@@ -20,41 +20,39 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
         window.resized.connect(
                 self.update)
 
-    def update(self):
-        self.m_layout.update()
-
     def setUI(self):
 
-        self.setContentsMargins(0,0,0,0)
+        self.setContentsMargins(
+                0,0,0,0)
         self.setContextMenuPolicy(
                 QtCore.Qt.NoContextMenu)
         self.m_layout = TileLayout(self)
 
     def clear(self):
 
-        self.m_layout.clear()
         self.hide()
+        self.m_layout.clear()
 
-    def closeView(self, view=None, vid=None):
+    def closeView(
+            self, 
+            view=None, 
+            vid=None
+            ):
 
         if not view:
-            view=self.currentView()
+            view=self.view
         if not vid and view:
             vid=view.id()
-        for w in self.m_layout.root.widgets():
+        l=self.m_layout
+        for w in l.root.widgets():
             if w.view.id()==vid:
-                self.m_layout.focusWidget(w)
-                prev=self.m_layout.focus('prev')
-                if prev:
-                    self.m_layout.removeWidget(w)
-                    self.setCurrentView(prev.widget)
+                l.focusWidget(w)
+                p=l.focus('prev')
+                if p:
+                    l.removeWidget(w)
+                    self.setCurrentView(
+                            p.widget)
                 return w
-
-    def setCurrentView(self, widget):
-
-        if type(widget)==ViewContainer:
-            widget=widget.view
-        super().setCurrentView(widget)
 
     def setView(
             self, 
@@ -80,12 +78,61 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
 
     def focusView(self, view):
 
-        self.setCurrentView(view)
-        self.m_layout.focusWidget(view)
+        self.setCurrentView(
+                view)
+        self.m_layout.focusWidget(
+                view)
 
-    def addWidget(self, widget, hsplit=False):
+    def addWidget(
+            self, 
+            widget, 
+            hsplit=False
+            ):
 
-        self.m_layout.addWidget(widget, hsplit)
+        self.m_layout.addWidget(
+                widget, hsplit)
+
+    def removeWidget(self):
+
+        c=self.m_layout.current
+        if c and c.widget: 
+            self.focusPrevious()
+            self.m_layout.removeWidget(
+                    c.widget)
+
+    def focus(self, kind):
+
+        n = self.m_layout.focus(
+                kind)
+        if n:
+            self.setCurrentView(
+                    n.widget)
+        return n
+
+    def move(self, kind):
+
+        return self.m_layout.move(
+                kind)
+
+    def flip(self, kind):
+
+        return self.m_layout.flip(
+                kind)
+
+    def resize(self, direction, kind):
+
+        return self.m_layout.resize(
+                direction, kind)
+
+    def split(self, hsplit=False): 
+
+        if self.view: 
+            model=self.view.model()
+            self.open(
+                    model, 
+                    how=None, 
+                    hsplit=hsplit
+                    )
 
     def equalize(self):
         self.m_layout.equalize()
@@ -93,32 +140,5 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
     def toggleSplit(self): 
         self.m_layout.toggleSplit()
 
-    def removeWidget(self):
-
-        if self.m_layout.current:
-            widget=self.m_layout.current.widget
-            if widget: 
-                self.focusPrevious()
-                self.m_layout.removeWidget(widget)
-
-    def focus(self, kind):
-
-        node = self.m_layout.focus(kind)
-        if node:
-            self.setCurrentView(node.widget)
-        return node
-
-    def move(self, kind):
-        return self.m_layout.move(kind)
-
-    def flip(self, kind):
-        return self.m_layout.flip(kind)
-
-    def resize(self, direction, kind):
-        return self.m_layout.resize(direction, kind)
-
-    def split(self, hsplit=False): 
-
-        if self.view: 
-            model=self.view.model()
-            self.open(model, how=None, hsplit=hsplit)
+    def update(self):
+        self.m_layout.update()

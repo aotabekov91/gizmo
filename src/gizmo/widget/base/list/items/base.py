@@ -14,7 +14,6 @@ class ItemWidget(QtWidgets.QWidget):
                 objectName='ListWidgetItem', 
                 **kwargs
                 )
-
         self.list=listWidget
         l=self.getLayout()
         self.setItem()
@@ -66,7 +65,8 @@ class ItemWidget(QtWidgets.QWidget):
     def adjustSize(self):
 
         super().adjustSize()
-        self.item.setSizeHint(self.sizeHint())
+        hint=self.sizeHint()
+        self.item.setSizeHint(hint)
 
     def setFocus(self):
         self.up.setFocus()

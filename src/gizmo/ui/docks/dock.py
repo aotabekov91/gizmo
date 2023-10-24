@@ -2,11 +2,12 @@ from PyQt5 import QtWidgets, QtCore
 
 class Dock(QtWidgets.QDockWidget):
 
-    def __init__(self, 
-                 docks, 
-                 loc,
-                 objectName='DockWidget',
-                 ):
+    def __init__(
+            self, 
+            docks, 
+            loc, 
+            objectName='DockWidget'
+            ):
 
         super().__init__(
                 objectName=objectName)

@@ -17,6 +17,11 @@ class UpDownEdit (ItemWidget):
         super().__init__(
                 *args, **kwargs)
 
+    def setItem(self):
+
+        super().setItem()
+        self.connect()
+
     def getLayout(self):
 
         layout =super().getLayout()
@@ -26,11 +31,19 @@ class UpDownEdit (ItemWidget):
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.down.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
-        self.down.textChanged.connect(
-                self.on_downChanged)
         setEditorTabSize(self.down, 4)
         layout.addWidget(self.down, 70)
         return layout
+
+    def connect(self):
+
+        self.down.textChanged.connect(
+                self.on_downChanged)
+
+    def disconnect(self):
+
+        self.down.textChanged.disconnect(
+                self.on_downChanged)
 
     def setTextDown(self, text):
 
@@ -62,11 +75,13 @@ class UpDownEdit (ItemWidget):
 
     def setData(self, data):
 
+        self.disconnect()
         super().setData(data)
         if data:
             text=data.get('down', '') 
             self.setTextDown(text)
             self.adjustSize()
+        self.connect()
 
     def on_downChanged(self): 
 
