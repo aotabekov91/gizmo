@@ -8,23 +8,36 @@ class VimEditor(QtWidgets.QTextEdit):
 
     def __init__(
             self, 
-            nvim=NVim, 
-            parent = None, 
+            vim=None, 
             tab_stop = 4,
-            font='MS Gothic'
+            font='MS Gothic',
+            objectName='Editor',
+            **kwargs,
             ):
 
-        super().__init__(
-                parent=parent, 
-                objectName='NVimEditor'
-                )
-
-        self.nvim = nvim
         self.mode = None
         self.abort = False
         self.tab_stop=tab_stop
+        super().__init__(
+                objectName=objectName,
+                **kwargs,
+                )
+
+        self.setVim(vim)
         self.setFont(QtGui.QFont(font))
         setEditorTabSize(self, self.tab_stop)
+
+    def setVim(self, nvim=None):
+
+        if not nvim: 
+            nvim=NVim()
+        self.nvim=nvim
+
+    def setText(self, text):
+
+        super().setText(text)
+        self.document().adjustSize()
+        self.nvim.setText(text)
 
     def keyPressEvent(self, e):
 
@@ -56,8 +69,8 @@ class VimEditor(QtWidgets.QTextEdit):
 
     def update(self):
 
-        self.setPlainText(self.nvim.text())
         mode = self.nvim.mode()
+        self.setPlainText(self.text())
         row, col = self.nvim.cursorPosition()
         c = QtGui.QTextCursor(self.document())
         c.setPosition(self.nvim.byte(row, col))
@@ -73,7 +86,7 @@ class VimEditor(QtWidgets.QTextEdit):
             self.setCursorWidth(1)
         elif mode=='n':
             self.setCursorWidth(0)
-        
+
         if cond:
             selection = QtWidgets.QTextEdit.ExtraSelection()
             selection.cursor = c
