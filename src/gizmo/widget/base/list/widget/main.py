@@ -133,15 +133,11 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
         self.goto(1)
 
     @register('G')
-    def gotoLast(self):
-
-        last=self.count()
-        self.goto(last)
-
-    @register('g')
     def goto(self, digit=0):
 
         digit-=1
+        if digit<0:
+            digit=self.count()-1
         self.setCurrentRow(digit)
         self.scrollToItem(
                 self.currentItem(), 
