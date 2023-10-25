@@ -127,33 +127,33 @@ class View(QtWidgets.QGraphicsView):
 
     def connect(self):
 
-        display=self.app.display
+        d=self.app.display
         self.mouseDoubleClickOccured.connect(
-                display.viewMouseDoubleClickOccured)
+                d.viewMouseDoubleClickOccured)
         self.mouseReleaseOccured.connect(
-                display.viewMouseReleaseOccured)
+                d.viewMouseReleaseOccured)
         self.mouseMoveOccured.connect(
-                display.viewMouseMoveOccured)
+                d.viewMouseMoveOccured)
         self.mousePressOccured.connect(
-                display.viewMousePressOccured)
+                d.viewMousePressOccured)
         self.hoverMoveOccured.connect(
-                display.viewHoverMoveOccured)
+                d.viewHoverMoveOccured)
         self.itemMouseDoubleClickOccured.connect(
-                display.itemMouseDoubleClickOccured)
+                d.itemMouseDoubleClickOccured)
         self.itemMouseReleaseOccured.connect(
-                display.itemMouseReleaseOccured)
+                d.itemMouseReleaseOccured)
         self.itemMouseMoveOccured.connect(
-                display.itemMouseMoveOccured)
+                d.itemMouseMoveOccured)
         self.itemMousePressOccured.connect(
-                display.itemMousePressOccured)
+                d.itemMousePressOccured)
         self.itemHoverMoveOccured.connect(
-                display.itemHoverMoveOccured)
+                d.itemHoverMoveOccured)
         self.itemChanged.connect(
-            display.itemChanged)
+            d.itemChanged)
         self.positionChanged.connect(
-            display.positionChanged)
+            d.positionChanged)
         self.itemPainted.connect(
-                display.itemPainted)
+                d.itemPainted)
         self.resized.connect(
                 self.readjust)
 
@@ -255,8 +255,8 @@ class View(QtWidgets.QGraphicsView):
 
     def setModel(self, model):
 
-        self.m_model=model
         self.scene().clear()
+        self.m_model=model
 
     def zoomIn(self): 
         self._zoom(kind='in')

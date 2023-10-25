@@ -299,7 +299,8 @@ class Ear(QtCore.QObject):
             matches, 
             partial, 
             key, 
-            digit):
+            digit
+            ):
 
         self.timer.timeout.disconnect()
         self.timer.timeout.connect(

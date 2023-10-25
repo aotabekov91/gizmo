@@ -156,8 +156,7 @@ class BaseDisplay:
                     view, 
                     how, 
                     focus, 
-                    **kwargs
-                    )
+                    **kwargs)
             self.viewCreated.emit(view)
 
     def createView(self, model):

@@ -122,19 +122,17 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             if index:
                 self.setRootIndex(index)
                 child=index.child(0,0)
-                if child.isValid(): 
-                    self.setCurrentIndex(child)
+                self.setCurrentIndex(child)
 
     @register('u')
     def rootUp(self, digit=1):
 
         for d in range(digit):
-            index=self.rootIndex()
-            if index.parent().isValid():
-                self.setRootIndex(
-                        index.parent())
-                self.setCurrentIndex(
-                        index)
+            idx=self.rootIndex()
+            p=idx.parent()
+            if p.isValid():
+                self.setRootIndex(p)
+                self.setCurrentIndex(idx)
 
     def customMove(self, direction):
 
@@ -146,24 +144,15 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         self.setCurrentIndex(index)
 
     @register('gg')
-    def gotoStart(self):
+    def gotoFirst(self):
 
         index=self.rootIndex()
         if index: 
             child=index.child(0, 0)
             self.setCurrentIndex(child)
 
-    @register('G')
-    def gotoEnd(self): 
-
-        index=self.rootIndex()
-        if index: 
-            last_row=self.model().rowCount(index)-1
-            last=index.child(last_row, 0)
-            self.setCurrentIndex(last)
-
     @register('gf')
-    def gotoFirst(self): 
+    def gotoFirstSibling(self): 
 
         index=self.currentIndex()
         if index:
@@ -171,8 +160,16 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             first=parent.child(0, 0)
             self.setCurrentIndex(first)
 
-    @register('gl')
     def gotoLast(self): 
+
+        index=self.rootIndex()
+        if index: 
+            last_row=self.model().rowCount(index)-1
+            last=index.child(last_row, 0)
+            self.setCurrentIndex(last)
+
+    @register('gl')
+    def gotoLastSibling(self): 
 
         index=self.currentIndex()
         if index:
@@ -181,12 +178,28 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             last=parent.child(last_row, 0)
             self.setCurrentIndex(last)
 
+    @register('G')
+    def goto(self, digit=None):
+
+        if digit is None:
+            self.gotoLast()
+        else:
+            idx=self.getRowIndex(digit)
+            self.setCurrentIndex(idx)
+
+    def getRowIndex(self, row):
+
+        idx = self.model().index(0, 0)
+        for i in range(row):
+            idx = self.indexBelow(idx)
+        return idx
+
     @register('gp')
     def gotoParent(self):
 
         index=self.currentIndex()
         parent=index.parent()
-        if parent.isValid(): self.setCurrentIndex(parent)
+        self.setCurrentIndex(parent)
 
     @register('gs')
     def gotoSiblingDown(self, digit=1):
@@ -203,27 +216,12 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     def gotoSibling(self, kind='up'):
 
         idx=self.currentIndex()
-        parent=idx.parent()
-        if kind=='up':
-            new=parent.child(
-                    idx.row()-1, 0)
-        else:
-            new=parent.child(
-                    idx.row()+1, 0)
-        if new.isValid(): 
-            self.setCurrentIndex(new)
-
-    @register('G')
-    def goto(self, digit=1):
-
-        def getRowIndex(row):
-            idx = self.model().index(0, 0)
-            for i in range(row):
-                idx = self.indexBelow(idx)
-            return idx
-
-        idx=getRowIndex(digit)
-        self.setCurrentIndex(idx)
+        p=idx.parent()
+        s_idx=idx.row()+1
+        if kind=='up': 
+            s_idx=idx.row()-1
+        n_idx=p.child(s_idx, 0)
+        self.setCurrentIndex(n_idx)
 
     def setCurrentIndex(self, idx):
 
@@ -231,6 +229,8 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         if self.model() is None: 
             return
         if self.currentItem() is None: 
+            return
+        if not idx.isValid():
             return
         self.indexChanged.emit(
                 idx)
@@ -247,48 +247,6 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
 
         if event.type()==QtCore.QEvent.Enter:
             item=self.currentItem()
-            if item: self.itemChanged.emit(item)
+            if item: 
+                self.itemChanged.emit(item)
         return super().event(event)
-
-    # def keyPressEvent(self, event):
-    #     self.keyPressEventOccurred.emit(event)
-    #     if event.key()==QtCore.Qt.Key_J:
-    #         self.moveDown()
-    #     elif event.text()=='G':
-    #         self.gotoEnd()
-    #     elif event.key()==QtCore.Qt.Key_G:
-    #         self.gotoStart()
-    #     elif event.key()==QtCore.Qt.Key_BracketLeft:
-    #         self.gotoSibling(kind='up')
-    #     elif event.key()==QtCore.Qt.Key_BracketRight:
-    #         self.gotoSibling(kind='down')
-    #     elif event.key()==QtCore.Qt.Key_P:
-    #         self.gotoParent()
-    #     elif event.key()==QtCore.Qt.Key_K:
-    #         self.moveUp()
-    #     elif event.key()==QtCore.Qt.Key_L:
-    #         self.expand()
-    #     elif event.key()==QtCore.Qt.Key_H:
-    #         self.collapse()
-    #     elif event.key()==QtCore.Qt.Key_U:
-    #         self.rootUp()
-    #     elif event.key()==QtCore.Qt.Key_Z:
-    #         self.update()
-    #     elif event.key()==QtCore.Qt.Key_D:
-    #         self.rootDown()
-    #     elif event.key()==QtCore.Qt.Key_Semicolon:
-    #         self.moveToParent()
-    #     elif event.key()==QtCore.Qt.Key_B:
-    #         self.moveToBottom()
-    #     elif event.key()==QtCore.Qt.Key_X:
-    #         self.expandAllInside()
-    #     elif event.key()==QtCore.Qt.Key_T:
-    #         self.collapseAllInside()
-    #     elif event.key()==QtCore.Qt.Key_O:
-    #         self.openWanted.emit()
-    #     elif event.key()==QtCore.Qt.Key_Escape:
-    #         self.hideWanted.emit()
-    #     elif event.key()==QtCore.Qt.Key_Return:
-    #         self.returnPressed.emit()
-    #     else:
-    #         super().keyPressEvent(event)
