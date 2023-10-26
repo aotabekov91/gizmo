@@ -46,7 +46,7 @@ class View(QtWidgets.QGraphicsView):
     def __init__(
             self, 
             app, 
-            layout, 
+            layout_class, 
             scene_class=None,
             objectName='View',
             **kwargs,
@@ -70,10 +70,13 @@ class View(QtWidgets.QGraphicsView):
         self.m_cursor=QtCore.Qt.ArrowCursor
         self.s_settings=app.config.get(
                 self.__class__.__name__, {})
-        self.setup(scene_class, layout)
+        self.setup(scene_class, layout_class)
         self.connect()
 
-    def setup(self, scene_class, layout):
+    def setup(self, 
+              scene_class, 
+              layout_class
+              ):
 
         if not scene_class: 
             scene_class=Scene
@@ -81,7 +84,7 @@ class View(QtWidgets.QGraphicsView):
         self.m_scene.itemAdded.connect(
                 self.on_itemAdded)
         self.setScene(self.m_scene)
-        self.m_layout = layout(self)
+        self.m_layout = layout_class(self)
         self.scene().setBackgroundBrush(
                 QtGui.QColor('black'))
         self.setDragMode(
