@@ -51,7 +51,8 @@ class Docks(QtCore.QObject):
         d=getattr(self, loc, None)
         if d: 
             self.delTab(w)
-            d.setTab(w)
+            d.setTab(w) 
+        return d
 
     def delTab(self, w): 
 
@@ -70,8 +71,10 @@ class Docks(QtCore.QObject):
 
         d = dock or self.current
         if d and d.current:
-            self.setTab(d.current, loc)
-            self.goto(loc)
+            n=self.setTab(
+                    d.current, loc)
+            if n: 
+                n.showWidget(n.current)
 
     def goto(self, loc):
 

@@ -37,6 +37,7 @@ class Dock(QtWidgets.QDockWidget):
                 self.min_w, self.min_h)
         w.position=self.loc
         w.dock=self
+        self.current=w
 
     def delTab(self, w):
 
