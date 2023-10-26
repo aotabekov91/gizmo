@@ -29,8 +29,8 @@ class Docks(QtCore.QObject):
                 QtCore.Qt.BottomRightCorner, 
                 QtCore.Qt.RightDockWidgetArea)
         locs = {
-                'top': QtCore.Qt.TopDockWidgetArea,
-                'bottom': QtCore.Qt.BottomDockWidgetArea,
+                'up': QtCore.Qt.TopDockWidgetArea,
+                'down': QtCore.Qt.BottomDockWidgetArea,
                 'left': QtCore.Qt.LeftDockWidgetArea,
                 'right': QtCore.Qt.RightDockWidgetArea,
                 }

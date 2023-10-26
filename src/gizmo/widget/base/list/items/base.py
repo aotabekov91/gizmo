@@ -9,7 +9,7 @@ class ItemWidget(QtWidgets.QWidget):
             **kwargs,
             ):
 
-        super(ItemWidget, self).__init__(
+        super().__init__(
                 parent=listWidget,
                 objectName='ListWidgetItem', 
                 **kwargs
