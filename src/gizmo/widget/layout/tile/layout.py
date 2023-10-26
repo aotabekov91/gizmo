@@ -137,7 +137,7 @@ class TileLayout:
                         else:
                             n_ = n_.leaves[1]
                     return n_
-            elif d=='left':
+            elif d=='right':
                 if p.hsplit and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = y + h * 0.5
@@ -148,7 +148,7 @@ class TileLayout:
                         else:
                             n_ = n_.leaves[0]
                     return n_
-            elif d=='right':
+            elif d=='left':
                 if p.hsplit and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = y + h * 0.5
@@ -173,10 +173,15 @@ class TileLayout:
             self.root.equalize()
             self.update()
 
-    def focus(self, kind):
+    def goto(self, kind, digit):
 
         pos=['right', 'left', 'down', 'up']
-        if kind in pos:
+        if digit is not None:
+            widgets = list(self.root.widgets())
+            if 0<digit<len(widgets):
+                widget=widgets[digit]
+                return self.focusWidget(widget)
+        elif kind in pos:
             leaf = self.findLeaf(kind)
             self.focusLeaf(leaf)
             return leaf

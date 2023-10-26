@@ -1,21 +1,13 @@
 import os
-
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5 import QtGui, QtCore, QtWidgets
 
 from .base import ItemWidget
 
 class Icon(ItemWidget):
 
-    def installEventFilter(self, listener):
-
-        self.icon.installEventFilter(listener)
-
     def setUI(self):
 
         style_sheet = '''
-
             QWidget{
                 border-style: outset;
                 border-width: 0px;
@@ -28,38 +20,41 @@ class Icon(ItemWidget):
                 background-color: transparent;
                 }
                 '''
-
-        self.icon = QLabel()
-
-        w=QWidget()
-        layout= QHBoxLayout()
-        layout.setContentsMargins(20,20,20,20)
+        self.icon = QtWidgets.QLabel()
+        w=QtWidgets.QWidget()
+        layout= QtWidgets.QHBoxLayout()
+        layout.setContentsMargins(
+                20,20,20,20)
         layout.addStretch()
-        layout.addWidget(self.icon, Qt.AlignCenter)
+        layout.addWidget(
+                self.icon, 
+                QtCore.Qt.AlignCenter)
         layout.addStretch()
         w.setLayout(layout)
-
-        layout=QHBoxLayout()
-        layout.setContentsMargins(20,20,20,20)
+        layout=QtWidgets.QHBoxLayout()
+        layout.setContentsMargins(
+                20,20,20,20)
         layout.addStretch()
-        layout.addWidget(w, Qt.AlignCenter)
+        layout.addWidget(
+                w, 
+                QtCore.Qt.AlignCenter)
         layout.addStretch()
-
         return layout, style_sheet
 
-    def setIcon(self, imagePath):
+    def setIcon(self, path):
 
-        self.icon.path = imagePath
-        if os.path.isfile(imagePath):
-            scale=self.icon.size()
-            w, h=scale.width(), scale.height()
-            self.icon.setPixmap(QPixmap(imagePath).scaled(w, h, Qt.KeepAspectRatio))
+        self.icon.path = path
+        if os.path.isfile(path):
+            s=self.icon.size()
+            pmap=QtGui.QPixmap(path)
+            pmap=pmap.scaled(
+                    s.width(), 
+                    s.height(),
+                    QtCore.Qt.KeepAspectRatio)
+            self.icon.setPixmap(pmap)
             self.icon.show()
 
     def setData(self, data):
 
-        if data.get('icon', False): self.setIcon(data['icon'])
-
-    def setFixedWidth(self, width):
-
-        self.setFixedSize(self.list.size())
+        if data.get('icon', False): 
+            self.setIcon(data['icon'])

@@ -154,11 +154,11 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
     @register('gf')
     def gotoFirstSibling(self): 
 
-        index=self.currentIndex()
-        if index:
-            parent=index.parent()
-            first=parent.child(0, 0)
-            self.setCurrentIndex(first)
+        idx=self.currentIndex()
+        if idx:
+            p=idx.parent()
+            f=p.child(0, 0)
+            self.setCurrentIndex(f)
 
     def gotoLast(self): 
 

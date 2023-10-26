@@ -42,17 +42,15 @@ class StackWidget(QtWidgets.QStackedWidget):
         for i in range(self.count()): 
             self.widget(i).installEventFilter(listener)
 
-    def setFixedWidth(self, width):
+    # def setFixedWidth(self, width):
+    #     super().setFixedWidth(width)
+    #     for i in range(self.count()): 
+    #         self.widget(i).setFixedWidth(width)
 
-        super().setFixedWidth(width)
-        for i in range(self.count()): 
-            self.widget(i).setFixedWidth(width)
-
-    def setFixedHeight(self, height):
-
-        super().setFixedHeight(height)
-        for i in range(self.count()): 
-            self.widget(i).setFixedHeight(height)
+    # def setFixedHeight(self, height):
+    #     super().setFixedHeight(height)
+    #     for i in range(self.count()): 
+    #         self.widget(i).setFixedHeight(height)
 
     def setFixedSize(self, size):
 

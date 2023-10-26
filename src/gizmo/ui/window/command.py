@@ -25,16 +25,14 @@ class CommandWindow(CommandStack):
                     check_fields=['down']), 
                 'mode')
 
-    def activate(self): 
+    # def activate(self): 
+    #     self.activated=True
+    #     self.app.window.show(
+    #             self)
+    #     # self.setFixedSize(
+    #     #         self.app.window.size())
 
-        self.activated=True
-        self.app.window.show(
-                self)
-        self.setFixedSize(
-                self.app.window.size())
-
-    def deactivate(self): 
-
-        self.activated=False
-        self.app.window.show(
-                self.app.window.main)
+    # def deactivate(self): 
+    #     self.activated=False
+    #     self.app.window.show(
+    #             self.app.window.main)

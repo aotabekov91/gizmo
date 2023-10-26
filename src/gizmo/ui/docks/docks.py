@@ -4,30 +4,30 @@ from .dock import Dock
 
 class Docks(QtCore.QObject):
 
-    keyPressEventOccurred=QtCore.pyqtSignal(object)
-
     def __init__(self, window):
 
-        super(Docks, self).__init__()#window)
-
-        self.prev=None
+        super(Docks, self).__init__(
+                parent=window)
+        self.docks=[]
         self.current=None
-        self.window=window
+        self.m_window=window
         self.fullscreen=False
-        self.window.installEventFilter(self)
         self.createDocks()
 
     def createDocks(self):
 
-        self.window.setCorner(
-                QtCore.Qt.TopLeftCorner, QtCore.Qt.LeftDockWidgetArea)
-        self.window.setCorner(
-                QtCore.Qt.TopRightCorner, QtCore.Qt.RightDockWidgetArea)
-        self.window.setCorner(
-                QtCore.Qt.BottomLeftCorner, QtCore.Qt.LeftDockWidgetArea)
-        self.window.setCorner(
-                QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
-
+        self.m_window.setCorner(
+                QtCore.Qt.TopLeftCorner, 
+                QtCore.Qt.LeftDockWidgetArea)
+        self.m_window.setCorner(
+                QtCore.Qt.TopRightCorner, 
+                QtCore.Qt.RightDockWidgetArea)
+        self.m_window.setCorner(
+                QtCore.Qt.BottomLeftCorner, 
+                QtCore.Qt.LeftDockWidgetArea)
+        self.m_window.setCorner(
+                QtCore.Qt.BottomRightCorner, 
+                QtCore.Qt.RightDockWidgetArea)
         locs = {
                 'top': QtCore.Qt.TopDockWidgetArea,
                 'bottom': QtCore.Qt.BottomDockWidgetArea,
@@ -35,136 +35,65 @@ class Docks(QtCore.QObject):
                 'right': QtCore.Qt.RightDockWidgetArea,
                 }
 
-        for loc, area in locs.items():
-
-            dock = Dock(self, loc)
-            dock.setTitleBarWidget(QtWidgets.QWidget())
-
-            if loc in ['right', 'left']:
-                dock.tab.setFixedWidth(300)
-            elif loc in ['top', 'bottom']:
-                dock.tab.setFixedHeight(300)
-
-            self.window.addDockWidget(area, dock)
-            setattr(self, f'{loc}', dock)
-
+        for loc, r in locs.items():
+            d = Dock(loc)
+            d.title=QtWidgets.QWidget()
+            d.setTitleBarWidget(d.title)
+            self.m_window.addDockWidget(r, d)
+            setattr(self, f'{loc}', d)
+            d.focusGained.connect(
+                    self.setCurrent)
+            self.docks+=[d]
         self.hideAll()
-
-    def eventFilter(self, widget, event):
-
-        if event.type()==QtCore.QEvent.Resize:
-            self.adjustDocks()
-            return True
-        return False
-
-    def focus(self, position): 
-
-        getattr(self, f'{position}').setFocus()
-
-    def resize(self, ratio): 
-
-        if self.current: self.current.resize(ratio)
 
     def setTab(self, w, loc): 
 
-        w.dock=getattr(self, f'{loc}')
-        w.index=w.dock.tab.addWidget(w)
+        d=getattr(self, loc, None)
+        if d: 
+            self.delTab(w)
+            d.setTab(w)
 
     def delTab(self, w): 
 
-        if self.current==w.dock: self.current.hide()
-        w.dock.tab.removeWidget(w)
-
-    def toggleFullscreen(self, dock=None):
-
-        if not dock: dock=self.current
-
-        if dock:
-
-            self.setCurrent(dock)
-
-            if not self.fullscreen:
-                self.fullscreen=True
-                self.current.resize(fullscreen=True)
-            else:
-                self.fullscreen=False
-                self.window.display.show()
-                self.current.resize(restore=True)
-
-            self.focus(self.current.loc)
-
-    def adjustDocks(self): 
-
-        width=self.window.size().width()
-
-        if self.left.isVisible():
-            width-=self.left.size().width()
-        if self.right.isVisible():
-            width-=self.right.size().width()
-
-        for position in ['top', 'bottom']: 
-            dock=getattr(self, f'{position}')
-            if dock.isVisible():
-                dock.tab.setFixedWidth(width-5)
-                widget=dock.current()
-                if widget: 
-                    size=dock.tab.size()
-                    widget.setFixedSize(size)
-                    widget.adjustSize()
+        d=getattr(w, 'dock', None)
+        if d: d.delTab(w)
 
     def hideAll(self):
 
-        for dock in ['right', 'top', 'bottom', 'left']:
-            getattr(self, f'{dock}').hide()
+        for d in self.docks: 
+            d.hide()
+            if d.current:
+                m=getattr(d.current, 'mode', None)
+                if m: m.deactivate()
+
+    def move(self, loc, dock=None):
+
+        d = dock or self.current
+        if d and d.current:
+            self.setTab(d.current, loc)
+            self.goto(loc)
+
+    def goto(self, loc):
+
+        d=getattr(self, loc, None)
+        if d and d.current:
+            m=getattr(d.current, 'mode', None)
+            if m: m.activate()
+
+    def zoomIn(self, digit=1, dock=None): 
+
+        d=dock or self.current
+        if d: d.zoomIn(digit)
+
+    def zoomOut(self, digit=1, dock=None): 
+
+        d=dock or self.current
+        if d: d.zoomOut(digit)
+
+    def toggleFullscreen(self, dock=None):
+
+        d = dock or self.current
+        if d: d.toggleFullscreen()
 
     def setCurrent(self, dock):
-
-        if self.current!=dock:
-            self.prev=self.current
-            self.current=dock
-
-    def zoom(self, kind='in', digit=1): 
-
-        if self.current:
-
-            if kind=='in': 
-                factor=1.1**digit
-            else:
-                factor=.9**digit
-            self.current.resize(factor=factor)
-            self.current.setFocus()
-
-    def focusLeftDock(self): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.focus('left')
-
-    def focusRightDock(self): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.focus('right')
-
-    def focusTopDock(self): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.focus('top')
-
-    def focusBottomDock(self): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.focus('bottom') 
-
-    def toggleDockFullscreen(self): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.toggleFullscreen()
-
-    def zoomInDock(self, digit=1): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.zoom('in', digit)
-
-    def zoomOutDock(self, digit=1): 
-
-        self.window.app.moder.plugs.command.delisten_wanted=None
-        self.zoom('out', digit)
+        self.current=dock

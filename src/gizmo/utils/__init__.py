@@ -1,4 +1,4 @@
 from .ear import Ear
-from .metakey import MetaKey
 from .register import register
+from .meta import MetaKey, MetaConf
 from .tab_size import setEditorTabSize

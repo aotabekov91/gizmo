@@ -5,14 +5,10 @@ class MainWindow(QtWidgets.QMainWindow):
     resized=QtCore.pyqtSignal()
     
     def __init__(
-            self, 
-            *args, 
-            **kwargs):
+            self, *args, **kwargs):
 
         super().__init__(
-                *args, 
-                **kwargs,
-                )
+                *args, **kwargs)
         self.setUI()
 
     def setUI(self):

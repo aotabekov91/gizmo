@@ -100,13 +100,16 @@ class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
             self.m_layout.removeWidget(
                     c.widget)
 
-    def focus(self, kind):
+    def toggleFullscreen(self):
+        raise
 
-        n = self.m_layout.focus(
-                kind)
+    def goto(self, kind=None, digit=None):
+
+        n = self.m_layout.goto(
+                kind, digit)
         if n:
-            self.setCurrentView(
-                    n.widget)
+            w=n.widget
+            self.setCurrentView(w)
         return n
 
     def move(self, kind):

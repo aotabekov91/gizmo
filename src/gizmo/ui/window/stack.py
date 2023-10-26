@@ -10,67 +10,62 @@ class StackWindow(QtWidgets.QMainWindow):
 
     resized=QtCore.pyqtSignal()
     focusGained=QtCore.pyqtSignal()
+    stackResized=QtCore.pyqtSignal()
+    windowResized=QtCore.pyqtSignal()
 
     def __init__(
             self,
             *args, 
+            stack=None,
             objectName='StackedWindow',
             **kwargs,
             ):
 
+        self.m_size=None
         super().__init__(
                 *args, 
                 objectName=objectName,
                 **kwargs
                 )
-        self.stack=StackWidget(
+        self.setStack(stack)
+        self.setUI()
+
+    def setStack(self, stack=None):
+
+        if not stack:
+            stack=StackWidget(
                 parent=self,
                 objectName='StackedWidget',
                 )
+        self.stack=stack
         self.stack.resized.connect(
                 self.resized)
         self.stack.resized.connect(
                 self.on_stackResized)
+        self.stack.resized.connect(
+                self.stackResized)
         self.stack.focusGained.connect(
                 self.focusGained)
         self.setCentralWidget(
                 self.stack)
         self.setContentsMargins(
                 0, 0, 0, 0)
-        self.centralWidget().layout().setContentsMargins(
-                0,0,0,0)
-        self.setUI()
 
     def setUI(self):
 
-        self.docks=Docks(
-                self)
-        self.bar=StatusBar(
-                self)
-        self.setStatusBar(
-                self.bar)
-        self.main=MainWindow()
-        self.overlay=Overlay(
-                parent=self)
+        self.docks=Docks(self)
+        self.bar=StatusBar(self)
+        self.setStatusBar(self.bar)
+        self.main=MainWindow(self)
+        self.overlay=Overlay(self)
         self.stack.addWidget(
                 self.main, 
                 'main', 
-                main=True
-                )
+                main=True)
         self.bar.hide()
 
-    def on_stackResized(
-            self, event):
+    def on_stackResized(self, event):
 
-        self.overlay.resize(
-                event.size())
-        self.resized.emit()
-
-    def resizeEvent(
-            self, event):
-
-        super().resizeEvent(
-                event)
-        self.overlay.resize(
-                event.size())
-        self.resized.emit()
+        s=self.size()
+        self.overlay.resize(s)
+        self.resizeEvent(event)
