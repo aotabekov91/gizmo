@@ -22,6 +22,9 @@ class Model:
     def setId(self, idx): 
         self.m_id=idx
 
+    def assignId(self, *args, **kwargs):
+        pass
+
     def source(self): 
         return self.m_source
 
