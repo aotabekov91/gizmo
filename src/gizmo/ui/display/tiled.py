@@ -1,24 +1,9 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtCore
 
-# from gizmo.widget import ViewContainer
 from gizmo.ui.display import BaseDisplay
 from gizmo.widget.layout import TileLayout
 
-class TiledDisplay(BaseDisplay, QtWidgets.QWidget):
-
-    def __init__(
-            self, 
-            window=None,
-            objectName='Display',
-            ):
-
-        super().__init__(
-                parent=window.main,
-                objectName=objectName,
-                )
-        self.setup()
-        window.resized.connect(
-                self.update)
+class TiledDisplay(BaseDisplay):
 
     def setUI(self):
 

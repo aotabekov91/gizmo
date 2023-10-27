@@ -1,9 +1,23 @@
 class SinglePage:
 
-    def __init__(self, config):
+    def __init__(
+            self, 
+            config={},
+            pageSpacing=0,
+            viewportPadding=0,
+            **kwargs,
+            ):
 
-        self.config=config
-        self.viewportPadding=config.get('viewportPadding', 0) 
+        self.m_config=config
+        self.pageSpacing=pageSpacing
+        self.viewportPadding=viewportPadding
+        self.setSettings()
+
+    def setSettings(self):
+
+        c=self.m_config
+        for k, v in c.items():
+            setattr(self, k, v)
 
     def left(self, idx, count=None): 
         return idx
@@ -28,13 +42,11 @@ class SinglePage:
 
     def width(self, width):
 
-        ps=self.config.get('pageSpacing', 0.0)
+        ps=self.pageSpacing
         return width-self.viewportPadding-2.*ps
 
     def height(self, height):
-
-        ps=self.config.get('pageSpacing', 0.0)
-        return height-2.0*ps
+        return height-2.0*self.pageSpacing
 
     def load(
             self, 
@@ -45,8 +57,8 @@ class SinglePage:
             rightToLeft, 
             ):
 
-        ps=self.config.get('pageSpacing', 0.0)
         ph=0.
+        ps=self.pageSpacing
         for i in items:
             br=i.boundingRect()
             left=-br.left()-0.5*br.width()

@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from .item import Item
-from .cursor import Cursor
-from .layout import Layout
 from ..scene import Scene
+from .layout import Layout
+from .cursor import Cursor
 
 class View(QtWidgets.QGraphicsView):
 
@@ -55,12 +55,17 @@ class View(QtWidgets.QGraphicsView):
     def __init__(
             self, 
             app, 
-            delta=0.05,
-            item_class=None,
-            scene_class=None,
+            config={},
+            item_class=Item,
+            scene_class=Scene,
+            layout_class=Layout,
+            cursor_class=Cursor,
             objectName='View',
-            layout_class=None, 
-            cursor_class=None,
+            foldlevel=0,
+            scaleFactor=1.,
+            zoomFactor = 0.1,
+            continuousView=True,
+            scaleMode='FitToWindowHeight',
             **kwargs,
             ):
 
@@ -72,15 +77,16 @@ class View(QtWidgets.QGraphicsView):
         self.m_yanked=[]
         self.m_selected=[]
         self.m_elements={}
+        self.m_id=id(self)
         self.m_curr = None 
         self.m_prev = None 
-        self.m_model=None
-        self.m_id=id(self)
-        self.m_foldlevel=0
-        self.delta = delta 
-        self.zoomInFactor=1.25
-        self.zoomOutFactor=0.75
-        self.zoomRange=[-10, 10]
+        self.m_model = None
+        self.m_config=config
+        self.foldlevel=foldlevel
+        self.scaleMode=scaleMode
+        self.scaleFactor=scaleFactor
+        self.zoomFactor = zoomFactor  
+        self.continuousView=continuousView
         self.item_class=item_class
         self.scene_class=scene_class
         self.cursor_class=cursor_class
@@ -90,14 +96,19 @@ class View(QtWidgets.QGraphicsView):
                 objectName=objectName,
                 **kwargs,
                 )
-        self.s_settings=app.config.get(
-                self.__class__.__name__, {})
+        self.setSettings()
         self.setup(
                 scene_class, 
                 layout_class, 
                 cursor_class,
                 )
         self.connect()
+
+    def setSettings(self):
+
+        c=self.m_config
+        for k, v in c.items():
+            setattr(self, k, v)
 
     def setup(
             self, 
@@ -106,15 +117,13 @@ class View(QtWidgets.QGraphicsView):
             cursor_class,
               ):
 
-        if not scene_class: 
-            scene_class=Scene
-        self.m_scene=scene_class()
-        self.m_scene.itemAdded.connect(
-                self.on_itemAdded)
-        self.setScene(self.m_scene)
-        self.m_layout = layout_class(self)
-        self.scene().setBackgroundBrush(
-                QtGui.QColor('black'))
+        self.setupLayout()
+        self.setupScene()
+        self.setupCursor()
+        self.setupView()
+
+    def setupView(self):
+
         self.setDragMode(
                 QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setVerticalScrollBarPolicy(
@@ -124,8 +133,44 @@ class View(QtWidgets.QGraphicsView):
         self.setProperty('selected', False)
         self.setContentsMargins(0,0,0,0)
         self.setAcceptDrops(False)
-        if cursor_class:
-            self.cursor=self.cursor_class(self)
+
+    def setupCursor(self):
+
+        config=self.m_config.get(
+                'Cursor', {})
+        self.cursor=self.cursor_class(
+                self, config=config)
+
+    def setupLayout(self):
+
+        config=self.m_config.get(
+                'Layout', {})
+        self.m_layout = self.layout_class(
+                self, config=config)
+
+    def setItem(self, e):
+
+        config=self.m_config.get(
+                'Item', {})
+        i = self.item_class(
+                element=e, 
+                view=self,
+                index=e.index(),
+                scaleFactor=self.scaleFactor,
+                config=config,
+                )
+        e.setItem(i)
+        self.m_items += [i]
+        self.scene().addItem(i)
+
+    def setupScene(self):
+
+        self.m_scene=self.scene_class()
+        self.m_scene.itemAdded.connect(
+                self.on_itemAdded)
+        self.setScene(self.m_scene)
+        self.scene().setBackgroundBrush(
+                QtGui.QColor('black'))
 
     def setId(self, vid):
         self.m_id=vid
@@ -274,35 +319,16 @@ class View(QtWidgets.QGraphicsView):
                 self, item, event)
 
     def setFoldLevel(self, level): 
-        self.m_foldlevel=max(level, 0)
+        self.foldlevel=max(level, 0)
 
     def foldLevel(self): 
-        return self.m_foldlevel
+        return self.foldlevel
 
     def incrementFold(self): 
         self.setFoldLevel(self.foldLevel()+1)
 
     def decrementFold(self): 
         self.setFoldLevel(self.foldLevel()-1)
-
-    def _zoom(self, kind):
-
-        if kind=='in':
-            self.zoom += 1 
-            if self.zoom <= self.zoomRange[1]:
-                self.scale(
-                        self.zoomInFactor, 
-                        self.zoomInFactor)
-            else:
-                self.zoom = self.zoomRange[1]
-        elif kind=='out':
-            self.zoom -= 1 
-            if self.zoom >= self.zoomRange[0]:
-                self.scale(
-                        self.zoomOutFactor, 
-                        self.zoomOutFactor)
-            else:
-                self.zoom = self.zoomRange[0]
 
     def visibleItems(self): 
 
@@ -378,9 +404,6 @@ class View(QtWidgets.QGraphicsView):
     def getItems(self): 
         return self.m_items
 
-    def settings(self): 
-        return self.s_settings
-
     def prepareView(self, *args, **kwargs):
         pass
 
@@ -450,17 +473,6 @@ class View(QtWidgets.QGraphicsView):
         for e in elem.values():
             self.setItem(e)
 
-    def setItem(self, e):
-
-        i = self.item_class(
-                element=e, 
-                view=self,
-                index=e.index(),
-                )
-        e.setItem(i)
-        self.m_items += [i]
-        self.scene().addItem(i)
-
     def getPosition(self):
 
         if self.m_curr:
@@ -494,40 +506,37 @@ class View(QtWidgets.QGraphicsView):
 
     def setScaleFactor(self, factor):
 
-        if self.s_settings.get('scaleFactor', 1.) != factor:
+        if self.scaleFactor != factor:
             if self.scaleMode() == 'ScaleFactor':
-                self.s_settings['scaleFactor'] = str(factor)
+                self.scaleFactor = factor
                 for i in self.m_items:
                     i.setScaleFactor(factor)
                 self.updateView()
 
     def setScaleMode(self, mode):
 
-        self.s_settings['scaleMode'] = mode
+        self.scaleMode = mode
         self.adjustScrollBarPolicy()
         self.updateView()
         self.scaleModeChanged.emit(mode, self)
 
     def scaleMode(self):
-
-        return self.s_settings.get(
-                'scaleMode', 'FitToWindowHeight')
+        return self.scaleMode
 
     def adjustScrollBarPolicy(self):
 
-        scaleMode = self.s_settings.get(
-                'scaleMode', 'FitToWindowHeight')
-        if scaleMode == 'ScaleFactor':
+        sm = self.scaleMode
+        if sm == 'ScaleFactor':
             self.setHorizontalScrollBarPolicy(
                     QtCore.Qt.ScrollBarAlwaysOff)
-        elif scaleMode == 'FitToWindowWidth':
+        elif sm == 'FitToWindowWidth':
             self.setHorizontalScrollBarPolicy(
                     QtCore.Qt.ScrollBarAlwaysOff)
-        elif scaleMode == 'FitToWindowHeight':
+        elif sm == 'FitToWindowHeight':
             self.setHorizontalScrollBarPolicy(
                     QtCore.Qt.ScrollBarAlwaysOff)
             policy = QtCore.Qt.ScrollBarAlwaysOff
-            if self.s_settings.get('continuousView', True):
+            if self.continuousView:
                 policy = QtCore.Qt.ScrollBarAsNeeded
 
     def setCurrent(self, pnum):
@@ -643,8 +652,7 @@ class View(QtWidgets.QGraphicsView):
 
         if self.scaleMode() != 'ScaleFactor': 
             self.setScaleMode('ScaleFactor')
-        zf = self.s_settings.get(
-                'zoomFactor', .1)
+        zf = self.zoomFactor
         if kind=='out':
             zf=(1.-zf)**digit
         elif kind=='in':
@@ -664,8 +672,8 @@ class View(QtWidgets.QGraphicsView):
         hbar=self.horizontalScrollBar()
         vw=l.width(s.width())
         vh=l.height(s.height())
-        inc_vh=vh*self.delta
-        inc_vw=vw*self.delta
+        inc_vh=vh*self.zoomFactor
+        inc_vw=vw*self.zoomFactor
         if kind=='down':
             dx=vbar.value() + inc_vh*digit
             dx=min(sr.height(), dx)

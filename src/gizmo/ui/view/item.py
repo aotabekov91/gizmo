@@ -1,8 +1,6 @@
 from math import floor
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from .utils.tile import Tile
-
 class Item(QtWidgets.QGraphicsObject):
 
     wasModified = QtCore.pyqtSignal()
@@ -28,37 +26,53 @@ class Item(QtWidgets.QGraphicsObject):
             self, 
             element, 
             view, 
+            config={},
+            xresol=72,
+            yresol=72,
             index=None,
+            rotation=0,
+            scaleFactor=1.,
+            useTiling=False,
+            proxyPadding=0.,
+            devicePixelRatio=1.,
             **kwargs
             ):
 
         self.m_view=view
         self.m_index=index
         self.m_searched=[]
+        self.m_config=config
         self.m_paint_links=False
         self.m_element = element
         self.m_cache=view.m_cache
         self.m_size = element.size()
         self.select_pcolor=QtCore.Qt.red
         self.m_brect = QtCore.QRectF() 
-        self.m_transform = QtGui.QTransform()
-        self.m_normalizedTransform = QtGui.QTransform()
-        s=view.settings()
-        self.m_rotation=s.get('rotation', 0)
-        self.m_xresol=s.get('resolutionX', 72)
-        self.m_yresol=s.get('resolutionY', 72)
-        self.m_use_tiling=s.get('useTiling', False)
-        self.m_scaleFactor=s.get('scaleFactor', 1.)
-        self.m_proxy_padding=s.get('proxyPadding', 0.)
-        self.m_device_pixel_ration=s.get(
-                'devicePixelRatio', 1.)
+        self.m_trans = QtGui.QTransform()
+        self.m_norm = QtGui.QTransform()
+        self.xresol=xresol
+        self.yresol=yresol
+        self.rotation=rotation
+        self.useTiling=useTiling
+        self.scale=scaleFactor
+        self.proxyPadding=proxyPadding
+        self.devicePixelRatio=devicePixelRatio
         self.select_bcolor=QtGui.QColor(88, 139, 174, 30)
-        super().__init__(objectName='Item', **kwargs)
-        self.setAcceptHoverEvents(True)
+                
+        super().__init__(
+                objectName='Item', 
+                **kwargs)
+        self.setSettings()
         self.setup()
 
+    def setSettings(self):
+
+        c=self.m_config
+        for k, v in c.items():
+            setattr(self, k, v)
+
     def setup(self):
-        pass
+        self.setAcceptHoverEvents(True)
 
     def select(self, *args, **kwargs):
         pass
@@ -79,34 +93,19 @@ class Item(QtWidgets.QGraphicsObject):
         return self.m_view
 
     def proxyPadding(self):
-        return self.m_proxy_padding
-
-    def scale(self):
-        return self.m_scaleFactor
-
-    def rotation(self):
-        return self.m_rotation
+        return self.proxyPadding
 
     def setRotation(self, rotation):
-        self.m_rotation=rotation
-
-    def devicePixelRatio(self):
-        return self.m_device_pixel_ration
+        self.rotation=rotation
 
     def size(self): 
         return self.m_size
 
-    def xresol(self):
-        return self.m_xresol 
-
     def setXResol(self, xresol):
-        self.m_xresol=xresol
-
-    def yresol(self):
-        return self.m_yresol
+        self.xresol=xresol
 
     def setYResol(self, yresol):
-        self.m_yresol=yresol
+        self.yresol=yresol
 
     def setSearched(self, searched=[]): 
         self.m_searched=searched
@@ -120,10 +119,10 @@ class Item(QtWidgets.QGraphicsObject):
         self.paintItem(p, opts, wids)
 
     def displayedWidth(self):
-        return (self.xresol()/72.0)*self.m_size.width()
+        return (self.xresol/72.0)*self.m_size.width()
 
     def displayedHeight(self):
-        return (self.yresol()/72.0)*self.m_size.height()
+        return (self.yresol/72.0)*self.m_size.height()
 
     def refresh(self, dropCache=False):
         self.update()
@@ -143,20 +142,14 @@ class Item(QtWidgets.QGraphicsObject):
     def hoverMoveEvent(self, event):
         self.hoverMoveOccured.emit(event, self)
 
+    def scaledResol(self, kind): 
 
-    def scaledResolutionX(self): 
-
-        s=self.scale()
-        r=self.devicePixelRatio()
-        x=self.xresol()
-        return s*r*x
-
-    def scaledResolutionY(self): 
-
-        s=self.scale()
-        r=self.devicePixelRatio()
-        y=self.yresol()
-        return s*r*y
+        s=self.scale
+        r=self.devicePixelRatio
+        if kind=='x':
+            return self.xresol*s*r
+        elif kind=='y':
+            return self.yresol*s*r
 
     def paint(self, p, opts, wids):
 
@@ -167,9 +160,9 @@ class Item(QtWidgets.QGraphicsObject):
         self.setupPaint(p, opts, wids)
         self.itemPainted.emit(p, opts, wids, self)
 
-    def setResolution(self, x, y):
+    def setResol(self, x, y):
 
-        if self.xresol() != x or self.yresol() != y:
+        if self.xresol != x or self.yresol != y:
             if y>0 and x>0:
                 self.refresh()
                 self.setXResol(x)
@@ -178,7 +171,7 @@ class Item(QtWidgets.QGraphicsObject):
 
     def setScaleFactor(self, factor):
 
-        self.m_scaleFactor=factor
+        self.scale=factor
         self.redraw(refresh=True)
 
     def redraw(self, refresh=False):
@@ -191,10 +184,9 @@ class Item(QtWidgets.QGraphicsObject):
     def prepareGeometry(self):
 
         s = self.size()
-        x = self.xresol()*self.scale()/72.
-        y = self.yresol()*self.scale()/72.
-        t=self.m_transform
-        n=self.m_normalizedTransform
+        t, n=self.m_trans, self.m_norm
+        x = self.xresol*self.scale/72.
+        y = self.yresol*self.scale/72.
         t.reset()
         t.scale(x, y)
         n.reset()
@@ -208,8 +200,8 @@ class Item(QtWidgets.QGraphicsObject):
 
     def mapToPage(self, p, unify=True):
 
-        t=self.m_transform.inverted()
-        n=self.m_normalizedTransform.inverted()
+        t=self.m_trans.inverted()
+        n=self.m_norm.inverted()
         if type(p) in [QtCore.QPoint, QtCore.QPointF]:
             uni=n[0].map(p)
             ununi=t[0].map(p)
@@ -224,8 +216,8 @@ class Item(QtWidgets.QGraphicsObject):
 
     def mapToItem(self, p, isUnified=False):
 
-        t=self.m_transform
-        n=self.m_normalizedTransform
+        t=self.m_trans
+        n=self.m_norm
         if type(p) in [QtCore.QPoint, QtCore.QPointF]:
             if isUnified: p=n.map(p)
             return t.map(p)
@@ -234,11 +226,13 @@ class Item(QtWidgets.QGraphicsObject):
             if isUnified: p=n.mapRect(p)
             return t.mapRect(p)
 
-    def showOverlay(self, 
-                    overlay, 
-                    hideOverlay, 
-                    elements, 
-                    selectedElement):
+    def showOverlay(
+            self, 
+            overlay, 
+            hideOverlay, 
+            elements, 
+            selectedElement
+            ):
 
         for e in elements:
             if not e in overlay:
@@ -246,7 +240,11 @@ class Item(QtWidgets.QGraphicsObject):
             if e==selectedElement:
                 overlay[e].widget().setFocus()
 
-    def hideOverlay(self, overlay, deleteLater=False):
+    def hideOverlay(
+            self, 
+            overlay, 
+            deleteLater=False
+            ):
 
         dover=Overlay()
         dover.swap(overlay)
@@ -256,7 +254,12 @@ class Item(QtWidgets.QGraphicsObject):
                     raise
             self.refresh()
 
-    def addProxy(self, pos, wid, hideOverlay):
+    def addProxy(
+            self, 
+            pos, 
+            wid, 
+            hideOverlay
+            ):
 
         p=QtWidgets.QGraphicsProxyWidget(self)
         p.setWidget(wid)
@@ -271,15 +274,10 @@ class Item(QtWidgets.QGraphicsObject):
         height=proxy.preferredHeight()
         x=pos.x()-0.5*proxy.preferredWidth()
         y=pos.y()-0.5*proxy.preferredHeight()
-        proxyPadding=self.proxyPadding()
+        proxyPadding=self.proxyPadding
         x=max([x, self.m_brect.left()+proxyPadding])
         y=max([y, self.m_brect.top()+ proxyPadding])
         width=min([width, self.m_brect.right()-proxyPadding-x])
         height=min([height, self.m_brect.bottom()-y])
         proxy.setGeometry(
                 QtCore.QRectF(x, y, width, height))
-
-    # def name(self): 
-    #     idx=self.m_element.index()
-    #     count=self.m_view.count()
-    #     return f'{idx}/{count}'

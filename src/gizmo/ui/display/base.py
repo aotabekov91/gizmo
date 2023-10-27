@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
-class BaseDisplay:
+class BaseDisplay(QtWidgets.QWidget):
 
     annotationAdded=QtCore.pyqtSignal(
             object)
@@ -45,17 +45,41 @@ class BaseDisplay:
     viewMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object])
 
+    def __init__(
+            self, 
+            *args, 
+            app=None,
+            window=None,
+            objectName='Display',
+            config={},
+            **kwargs
+            ):
+
+        self.app=app
+        self.m_config=config
+        super().__init__(
+                parent=window.main,
+                objectName=objectName,
+                )
+        self.setup()
+        window.resized.connect(self.update)
+
     def setup(self):
 
         self.count=-1
         self.views={}
         self.view=None
         self.prev=None
-        self.viewers=[]
+        self.renders=[]
         self.setUI()
+        self.setConfig()
 
-    def addViewer(self, viewer):
-        self.viewers+=[viewer]
+    def setConfig(self):
+
+        if self.app:
+            c=self.app.config
+            self.m_config=c.get(
+                    'Display', {})
 
     def setUI(self):
 
@@ -161,12 +185,32 @@ class BaseDisplay:
 
     def createView(self, model):
 
-        for v in self.viewers:
-            view=v.getView(model)
-            if view: 
-                self.count+=1
-                self.views[self.count]=view
-                return view
+        for c in self.app.renders:
+            gv=getattr(c, 'getView', None)
+            if gv:
+                conf=self.getConf(c)
+                v=c.getView(
+                        model=model, 
+                        config=conf)
+                if v: 
+                    self.count+=1
+                    self.views[self.count]=v
+                    return v
+
+    def getConf(self, render):
+
+        c=self.m_config
+        g=c.get('View', {})
+        v=render.view_class
+        s=g.get(v.__name__, {})
+        for k, v in g.items():
+            if not k in s:
+                s[k]=v
+            sv=s[k]
+            if type(sv)==dict:
+                v.update(sv)
+                s[k]=v
+        return s
 
     def currentView(self): 
         return self.view
@@ -195,4 +239,7 @@ class BaseDisplay:
         self.m_layout.addWidget(view)
 
     def split(self, cond):
+        pass
+
+    def update(self): 
         pass

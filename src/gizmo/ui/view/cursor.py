@@ -2,8 +2,10 @@ from PyQt5.QtCore import QObject
 
 class Cursor(QObject):
 
-    def __init__(self, view): 
+    def __init__(
+            self, view, config={}): 
 
+        self.m_config=config
         super().__init__(view)
         view.itemMouseMoveOccured.connect(
                 self.on_mouseMove)
@@ -13,7 +15,14 @@ class Cursor(QObject):
                 self.on_mouseRelease)
         view.itemMouseDoubleClickOccured.connect(
                 self.on_doubleClick)
+        self.setSettings()
         self.setup()
+
+    def setSettings(self):
+
+        c=self.m_config
+        for k, v in c.items():
+            setattr(self, k, v)
 
     def setup(self):
         pass

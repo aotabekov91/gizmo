@@ -1,17 +1,17 @@
-from .utils.single import SinglePage
+from .single import SinglePage
 
 class Layout:
 
     def __init__(
             self, 
             view,
-            config={},
             mode='SinglePage',
             modes={'SinglePage': SinglePage},
+            **kwargs,
             ):
 
         self.modes=modes
-        self.m_mode=modes[mode](config)
+        self.m_mode=modes[mode](**kwargs)
 
     def mode(self): 
         return self.m_mode
