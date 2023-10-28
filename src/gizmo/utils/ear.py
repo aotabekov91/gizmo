@@ -39,6 +39,7 @@ class Ear(QtCore.QObject):
             listening=False,
             report_keys=True,
             listen_leader=None, 
+            suffix_functor=None,
             mode_on_exit='normal',
             delisten_on_exec=False,
             delisten_keys=['escape', 'escape_bracket'],
@@ -63,6 +64,7 @@ class Ear(QtCore.QObject):
         self.prefix_keys=prefix_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_keys=delisten_keys
+        self.suffix_functor=suffix_functor
         self.delisten_on_exec=delisten_on_exec
         self.listen_leader=self.parseKey(
                 listen_leader)
@@ -226,6 +228,9 @@ class Ear(QtCore.QObject):
                     digit)
         if matches or partial: 
             return True
+        elif self.suffix_functor:
+            return self.suffix_functor(
+                    key, digit, event)
         else:
             self.clearKeys()
             return False
