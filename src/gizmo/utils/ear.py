@@ -227,7 +227,7 @@ class Ear(QtCore.QObject):
                     key, 
                     digit)
         if matches or partial: 
-            return True
+            return True 
         elif self.suffix_functor:
             return self.suffix_functor(
                     key, digit, event)
