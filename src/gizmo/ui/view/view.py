@@ -7,6 +7,7 @@ from .cursor import Cursor
 
 class View(QtWidgets.QGraphicsView):
 
+    position='display'
     scaleModeChanged = QtCore.pyqtSignal(
             object, object)
     scaleFactorChanged = QtCore.pyqtSignal(
@@ -338,40 +339,15 @@ class View(QtWidgets.QGraphicsView):
     def model(self): 
         return self.m_model
 
-    def left(self): 
+    def modelId(self):
+
+        if self.m_model:
+            return self.m_model.id()
+
+    def increment(self, kind): 
         pass
 
-    def right(self): 
-        pass
-
-    def down(self): 
-        pass
-
-    def up(self): 
-        pass
-
-    def pageUp(self): 
-        pass
-
-    def pageDown(self): 
-        pass
-    
-    def pageLeft(self): 
-        pass
-
-    def pageRight(self): 
-        pass
-
-    def incrementRight(self): 
-        pass
-
-    def incrementLeft(self): 
-        pass
-
-    def incrementUp(self): 
-        pass
-    
-    def incrementDown(self): 
+    def derement(self, kind):
         pass
 
     def prev(self): 
@@ -380,7 +356,7 @@ class View(QtWidgets.QGraphicsView):
     def next(self): 
         pass
 
-    def goto(self, digit): 
+    def open(self, *arg, **kwargs):
         pass
 
     def gotoEnd(self): 
@@ -429,6 +405,12 @@ class View(QtWidgets.QGraphicsView):
         else:
             idx=self.m_curr
         return self.m_items[idx]
+
+    def itemId(self, item=None):
+
+        if not item:
+            item=self.currentItem()
+        return item.index()
 
     def currentItem(self):
         return self.item()
@@ -689,3 +671,17 @@ class View(QtWidgets.QGraphicsView):
             dx=hbar.value() - inc_vw*digit
             hbar.setValue(int(dx))
         self.setVisiblePage()
+
+    def kind(self):
+
+        if self.m_model:
+            return self.m_model.kind()
+
+    def getLocation(self, encode=True):
+
+        if encode:
+            x, y = self.getPosition()
+            x, y = str(x), str(y)
+            return ':'.join([x, y])
+        else:
+            raise

@@ -187,15 +187,16 @@ class BaseDisplay(QtWidgets.QWidget):
 
         for c in self.app.renders:
             gv=getattr(c, 'getView', None)
-            if gv:
-                conf=self.getConf(c)
-                v=c.getView(
-                        model=model, 
-                        config=conf)
-                if v: 
-                    self.count+=1
-                    self.views[self.count]=v
-                    return v
+            if not gv: return
+            p=c.view_class.position
+            if p!='display': return
+            conf=self.getConf(c)
+            v=c.getView(
+                    model=model, config=conf)
+            if not v:  return
+            self.count+=1
+            self.views[self.count]=v
+            return v
 
     def getConf(self, render):
 

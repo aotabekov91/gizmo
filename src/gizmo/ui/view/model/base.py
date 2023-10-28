@@ -46,6 +46,9 @@ class Model:
     def name(self):
         pass
 
+    def kind(self):
+        pass
+
     def count(self):
         return len(self.elements())
 

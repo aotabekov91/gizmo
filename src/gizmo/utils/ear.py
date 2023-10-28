@@ -220,7 +220,10 @@ class Ear(QtCore.QObject):
             matches, partial=self.getMatches(
                     key, digit)
             self.runMatches(
-                    matches, partial, key, digit)
+                    matches, 
+                    partial, 
+                    key, 
+                    digit)
         if matches or partial: 
             return True
         else:
