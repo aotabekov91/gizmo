@@ -189,6 +189,50 @@ class Ear(QtCore.QObject):
                         self.pressed_text)
         self.keyRegistered.emit(event)
 
+    # def eventFilter(
+    #         self, 
+    #         widget, 
+    #         event
+    #         ):
+    #     # if not self.listening:
+    #     #     return False
+    #     # if event.type()!=QtCore.QEvent.KeyPress:
+    #     #     return False
+    #     # m, p  = self.checkSpecial(event)
+    #     # if m:
+    #     #     event.accept()
+    #     #     return True
+    #     # self.registerKey(event)
+    #     # if self.checkLeader(event):
+    #     #     event.accept()
+    #     #     return True
+    #     # elif p in self.delisten_keys:
+    #     #     self.escapePressed.emit()
+    #     #     event.accept()
+    #     #     return True
+    #     # return self.addKeys(event)
+
+    # def addKeys(self, event):
+        # self.timer.stop()
+        # matches, partial = [], []
+        # if self.pressed:
+        #     key, digit = self.getKeys()
+        #     matches, partial=self.getMatches(
+        #             key, digit)
+        #     self.runMatches(
+        #             matches, 
+        #             partial, 
+        #             key, 
+        #             digit)
+        # if matches or partial: 
+        #     return True
+        # # elif self.suffix_functor:
+        #     # return self.suffix_functor(
+        #             # key, digit, event)
+        # else:
+        #     self.clearKeys()
+        #     return False
+
     def eventFilter(
             self, 
             widget, 
@@ -211,71 +255,24 @@ class Ear(QtCore.QObject):
             self.escapePressed.emit()
             event.accept()
             return True
-        return self.addKeys(event)
-
-    def addKeys(self, event):
-
-        self.timer.stop()
-        matches, partial = [], []
-        if self.pressed:
-            key, digit = self.getKeys()
-            matches, partial=self.getMatches(
-                    key, digit)
-            self.runMatches(
-                    matches, 
-                    partial, 
-                    key, 
-                    digit)
-        if matches or partial: 
+        elif self.addKeys(event):
+            event.accept()
             return True
         elif self.suffix_functor:
-            return self.suffix_functor(
-                    key, digit, event)
+            return self.suffix_functor(event)
         else:
             self.clearKeys()
             return False
 
-    # def eventFilter(
-    #         self, 
-    #         widget, 
-    #         event
-    #         ):
+    def addKeys(self, event):
 
-    #     if not self.listening:
-    #         return False
-    #     if event.type()!=QtCore.QEvent.KeyPress:
-    #         return False
-    #     m, p  = self.checkSpecial(event)
-    #     if m:
-    #         event.accept()
-    #         return True
-    #     self.registerKey(event)
-    #     if self.checkLeader(event):
-    #         event.accept()
-    #         return True
-    #     elif p in self.delisten_keys:
-    #         self.escapePressed.emit()
-    #         event.accept()
-    #         return True
-    #     elif self.addKeys(event):
-    #         event.accept()
-    #         return True
-    #     elif self.suffix_functor:
-    #         return self.suffix_functor(event)
-    #     else:
-    #         self.clearKeys()
-    #         return False
-
-    # def addKeys(self, event):
-
-    #     self.timer.stop()
-    #     m, p = [], []
-    #     if self.pressed:
-    #         k, d = self.getKeys()
-    #         m, p=self.getMatches(k, d)
-    #         self.runMatches(m, p, k, d)
-    #     print(m, p, k, d)
-    #     return m or p
+        self.timer.stop()
+        m, p = [], []
+        if self.pressed:
+            k, d = self.getKeys()
+            m, p=self.getMatches(k, d)
+            self.runMatches(m, p, k, d)
+        return m or p
 
     def getPressed(self, event):
 
@@ -377,7 +374,6 @@ class Ear(QtCore.QObject):
                 m=matches[0]
                 f=getattr(m, '__wrapped__', m)
                 c1='digit' in signature(f).parameters
-                print(f, digit, c1, signature(f).parameters)
                 if digit is not None and c1: 
                     m(digit=digit)
                 else:
