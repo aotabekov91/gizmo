@@ -30,7 +30,7 @@ class BaseDisplay(QtWidgets.QWidget):
             [object, object, object])
     itemMouseDoubleClickOccured=QtCore.pyqtSignal(
             [object, object, object])
-    viewSelection=QtCore.pyqtSignal(
+    selection=QtCore.pyqtSignal(
             [object, object])
     viewKeyPressOccurred=QtCore.pyqtSignal(
             [object, object])
@@ -63,6 +63,7 @@ class BaseDisplay(QtWidgets.QWidget):
                 )
         self.setup()
         window.resized.connect(self.update)
+        self.selection.connect(app.selection)
 
     def setup(self):
 
@@ -163,19 +164,19 @@ class BaseDisplay(QtWidgets.QWidget):
 
     def open(
             self, 
-            model=None, 
+            view=None,
             how='reset', 
             focus=True, 
             **kwargs
             ):
 
-        if how=='reset':
-            if self.view:
-                cmodel=self.view.model()
-                if cmodel==model: return
-
-        view=self.createView(model)
+        if how=='reset' and self.view:
+            nmodel=view.model()
+            cmodel=self.view.model()
+            if cmodel==nmodel: 
+                return
         if view: 
+            self.saveView(view)
             self.setView(
                     view, 
                     how, 
@@ -183,22 +184,12 @@ class BaseDisplay(QtWidgets.QWidget):
                     **kwargs)
             self.viewCreated.emit(view)
 
-    def createView(self, model):
+    def saveView(self, view):
 
-        for c in self.app.renders:
-            gv=getattr(c, 'getView', None)
-            if not gv: return
-            p=c.view_class.position
-            if p!='display': return
-            conf=self.getConf(c)
-            v=c.getView(
-                    model=model, config=conf)
-            if not v:  return
-            self.count+=1
-            self.views[self.count]=v
-            return v
+        self.count+=1
+        self.views[self.count]=view
 
-    def getConf(self, render):
+    def getRenderConfig(self, render):
 
         c=self.m_config
         g=c.get('View', {})

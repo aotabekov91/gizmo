@@ -233,7 +233,7 @@ class View(QtWidgets.QGraphicsView):
         self.itemPainted.connect(d.itemPainted)
         self.resized.connect(self.readjust)
         self.selection.connect(
-                self.app.display.viewSelection)
+                self.app.display.selection)
 
     def resizeEvent(self, event):
 
@@ -343,6 +343,16 @@ class View(QtWidgets.QGraphicsView):
 
         if self.m_model:
             return self.m_model.id()
+
+    def element(self, idx):
+
+        if self.m_model:
+            return self.m_model.element(idx)
+
+    def elements(self):
+
+        if self.m_model:
+            return self.m_model.elements()
 
     def increment(self, kind): 
         pass

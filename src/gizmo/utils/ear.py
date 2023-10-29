@@ -211,29 +211,24 @@ class Ear(QtCore.QObject):
             self.escapePressed.emit()
             event.accept()
             return True
-        return self.addKeys(event)
+        elif self.addKeys(event):
+            event.accept()
+            return True
+        elif self.suffix_functor:
+            return self.suffix_functor(event)
+        else:
+            self.clearKeys()
+            return False
 
     def addKeys(self, event):
 
         self.timer.stop()
-        matches, partial = [], []
+        m, p = [], []
         if self.pressed:
-            key, digit = self.getKeys()
-            matches, partial=self.getMatches(
-                    key, digit)
-            self.runMatches(
-                    matches, 
-                    partial, 
-                    key, 
-                    digit)
-        if matches or partial: 
-            return True 
-        elif self.suffix_functor:
-            return self.suffix_functor(
-                    key, digit, event)
-        else:
-            self.clearKeys()
-            return False
+            k, d = self.getKeys()
+            m, p=self.getMatches(k, d)
+            self.runMatches(m, p, k, d)
+        return m or p
 
     def getPressed(self, event):
 
