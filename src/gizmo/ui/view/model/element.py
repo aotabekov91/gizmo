@@ -15,6 +15,9 @@ class Element:
         super().__init__()
         self.setup()
 
+    def size(self):
+        pass
+
     def setup(self):
         pass
 

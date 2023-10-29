@@ -95,7 +95,6 @@ class View(QtWidgets.QGraphicsView):
         self.m_cursor=QtCore.Qt.ArrowCursor
         super().__init__(
                 objectName=objectName,
-                **kwargs,
                 )
         self.setSettings()
         self.setup(
