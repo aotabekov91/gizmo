@@ -116,8 +116,9 @@ class TiledDisplay(BaseDisplay):
 
         if self.view: 
             model=self.view.model()
+            view=self.copyView(model)
             self.open(
-                    model, 
+                    view,
                     how=None, 
                     hsplit=hsplit
                     )

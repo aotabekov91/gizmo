@@ -120,6 +120,13 @@ class BaseDisplay(QtWidgets.QWidget):
         if focus: 
             view.setFocus()
 
+    def copyView(self, model):
+
+        source=model.source()
+        for r in self.app.renders:
+            if r.isCompatible(source):
+                return r.getView(model)
+
     def focus(self, increment=1):
 
         if self.m_layout.count()<2:
