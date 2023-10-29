@@ -136,7 +136,6 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
     def goto(self, digit=0):
 
         print(digit)
-        raise
         digit-=1
         if digit<0:
             digit=self.count()-1
