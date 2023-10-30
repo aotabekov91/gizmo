@@ -1,4 +1,8 @@
+import re
+
 class Model:
+
+    pattern=None
 
     def __init__(
             self, 
@@ -57,3 +61,12 @@ class Model:
 
     def __hash__(self): 
         return hash(self.m_data)
+
+    @classmethod
+    def isCompatible(cls, source):
+
+        if source and cls.pattern:
+            return re.match(
+                    cls.pattern, 
+                    source,
+                    re.I)
