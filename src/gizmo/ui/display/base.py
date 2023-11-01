@@ -17,7 +17,7 @@ class BaseDisplay(QtWidgets.QWidget):
     itemPainted = QtCore.pyqtSignal(
             object, object, object, object, object)
     positionChanged = QtCore.pyqtSignal(
-            object, object, object, object)
+            object, object, object)
     itemKeyPressOccured=QtCore.pyqtSignal(
             [object, object, object])
     itemHoverMoveOccured=QtCore.pyqtSignal(
@@ -169,7 +169,7 @@ class BaseDisplay(QtWidgets.QWidget):
                 view=self.widget(idx)
                 self.setCurrentView(view)
 
-    def open(
+    def setupView(
             self, 
             view=None,
             how='reset', 
@@ -183,18 +183,14 @@ class BaseDisplay(QtWidgets.QWidget):
             if cmodel==nmodel: 
                 return
         if view: 
-            self.saveView(view)
+            self.count+=1
+            self.views[self.count]=view
             self.setView(
                     view, 
                     how, 
                     focus, 
                     **kwargs)
             self.viewCreated.emit(view)
-
-    def saveView(self, view):
-
-        self.count+=1
-        self.views[self.count]=view
 
     def getRenderConfig(self, render):
 

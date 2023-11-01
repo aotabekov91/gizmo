@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QObject
 
-class Cursor(QObject):
+class BaseCursor(QObject):
 
     def __init__(
             self, view, config={}): 

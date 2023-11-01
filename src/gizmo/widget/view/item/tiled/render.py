@@ -1,51 +1,32 @@
 from math import floor
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Item(QtWidgets.QGraphicsObject):
+from .base import Item
+
+class RenderItem(Item, QtWidgets.QGraphicsObject):
 
     wasModified = QtCore.pyqtSignal()
     cropRectChanged = QtCore.pyqtSignal()
     linkClicked = QtCore.pyqtSignal(
             bool, int, float, float)
-    itemPainted=QtCore.pyqtSignal(
+    painted=QtCore.pyqtSignal(
             object, object, object, object)
-    mouseDoubleClick=QtCore.pyqtSignal(
-            int, object)
-    mouseReleaseOccured=QtCore.pyqtSignal(
-            object, object)
-    mouseMoveOccured=QtCore.pyqtSignal(
-            object, object)
-    mousePressOccured=QtCore.pyqtSignal(
-            object, object)
-    hoverMoveOccured=QtCore.pyqtSignal(
-            object, object)
-    mouseDoubleClickOccured=QtCore.pyqtSignal(
-            object, object)
 
     def __init__(
             self, 
-            element, 
-            view, 
-            config={},
+            *args,
+            cache={},
             xresol=72,
             yresol=72,
-            index=None,
             rotation=0,
-            scaleFactor=1.,
             useTiling=False,
-            proxyPadding=0.,
             devicePixelRatio=1.,
             **kwargs
             ):
 
-        self.m_view=view
-        self.m_index=index
         self.m_searched=[]
-        self.m_config=config
+        self.m_cache=cache
         self.m_paint_links=False
-        self.m_element = element
-        self.m_cache=view.m_cache
-        self.m_size = element.size()
         self.select_pcolor=QtCore.Qt.red
         self.m_brect = QtCore.QRectF() 
         self.m_trans = QtGui.QTransform()
@@ -54,46 +35,32 @@ class Item(QtWidgets.QGraphicsObject):
         self.yresol=yresol
         self.rotation=rotation
         self.useTiling=useTiling
-        self.scale=scaleFactor
-        self.proxyPadding=proxyPadding
         self.devicePixelRatio=devicePixelRatio
-        self.select_bcolor=QtGui.QColor(88, 139, 174, 30)
-                
+        self.select_bcolor=QtGui.QColor(
+                88, 139, 174, 30)
         super().__init__(
-                objectName='Item', 
-                **kwargs)
-        self.setSettings()
-        self.setup()
-
-    def setSettings(self):
-
-        c=self.m_config
-        for k, v in c.items():
-            setattr(self, k, v)
+                *args, **kwargs)
 
     def setup(self):
-        self.setAcceptHoverEvents(True)
 
-    def select(self, *args, **kwargs):
-        pass
+        super().setup()
+        self.setAcceptHoverEvents(True)
+        self.updateSize()
+        self.setCache()
+
+    def setCache(self):
+
+        v=self.m_view
+        if v and hasattr(v, 'm_cache'):
+            self.m_cache=self.m_view.m_cache
+
+    def updateSize(self):
+
+        if self.m_element:
+            self.m_size = self.m_element.size()
 
     def paintItem(self, p, opts, wids):
         pass
-
-    def index(self):
-        return self.m_index
-
-    def setIndex(self, idx):
-        self.m_index=idx
-
-    def element(self): 
-        return self.m_element
-
-    def view(self): 
-        return self.m_view
-
-    def proxyPadding(self):
-        return self.proxyPadding
 
     def setRotation(self, rotation):
         self.rotation=rotation
@@ -127,21 +94,6 @@ class Item(QtWidgets.QGraphicsObject):
     def refresh(self, dropCache=False):
         self.update()
 
-    def mouseDoubleClickEvent(self, event):
-        self.mouseDoubleClickOccured.emit(self, event)
-
-    def mousePressEvent(self, event):
-        self.mousePressOccured.emit(self, event)
-
-    def mouseMoveEvent(self, event):
-        self.mouseMoveOccured.emit(self, event)
-
-    def mouseReleaseEvent(self, event):
-        self.mouseReleaseOccured.emit(self, event)
-
-    def hoverMoveEvent(self, event):
-        self.hoverMoveOccured.emit(event, self)
-
     def scaledResol(self, kind): 
 
         s=self.scale
@@ -158,7 +110,7 @@ class Item(QtWidgets.QGraphicsObject):
         qps=QtGui.QPainter.SmoothPixmapTransform
         p.setRenderHints(qpa | qpt | qps)
         self.setupPaint(p, opts, wids)
-        self.itemPainted.emit(p, opts, wids, self)
+        self.painted.emit(p, opts, wids, self)
 
     def setResol(self, x, y):
 
@@ -168,11 +120,6 @@ class Item(QtWidgets.QGraphicsObject):
                 self.setXResol(x)
                 self.setYResol(y)
                 self.redraw()
-
-    def setScaleFactor(self, factor):
-
-        self.scale=factor
-        self.redraw(refresh=True)
 
     def redraw(self, refresh=False):
 
@@ -198,7 +145,7 @@ class Item(QtWidgets.QGraphicsObject):
         self.m_brect.setWidth(w)
         self.m_brect.setHeight(h)
 
-    def mapToPage(self, p, unify=True):
+    def mapToElement(self, p, unify=True):
 
         t=self.m_trans.inverted()
         n=self.m_norm.inverted()

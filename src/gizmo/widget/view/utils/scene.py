@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-class Scene(QtWidgets.QGraphicsScene):
+class BaseScene(QtWidgets.QGraphicsScene):
 
     itemAdded=QtCore.pyqtSignal(object)
     backgroundDrawn=QtCore.pyqtSignal(object, object)

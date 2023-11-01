@@ -1,19 +1,21 @@
-class Element:
+class BaseElement:
 
     def __init__(
             self, 
             data=None, 
-            item=None,
             index=None, 
             model=None,
             ):
 
-        self.m_item = item
+        self.m_id = index
         self.m_data = data
         self.m_model = model
-        self.m_index = index
         super().__init__()
         self.setup()
+        self.load()
+
+    def load(self):
+        pass
 
     def size(self):
         pass
@@ -34,13 +36,7 @@ class Element:
         self.m_model=model
 
     def index(self): 
-        return self.m_index
+        return self.m_id
 
     def setIndex(self, idx):
-        self.m_index=idx
-
-    def item(self): 
-        return self.m_item
-
-    def setItem(self, item): 
-        self.m_item=item
+        self.m_id=idx
