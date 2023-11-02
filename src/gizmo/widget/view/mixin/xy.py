@@ -12,7 +12,7 @@ class XYMixin:
             x=(tl.x() -r.x())/r.width()
             y=(tl.y() -r.y())/r.height()
             return self.m_curr, x, y
-        return 0, 0, 0
+        return 1, 0, 0
 
     def getLocation(self, encode=True):
 

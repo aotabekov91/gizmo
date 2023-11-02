@@ -203,10 +203,11 @@ class ItemMixin:
         x, w = int(r.width()/2-5), 10
         y, h =int(r.height()/2-5), 10
         v=QtCore.QRect(x, y, w, h)
-        items=self.items(v)
-        if items:
-            item=items[0]
-            self.setCurrentItem(item)
+        if hasattr(self, 'items'):
+            items=self.items(v)
+            if items:
+                item=items[0]
+                self.setCurrentItem(item)
 
     def setZoomFactor(self, zf):
 

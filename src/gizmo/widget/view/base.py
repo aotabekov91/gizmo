@@ -200,7 +200,10 @@ class BaseView:
             return self.m_model.id()
 
     def setModel(self, model, *args, **kwargs):
+
         self.m_model=model
+        self.updateView()
+        self.initialize()
 
     def screenLeft(self, digit=1):
         self.moveScreen('left', digit)
@@ -435,15 +438,15 @@ class BaseView:
         hbar=self.horizontalScrollBar()
         vh=self.m_layout.height(h)
         vw=self.m_layout.height(h)
-        sh=self.scene().sceneRect().height()
-        sw=self.scene().sceneRect().height()
+        # sh=self.scene().sceneRect().height()
+        # sw=self.scene().sceneRect().height()
         if kind=='up':
             dx=vbar.value() - vh*digit
             dx=max(0, dx) 
             vbar.setValue(int(dx))
         elif kind=='down':
             dx=vbar.value() + vh*digit
-            dx=min(sh, dx) 
+            # dx=min(sh, dx) 
             vbar.setValue(int(dx))
         elif kind=='left':
             dy=hbar.value() - vw*digit
@@ -451,7 +454,7 @@ class BaseView:
             hbar.setValue(int(dy))
         elif kind=='right':
             dy=hbar.value() + vw*digit
-            dy=min(sw, dy) 
+            # dy=min(sw, dy) 
             hbar.setValue(int(dy))
         self.setVisibleItem()
 
@@ -459,7 +462,7 @@ class BaseView:
 
         s=self.size()
         l=self.m_layout
-        sr=self.scene().sceneRect()
+        # sr=self.scene().sceneRect()
         vbar=self.verticalScrollBar()
         hbar=self.horizontalScrollBar()
         vw=l.width(s.width())
@@ -468,7 +471,7 @@ class BaseView:
         inc_vw=vw*self.zoomFactor
         if kind=='down':
             dx=vbar.value() + inc_vh*digit
-            dx=min(sr.height(), dx)
+            # dx=min(sr.height(), dx)
             vbar.setValue(int(dx))
         elif kind=='up':
             dx=vbar.value() - inc_vh*digit
