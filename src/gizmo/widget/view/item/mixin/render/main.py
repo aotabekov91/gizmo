@@ -4,13 +4,8 @@ from PyQt5 import QtCore, QtGui
 class RenderMixin:
 
     cropRectChanged = QtCore.pyqtSignal()
-    linkClicked = QtCore.pyqtSignal(
-            bool, int, float, float)
     painted=QtCore.pyqtSignal(
             object, object, object, object)
-
-    def setRotation(self, rotation):
-        self.rotation=rotation
 
     def setXResol(self, xresol):
         self.xresol=xresol
@@ -47,14 +42,19 @@ class RenderMixin:
         elif kind=='y':
             return self.yresol*s*r
 
-    def paint(self, p, opts, wids):
+    def paintItem(self, p, o, w):
+
+        if self.m_element:
+            self.m_element.render()
+
+    def paint(self, p, o, w):
 
         qpa=QtGui.QPainter.Antialiasing
         qpt=QtGui.QPainter.TextAntialiasing
         qps=QtGui.QPainter.SmoothPixmapTransform
         p.setRenderHints(qpa | qpt | qps)
-        self.paintItem(p, opts, wids)
-        self.painted.emit(p, opts, wids, self)
+        self.paintItem(p, o, w)
+        self.painted.emit(p, o, w, self)
 
     def setResol(self, x, y):
 
@@ -88,45 +88,3 @@ class RenderMixin:
         h=floor(self.m_brect.height())
         self.m_brect.setWidth(w)
         self.m_brect.setHeight(h)
-
-    def mapToElement(self, p, unify=True):
-
-        t=self.m_trans.inverted()
-        n=self.m_norm.inverted()
-        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
-            uni=n[0].map(p)
-            ununi=t[0].map(p)
-        else:
-            p=p.normalized()
-            uni=n[0].mapRect(p)
-            ununi=t[0].mapRect(p)
-        if unify:
-            return uni
-        else:
-            return ununi
-
-    def mapToItem(self, p, isUnified=False):
-
-        t=self.m_trans
-        n=self.m_norm
-        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
-            if isUnified: p=n.map(p)
-            return t.map(p)
-        else:
-            p=p.normalized()
-            if isUnified: p=n.mapRect(p)
-            return t.mapRect(p)
-
-    def setProxyGeometry(self, pos, proxy):
-
-        width=proxy.preferredWidth()
-        height=proxy.preferredHeight()
-        x=pos.x()-0.5*proxy.preferredWidth()
-        y=pos.y()-0.5*proxy.preferredHeight()
-        proxyPadding=self.proxyPadding
-        x=max([x, self.m_brect.left()+proxyPadding])
-        y=max([y, self.m_brect.top()+ proxyPadding])
-        width=min([width, self.m_brect.right()-proxyPadding-x])
-        height=min([height, self.m_brect.bottom()-y])
-        proxy.setGeometry(
-                QtCore.QRectF(x, y, width, height))

@@ -87,25 +87,15 @@ class ItemMixin:
             self.setItems()
             self.addItems()
             self.updateView()
-            self.initialize()
-
-    def prepareScene(self):
-
-        if self.m_scene:
-            self.updateItems()
-            self.updateSceneRect()
-
-    def updateItems(self):
-
-        if self.m_items:
-            self.updateItemScale()
+            self.setVisibleItem()
 
     def updateSceneRect(self):
 
-        items=self.m_items.values()
+        self.updateItemScale()
         h = self.m_layout.m_mode.pageSpacing
         l, r, h = self.m_layout.load(
-                items, height=h)
+                items=self.m_items.values(),
+                height=h)
         self.scene().setSceneRect(
                 l, 0.0, r-l, h)
 
@@ -187,16 +177,6 @@ class ItemMixin:
             if i.isVisible():
                 i.refresh(refresh)
 
-    def setPaintLinks(self, cond=True):
-
-        self.m_paintlinks=cond
-        for i in self.m_items.values():
-            i.setPaintLinks(cond)
-            i.refresh(dropCache=True)
-
-    def paintLinks(self): 
-        return self.m_paintlinks
-    
     def setVisibleItem(self):
 
         r=self.viewport().rect()

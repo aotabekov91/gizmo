@@ -44,6 +44,21 @@ class Tile(QtCore.QObject):
                 pmap=QtGui.QPixmap.fromImage(img)
                 self.m_pixmap=pmap
 
+    def revert(self, image):
+
+        # todo: very slow
+        for y in range(image.height()):
+            for x in range(image.width()):
+                pc=image.pixel(x, y)
+                red=abs(255-QtGui.qRed(pc))
+                green=abs(255-QtGui.qGreen(pc))
+                blue=abs(255-QtGui.qBlue(pc))
+                c=[red, green, blue]
+                if c!=[0, 0, 0]: c=[124, green, 0]
+                nc=QtGui.QColor(*c).rgb()
+                image.setPixel(x, y, nc)
+        return image
+
     def takePixmap(self):
 
         k = self.cacheKey()

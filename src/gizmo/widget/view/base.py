@@ -60,7 +60,7 @@ class BaseView:
             objectName='View',
             zoomFactor = 0.1,
             continuousView=False,
-            scaleMode='FitToWindowHeight',
+            scaleMode='FitToWindowHeight', # Todo a bug
             scene_bcolor=QtGui.QColor('black'),
             **kwargs,
             ):
@@ -87,6 +87,7 @@ class BaseView:
         super().__init__(
                 parent=parent)
         self.setup()
+        self.initialize()
 
     def setCurrentItem(self, *args, **kwargs):
         pass
@@ -273,6 +274,13 @@ class BaseView:
     def fitToWindowHeight(self):
         self.setScaleMode('FitToWindowHeight')
 
+    def toggleFit(self):
+
+        if self.scaleMode=='FitToWindowWidth':
+            self.fitToWindowHeight()
+        else:
+            self.fitToWindowWidth()
+
     def setScaleMode(self, mode):
 
         self.scaleMode=mode
@@ -377,7 +385,7 @@ class BaseView:
         pass
 
     def initialize(self, *args, **kwargs):
-        self.setVisibleItem()
+        pass
 
     def item(self, idx=None):
 
