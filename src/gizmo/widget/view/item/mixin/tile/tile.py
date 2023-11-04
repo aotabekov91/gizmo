@@ -4,11 +4,13 @@ from .task import Task
 
 class Tile(QtCore.QObject):
 
+    cropRectChanged = QtCore.pyqtSignal()
+
     def __init__(self, item):
 
+        self.m_cache={}
         self.m_item=item
         self.m_error = False
-        self.m_cache=item.m_cache
         self.m_rect = QtCore.QRect()
         self.m_pixmap = QtGui.QPixmap()
         self.m_cropRect = QtCore.QRectF() 
@@ -44,21 +46,6 @@ class Tile(QtCore.QObject):
                 pmap=QtGui.QPixmap.fromImage(img)
                 self.m_pixmap=pmap
 
-    def revert(self, image):
-
-        # todo: very slow
-        for y in range(image.height()):
-            for x in range(image.width()):
-                pc=image.pixel(x, y)
-                red=abs(255-QtGui.qRed(pc))
-                green=abs(255-QtGui.qGreen(pc))
-                blue=abs(255-QtGui.qBlue(pc))
-                c=[red, green, blue]
-                if c!=[0, 0, 0]: c=[124, green, 0]
-                nc=QtGui.QColor(*c).rgb()
-                image.setPixel(x, y, nc)
-        return image
-
     def takePixmap(self):
 
         k = self.cacheKey()
@@ -92,9 +79,12 @@ class Tile(QtCore.QObject):
 
     def startRender(self, prefetch=False):
 
-        c1 = self.m_error or self.m_runner.isRunning()
-        c2 = prefetch and self.cacheKey() in self.m_cache
-        if c1 or c2:
+        if self.m_error:
+            return
+        elif self.m_runner.isRunning():
+            return
+        c=self.cacheKey() in self.m_cache
+        if prefetch and c:
             return
         self.m_runner.start(
                 self.m_rect, prefetch)
@@ -138,7 +128,8 @@ class Tile(QtCore.QObject):
 
     def dropCaches(self, page):
 
-        for k, m in list(self.m_cache.items()):
+        items=self.m_cache.items()
+        for k, m in list(items):
             if k[0]==page: 
                 self.m_cache.pop(k)
 
@@ -150,9 +141,10 @@ class Tile(QtCore.QObject):
                     self.m_rect.topLeft()+topLeft, 
                     pmap)
         elif self.isNotEmptyPixmap(self.m_obsoletePixmap):
-            p=QtCore.QRectF(self.m_rect).translated(topLeft)
+            # p=QtCore.QRectF(self.m_rect).translated(topLeft)
+            r=QtCore.QRectF(self.m_rect).translated(topLeft)
             p.drawPixmap(
-                    p,
+                    r,
                     self.m_obsoletePixmap, 
                     QtCore.QRectF())
 
@@ -163,5 +155,3 @@ class Tile(QtCore.QObject):
                 size=pixmap.size()
                 if size.width()*size.height()>0: 
                     return True
-        else:
-            return False

@@ -18,27 +18,26 @@ class BaseItem:
 
     def __init__(
             self, 
-            cache={},
             config={},
             size=None,
-            trans = QtGui.QTransform(),
             index=None,
+            parent=None,
             rotation=0,
             searched=[],
             element=None,
             xresol=72,
             yresol=72,
-            useTiling=False,
             scaleFactor=1.,
             proxyPadding=0.,
+            useTiling=False,
             devicePixelRatio=1.,
             norm = QtGui.QTransform(),
+            trans = QtGui.QTransform(),
             **kwargs
             ):
 
         self.m_id=index
         self.m_size=size
-        self.m_cache=cache
         self.m_searched=[]
         self.m_norm = norm 
         self.m_config=config
@@ -56,7 +55,7 @@ class BaseItem:
         self.select_pcolor=QtCore.Qt.red
         self.select_bcolor=QtGui.QColor(
                 88, 139, 174, 30)
-        super().__init__(**kwargs)
+        super().__init__(parent)
         self.setup()
         self.initialize()
 

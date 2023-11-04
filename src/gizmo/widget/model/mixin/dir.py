@@ -2,16 +2,17 @@ import os
 
 class DirMixin:
 
-    def assignId(self, source):
+    def assignId(self):
 
         self.m_folder=None
-        if os.path.exists(source):
-            f=os.path.dirname(source)
+        if os.path.exists(self.m_source):
+            f=os.path.dirname(self.m_source)
             self.m_folder=f
 
-    def load(self, source):
+    def load(self):
 
         self.m_data = []
+        self.assignId()
         self.setFiles()
         self.setElements()
 
@@ -28,12 +29,14 @@ class DirMixin:
     def setElements(self):
 
         if self.element_class:
-            c= self.element_class
             for d in self.m_data:
-                self.m_elements[d] = c(
+                e=self.element_class(
                         data=d,
                         index=d,
                         model=self)
+                self.m_elements[d] = e
+                self.elementCreated.emit(e)
+            self.loaded.emit()
 
     def sourceElement(self):
 

@@ -35,7 +35,7 @@ class Ear(QtCore.QObject):
             special=[],
             wait_run=40,
             wait_time=200,
-            prefix_keys={},
+            leader_keys={},
             listening=False,
             report_keys=True,
             listen_leader=None, 
@@ -61,7 +61,7 @@ class Ear(QtCore.QObject):
         self.wait_time=wait_time
         self.listening=listening
         self.report_keys=report_keys
-        self.prefix_keys=prefix_keys
+        self.leader_keys=leader_keys
         self.mode_on_exit=mode_on_exit
         self.delisten_keys=delisten_keys
         self.suffix_functor=suffix_functor
@@ -393,12 +393,12 @@ class Ear(QtCore.QObject):
         if key:
             oname=getattr(
                     self.obj, 'name', None)
-            prefix_keys=getattr(
-                    obj, 'prefix_keys', {})
+            leader_keys=getattr(
+                    obj, 'leader_keys', {})
             ear=getattr(obj, 'ear', None)
             if ear: 
-                prefix_keys.update(ear.prefix_keys)
-            prefix=prefix_keys.get(oname, '')
+                leader_keys.update(ear.leader_keys)
+            prefix=leader_keys.get(oname, '')
             match=self.parseKey(key, prefix=prefix)
             self.matches[name]=match
             self.commands[match]=method

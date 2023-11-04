@@ -60,12 +60,10 @@ class Task(QtCore.QObject, QtCore.QRunnable):
 
     def run(self):
 
+        r=self.m_item.rotation
+        x, y =self.m_item.scaledResol()
         img = self.m_element.render(
-            self.m_item.scaledResol('x'),
-            self.m_item.scaledResol('y'),
-            self.m_item.rotation,
-            self.m_rect)
-
+            x, y, r, self.m_rect)
         img.setDevicePixelRatio(
                 self.m_item.devicePixelRatio)
         self.imageReady.emit(

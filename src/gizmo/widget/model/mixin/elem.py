@@ -1,3 +1,4 @@
+
 class ElementMixin:
 
     def sourceElement(self):
@@ -9,10 +10,13 @@ class ElementMixin:
     def load(self):
 
         if self.element_class:
-            e={}
+            elems={}
             for i, d in enumerate(self.m_data):
-                e[i+1] = self.element_class(
+                e = self.element_class(
                         data=d,
                         index=i+1,
                         model=self)
-            self.m_elements=e
+                elems[i+1] = e 
+                self.elementCreated.emit(e)
+            self.m_elements=elems
+            self.loaded.emit()

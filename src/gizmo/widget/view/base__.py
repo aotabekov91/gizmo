@@ -1,48 +1,15 @@
 from PyQt5 import QtCore, QtGui
 
-from .item import BaseItem
-from .utils import BaseLayout, BaseCursor, BaseScene
+from .utils import BaseLayout, BaseCursor
 
 class BaseView:
 
     position=None
-    item_class=BaseItem
-    scene_class=BaseScene
-    layout_class=BaseLayout
     cursor_class=BaseCursor
+    layout_class=BaseLayout
 
-    scaleModeChanged = QtCore.pyqtSignal(
-            object, object)
-    scaleFactorChanged = QtCore.pyqtSignal(
-            object, object)
-    continuousModeChanged = QtCore.pyqtSignal(
-            bool, object)
-    focusGained=QtCore.pyqtSignal(
-            object)
-    resized=QtCore.pyqtSignal(
-            object, object)
-    modelModified = QtCore.pyqtSignal(
-            object)
     layoutModeChanged = QtCore.pyqtSignal(
             object)
-    selection=QtCore.pyqtSignal(
-            object, object)
-    positionChanged = QtCore.pyqtSignal(
-            object, object, object)
-    keyPressOccurred=QtCore.pyqtSignal(
-            [object, object])
-    hoverMoveOccured = QtCore.pyqtSignal(
-            [object, object])
-    mouseMoveOccured = QtCore.pyqtSignal(
-            [object, object])
-    mousePressOccured = QtCore.pyqtSignal(
-            [object, object])
-    mouseReleaseOccured = QtCore.pyqtSignal(
-            [object, object])
-    mouseDoubleClickOccured = QtCore.pyqtSignal(
-            [object, object])
-    indexChanged=QtCore.pyqtSignal(
-            object, object)
 
     def __init__(
             self, 
@@ -69,7 +36,7 @@ class BaseView:
         self.m_cut=[]
         self.m_yanked=[]
         self.m_elements={}
-        self.m_curr = 1 
+        self.m_curr = None 
         self.m_prev = None 
         self.m_id=index,
         self.m_cache=cache

@@ -1,6 +1,11 @@
 from PyQt5 import QtCore
 
+from .creator import Creator
+from ...item import BaseItem
+
 class ItemMixin:
+
+    item_class=BaseItem
 
     itemChanged = QtCore.pyqtSignal(
             object, object)
@@ -16,6 +21,13 @@ class ItemMixin:
             [object, object, object])
     itemMouseDoubleClickOccured = QtCore.pyqtSignal(
             [object, object, object])
+
+    elementCreated=QtCore.pyqtSignal(object)
+
+    def setup(self):
+
+        super().setup()
+        self.pool=QtCore.QThreadPool()
 
     def setupConnect(self):
 
@@ -78,6 +90,42 @@ class ItemMixin:
     def on_itemHoverMoveOccured(self, i, e):
         self.itemHoverMoveOccured.emit(self, i, e)
 
+    def setItems(self):
+
+        m=self.m_model
+        self.m_items={}
+        sf=self.scaleFactor
+        c=self.m_config.get('Item', {})
+        c=Creator(
+                model=m,
+                config=c,
+                view=self,
+                scaleFactor=sf,
+                klass=self.item_class,
+                )
+        c.signals.created.connect(
+                self.on_itemCreated)
+        c.signals.finished.connect(
+                self.on_itemsCreated)
+        self.pool.start(c)
+
+    def on_itemCreated(self, item):
+        self.setupItem(item)
+
+    def on_itemsCreated(self):
+
+        self.updateView()
+        self.setVisibleItem()
+
+    def setupItem(self, i):
+
+        idx=i.index()
+        i.setVisible(False)
+        self.m_items[idx]=i
+        x=self.logicalDpiX()
+        y=self.logicalDpiY()
+        i.setResol(x, y)
+
     def setModel(self, model):
 
         if self.m_scene:
@@ -85,13 +133,10 @@ class ItemMixin:
         if model:
             self.m_model = model
             self.setItems()
-            self.addItems()
-            self.updateView()
-            self.setVisibleItem()
 
     def updateSceneRect(self):
 
-        self.updateItemScale()
+        self.updateScales()
         h = self.m_layout.m_mode.pageSpacing
         l, r, h = self.m_layout.load(
                 items=self.m_items.values(),
@@ -99,52 +144,38 @@ class ItemMixin:
         self.scene().setSceneRect(
                 l, 0.0, r-l, h)
 
-    def updateItemScale(self):
+    def updateScales(self):
+
+        i=self.item(1)
+        if i:
+            s=self.calculateScale(i)
+        if i and s:
+            v=self.getItems().values()
+            for i in v:
+                i.setScaleFactor(s)
+
+    def calculateScale(self, i):
 
         s=self.size()
         l=self.m_layout
         w=l.width(s.width())
         h=l.height(s.height())
+        x=self.logicalDpiX()
+        y=self.logicalDpiY()
+        i.setResol(x, y)
 
-        items=self.m_items.values()
-        for i in items:
-            x=self.logicalDpiX()
-            y=self.logicalDpiY()
-            i.setResol(x, y)
-            dw= i.displayedWidth()
-            dh = i.displayedHeight()
-            fitPageSize=[w/float(dw), h/float(dh)]
-            width_ratio=w/dw
-            scale = {
-                'ScaleFactor': i.scale,
-                'FitToWindowWidth': width_ratio,
-                'FitToWindowHeight': min(fitPageSize)
-                }
-            s=scale[self.scaleMode]
-            i.setScaleFactor(s)
-
-    def setItems(self):
-
-        if self.item_class:
-            self.m_items = {}
-            c=self.m_config.get('Item', {})
-            s=self.m_model.elements()
-            sf=self.scaleFactor
-            v=s.values()
-            for j, e in enumerate(v):
-                i = self.item_class(
-                        config=c,
-                        index=j+1,
-                        element=e, 
-                        scaleFactor=sf,
-                        )
-                self.m_items[j+1]=i
-
-    def addItems(self):
-
-        if self.m_scene:
-            for i in self.m_items.values():
-                self.m_scene.addItem(i)
+        ds = i.displayedSize()
+        dw, dh = ds 
+        if not dw: 
+            return
+        fitPageSize=[w/float(dw), h/float(dh)]
+        width_ratio=w/dw
+        scale = {
+            'ScaleFactor': i.scale,
+            'FitToWindowWidth': width_ratio,
+            'FitToWindowHeight': min(fitPageSize)
+            }
+        return scale[self.scaleMode]
 
     def setCurrentItem(self, item):
 

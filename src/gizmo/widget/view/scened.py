@@ -69,7 +69,7 @@ class BaseView:
         self.m_cut=[]
         self.m_yanked=[]
         self.m_elements={}
-        self.m_curr = 1 
+        self.m_curr = None 
         self.m_prev = None 
         self.m_id=index,
         self.m_cache=cache

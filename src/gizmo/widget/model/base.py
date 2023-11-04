@@ -1,4 +1,5 @@
 import re
+from PyQt5 import QtCore
 from .element import BaseElement
 
 class BaseModel:
@@ -6,6 +7,9 @@ class BaseModel:
     kind=None
     pattern=None
     element_class=BaseElement
+
+    loaded=QtCore.pyqtSignal()
+    elementCreated=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -18,12 +22,11 @@ class BaseModel:
 
         self.m_id=index
         self.m_data=None
+        self.m_loaded=False
         self.m_source=source
         self.m_elements=elements
         super().__init__()
         self.setup(*args, **kwargs)
-        self.assignId(source)
-        self.load(source)
 
     def count(self):
         return len(self.m_elements)

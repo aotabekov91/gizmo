@@ -15,10 +15,9 @@ class TileMixin:
 
     def paintItem(self, p, o, w):
 
-        r=self.m_brect
-        bcolor=QtGui.QBrush(QtGui.QColor('white'))
-        p.fillRect(r, bcolor) 
-        self.m_tiles[0].paint(p, r.topLeft())
+        if self.isVisible():
+            tl=self.m_brect.topLeft()
+            self.m_tiles[0].paint(p, tl)
 
     def prepareGeometry(self):
 
