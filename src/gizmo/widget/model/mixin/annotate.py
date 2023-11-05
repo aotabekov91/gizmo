@@ -1,3 +1,0 @@
-class AnnotateMixin:
-
-    canAnnotate=True

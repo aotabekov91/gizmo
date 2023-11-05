@@ -128,12 +128,13 @@ class StackWidget(QtWidgets.QStackedWidget):
 
     def event(self, event):
 
+        res=super().event(event)
         if event.type()==QtCore.QEvent.Enter: 
             self.setFocus()
             self.focusGained.emit(self)
         elif event.type()==QtCore.QEvent.Resize:
             self.resized.emit(event)
-        return super().event(event)
+        return res
 
     def adjustSize(self):
         

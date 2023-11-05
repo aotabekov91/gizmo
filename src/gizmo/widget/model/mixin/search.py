@@ -1,3 +1,0 @@
-class SearchMixin:
-
-    canSearch=True

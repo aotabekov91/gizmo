@@ -1,0 +1,3 @@
+class Annotate:
+
+    canAnnotate=True
