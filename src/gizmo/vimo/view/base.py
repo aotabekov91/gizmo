@@ -5,6 +5,8 @@ class View:
     position=None
     modelChanged=QtCore.pyqtSignal(
             object, object)
+    modelIsToBeChanged=QtCore.pyqtSignal(
+            object, object)
 
     def __init__(
             self, 
@@ -46,8 +48,11 @@ class View:
 
     def setModel(self, model):
 
+        self.modelIsToBeChanged.emit(
+                self, self.m_model)
         self.m_model=model
-        self.modelChanged.emit(self, model)
+        self.modelChanged.emit(
+                self, model)
 
     def setupScrollBars(self):
 
@@ -61,13 +66,13 @@ class View:
         if self.m_model:
             return self.m_model.id()
 
-    def checkProp(self, prop):
-        return getattr(self, prop, False)
+    def checkProp(self, prop, v=None):
 
-    def checkModelProp(self, prop):
+        v=v or self
+        return getattr(v, prop, False)
 
-        if self.m_model:
-            return getattr(
-                    self.m_model, 
-                    prop, 
-                    False)
+    def checkModelProp(self, prop, m=None):
+
+        m=m or self.m_model
+        if m:
+            return getattr(m, prop, False)

@@ -203,27 +203,28 @@ class Render:
                             int(l), int(t), int(w), int(h))
                     p.setRect(nr)
 
-    def mapToPage(self, obj, unify=True):
+    def mapToPage(self, p, unify=True):
 
-        if type(obj) in [QtCore.QPoint, QtCore.QPointF]:
-            ununified=self.m_transform.inverted()[0].map(obj)
-            unified=self.m_normalizedTransform.inverted()[0].map(obj)
+        t=self.m_trans.inverted()
+        n=self.m_norm.inverted()
+        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
+            u=n[0].map(p)
+            un=t[0].map(p)
         else:
-            polygon=obj.normalized()
-            ununified=self.m_transform.inverted()[0].mapRect(polygon)
-            unified=self.m_normalizedTransform.inverted()[0].mapRect(polygon)
+            p=p.normalized()
+            u=n[0].mapRect(p)
+            un=t[0].mapRect(p)
+        if unify: return u
+        return un
 
-        if unify:
-            return unified
+    def mapToItem(self, p, isUnified=False):
+
+        t=self.m_trans
+        n=self.m_norm
+        if type(p) in [QtCore.QPoint, QtCore.QPointF]:
+            if isUnified: p=n.map(p)
+            return t.map(p)
         else:
-            return ununified
-
-    def mapToItem(self, polygon, isUnified=False):
-
-        if type(polygon) in [QPoint, QPointF]:
-            if isUnified: polygon=self.m_normalizedTransform.map(polygon)
-            return self.m_transform.map(polygon)
-        else:
-            polygon=polygon.normalized()
-            if isUnified: polygon=self.m_normalizedTransform.mapRect(polygon)
-            return self.m_transform.mapRect(polygon)
+            p=p.normalized()
+            if isUnified: p=n.mapRect(p)
+            return t.mapRect(p)
