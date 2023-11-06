@@ -219,8 +219,13 @@ class Render:
 
     def mapToItem(self, p, isUnified=False):
 
-        t=self.m_trans
         n=self.m_norm
+        t=self.m_trans
+        if type(p)==tuple:
+            if len(p)==2:
+                p=QtCore.QPointF(*p)
+            elif len(p)==4:
+                p=QtCore.QRectF(*p)
         if type(p) in [QtCore.QPoint, QtCore.QPointF]:
             if isUnified: p=n.map(p)
             return t.map(p)

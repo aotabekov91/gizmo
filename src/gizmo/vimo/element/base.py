@@ -17,9 +17,6 @@ class Element:
     def load(self):
         pass
 
-    def size(self):
-        pass
-
     def setup(self):
         pass
 
