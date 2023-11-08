@@ -93,7 +93,7 @@ class Connect:
     def setup(self):
 
         super().setup()
-        if self.checkProp('hasScene'):
+        if self.check('hasScene'):
             self.m_scene.itemAdded.connect(
                     self.on_itemAdded)
         if self.app:

@@ -225,12 +225,14 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
 
     def setCurrentIndex(self, idx):
 
-        super().setCurrentIndex(idx)
         if self.model() is None: 
             return
-        if self.currentItem() is None: 
+        if idx is None:
             return
+        super().setCurrentIndex(idx)
         if not idx.isValid():
+            return
+        if self.currentItem() is None: 
             return
         self.indexChanged.emit(
                 idx)

@@ -35,6 +35,3 @@ class Item:
 
     def setIndex(self, idx):
         self.m_id=idx
-
-    def checkProp(self, prop):
-        return hasattr(self, prop) 

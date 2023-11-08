@@ -116,6 +116,12 @@ class Items(
         for j, i in self.getItems():
             i.refresh(dropCache=True)
 
+    def currentItem(self):
+        return self.item(self.m_curr)
+
+    def currentIndex(self):
+        return self.m_curr
+
     def updateCurrent(self, refresh=False):
 
         i=self.currentItem()
@@ -136,3 +142,8 @@ class Items(
         i=self.items(v)
         if i:
             self.setCurrentItem(i[0])
+
+    def visibleItems(self): 
+
+        r=self.viewport().rect()
+        return self.items(r)

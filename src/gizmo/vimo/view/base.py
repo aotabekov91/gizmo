@@ -66,13 +66,12 @@ class View:
         if self.m_model:
             return self.m_model.id()
 
-    def checkProp(self, prop, v=None):
+    def check(self, what, v=None):
 
         v=v or self
-        return getattr(v, prop, False)
-
-    def checkModelProp(self, prop, m=None):
-
-        m=m or self.m_model
-        if m:
-            return getattr(m, prop, False)
+        if type(what)!=list:
+            what=[what]
+        for w in what:
+            if not getattr(v, w, False):
+                return False
+        return True

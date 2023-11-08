@@ -203,10 +203,15 @@ class Render:
                             int(l), int(t), int(w), int(h))
                     p.setRect(nr)
 
-    def mapToPage(self, p, unify=True):
+    def mapToElement(self, p, unify=True):
 
-        t=self.m_trans.inverted()
         n=self.m_norm.inverted()
+        t=self.m_trans.inverted()
+        if type(p)==tuple:
+            if len(p)==2:
+                p=QtCore.QPointF(*p)
+            elif len(p)==4:
+                p=QtCore.QRectF(*p)
         if type(p) in [QtCore.QPoint, QtCore.QPointF]:
             u=n[0].map(p)
             un=t[0].map(p)
@@ -217,7 +222,7 @@ class Render:
         if unify: return u
         return un
 
-    def mapToItem(self, p, isUnified=False):
+    def mapToItem(self, p, unified=False):
 
         n=self.m_norm
         t=self.m_trans
@@ -227,9 +232,9 @@ class Render:
             elif len(p)==4:
                 p=QtCore.QRectF(*p)
         if type(p) in [QtCore.QPoint, QtCore.QPointF]:
-            if isUnified: p=n.map(p)
+            if unified: p=n.map(p)
             return t.map(p)
         else:
             p=p.normalized()
-            if isUnified: p=n.mapRect(p)
+            if unified: p=n.mapRect(p)
             return t.mapRect(p)

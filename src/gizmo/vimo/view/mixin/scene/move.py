@@ -36,7 +36,7 @@ class MoveScene(Scene):
         sh, sw = sr.height(), sr.width()
         vb=self.verticalScrollBar()
         hb=self.horizontalScrollBar()
-        if self.checkProp('hasLayout'):
+        if self.check('hasLayout'):
             h=self.m_layout.height(h)
             w=self.m_layout.height(w)
         if kind=='up':
@@ -65,7 +65,7 @@ class MoveScene(Scene):
         sh, sw = sr.height(), sr.width()
         vb=self.verticalScrollBar()
         hb=self.horizontalScrollBar()
-        if self.checkProp('hasLayout'):
+        if self.check('hasLayout'):
             h=self.m_layout.height(h)
             w=self.m_layout.height(w)
         h=h*self.zoomFactor

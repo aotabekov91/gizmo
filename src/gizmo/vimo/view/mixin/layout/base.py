@@ -31,8 +31,8 @@ class Layout:
     def prevItem(self, digit=1):
 
         idx=self.m_curr-digit+1 
-        items=self.checkProp('hasItems')
-        pos=self.checkProp('canPosition')
+        items=self.check('hasItems')
+        pos=self.check('canPosition')
         if pos and items:
             c=self.m_layout.prev(
                     idx, self.count())
@@ -41,8 +41,8 @@ class Layout:
     def nextItem(self, digit=1): 
 
         idx=self.m_curr-digit+1 
-        items=self.checkProp('hasItems')
-        pos=self.checkProp('canPosition')
+        items=self.check('hasItems')
+        pos=self.check('canPosition')
         if pos and items:
             c=self.m_layout.next(
                     idx, self.count())
