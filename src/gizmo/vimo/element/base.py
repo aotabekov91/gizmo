@@ -1,4 +1,8 @@
+from PyQt5 import QtGui, QtCore
+
 class Element:
+
+    changed=QtCore.pyqtSignal()
 
     def __init__(
             self, 
@@ -10,9 +14,22 @@ class Element:
         self.m_id = index
         self.m_data = data
         self.m_model = model
+        self.m_norm= QtGui.QTransform()
         super().__init__()
         self.setup()
         self.load()
+        self.updateTrans()
+
+    def updateTrans(self):
+
+        n=self.m_norm
+        s=self.size()
+        n.scale(s.width(), s.height())
+        ninv=n.inverted()[0]
+        self.m_norm_inv=ninv
+
+    def size(self):
+        return QtCore.QSize(0, 0)
 
     def load(self):
         pass

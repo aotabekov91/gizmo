@@ -46,7 +46,7 @@ class Select:
                 for s in box:
                     r=self.mapToItem(s, unified=True)
                     p.setBrush(self.m_select_brush)
-                    p.drawRects(r)
+                    p.drawRect(r)
                     p.setPen(self.m_select_pen)
-                    p.drawRects(r)
+                    p.drawRect(r)
             p.restore()

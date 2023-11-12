@@ -69,9 +69,10 @@ class Part(QtCore.QObject):
             if obj :
                 self.m_obsoletePixmap = obj
         else:
-            k=self.cacheKey()
-            if k in self.m_cache:
-                self.m_cache.pop(k)
+            self.m_cache={}
+            # k=self.cacheKey()
+            # if k in self.m_cache:
+                # self.m_cache.pop(k)
             self.m_obsoletePixmap = QtGui.QPixmap() 
         self.m_error = False
         self.m_runner.cancel(True)

@@ -33,10 +33,8 @@ class LeftRightEdit (ItemWidget):
         left_right_layout = QHBoxLayout()
         left_right_layout.setSpacing(0)
         left_right_layout.setContentsMargins(0, 10, 0, 10)
-
         self.left = QLabel(objectName='leftLabel')
         self.left.setWordWrap(True)
-
         self.right = QPlainTextEdit(objectName='rightEdit')
         self.right.setHorizontalScrollBarPolicy(
                 Qt.ScrollBarAlwaysOff)
@@ -138,4 +136,3 @@ class LeftRightEdit (ItemWidget):
 
         self.timer.stop()
         self.list.widgetDataChanged.emit(self)
-

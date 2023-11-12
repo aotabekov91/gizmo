@@ -3,7 +3,7 @@ from PyQt5 import QtCore
 class Element:
 
     hasElements=True
-    loaded=QtCore.pyqtSignal()
+    loaded=QtCore.pyqtSignal(object)
     elementCreated=QtCore.pyqtSignal(object)
 
     def count(self):
@@ -37,4 +37,4 @@ class Element:
                 elems[i+1] = e 
                 self.elementCreated.emit(e)
             self.m_elements=elems
-            self.loaded.emit()
+            self.loaded.emit(self)

@@ -1,2 +1,0 @@
-class Outline:
-    pass

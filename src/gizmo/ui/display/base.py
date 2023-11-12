@@ -186,26 +186,8 @@ class BaseDisplay(QtWidgets.QWidget):
             self.count+=1
             self.views[self.count]=view
             self.setView(
-                    view, 
-                    how, 
-                    focus, 
-                    **kwargs)
+                    view, how, focus, **kwargs)
             self.viewCreated.emit(view)
-
-    def getRenderConfig(self, render):
-
-        c=self.m_config
-        g=c.get('View', {})
-        v=render.view_class
-        s=g.get(v.__name__, {})
-        for k, v in g.items():
-            if not k in s:
-                s[k]=v
-            sv=s[k]
-            if type(sv)==dict:
-                v.update(sv)
-                s[k]=v
-        return s
 
     def currentView(self): 
         return self.view

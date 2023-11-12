@@ -1,9 +1,10 @@
+from PyQt5 import QtCore
+
 class Item:
 
     def __init__(
             self, 
             config={},
-            size=None,
             index=None,
             parent=None,
             element=None,
@@ -11,18 +12,14 @@ class Item:
             ):
 
         self.m_id=index
-        self.m_size=size
         self.m_config=config
-        self.m_element = element
         self.kwargs=kwargs
+        self.setElement(element)
         super().__init__(parent)
         self.setup()
 
     def setup(self):
         pass
-
-    def size(self):
-        return self.m_size
 
     def element(self):
         return self.m_element

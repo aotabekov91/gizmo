@@ -1,8 +1,10 @@
+from PyQt5 import QtCore
 from .base import Scene
 
 class MoveScene(Scene):
 
     canMove=True
+    positionChanged=QtCore.pyqtSignal()
 
     def screenLeft(self, digit=1):
         self.moveScreen('left', digit)
@@ -56,6 +58,7 @@ class MoveScene(Scene):
             dy=min(sw, dy) 
             hb.setValue(int(dy))
         self.setVisibleItem()
+        self.positionChanged.emit()
 
     def move(self, kind, digit=1):
 
@@ -85,3 +88,4 @@ class MoveScene(Scene):
             dx=hb.value() - w*digit
             hb.setValue(int(dx))
         self.setVisibleItem()
+        self.positionChanged.emit()

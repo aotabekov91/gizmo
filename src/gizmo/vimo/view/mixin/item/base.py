@@ -22,8 +22,16 @@ class Items(
     def count(self):
         return len(self.m_items) 
 
-    def item(self, idx):
-        return self.m_items.get(idx, None)
+    def item(self, idx=None, element=None):
+
+        if element:
+            for i in self.m_items.values():
+                if i.element()!=element:
+                    continue
+                return i
+        else:
+            return self.m_items.get(idx, None)
+
 
     def setup(self):
 

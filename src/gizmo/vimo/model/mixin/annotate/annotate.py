@@ -1,3 +1,0 @@
-class Annotate:
-
-    canAnnotate=True

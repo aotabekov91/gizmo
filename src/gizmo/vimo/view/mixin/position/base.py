@@ -1,9 +1,18 @@
+from PyQt5 import QtCore
+
 class Position:
 
     canPosition=True
+    positionChanged=QtCore.pyqtSignal()
 
-    def getLocator(self, kind=None):
-        return {}
+    def getPosition(self, *args, **kwargs): 
+        pass
 
-    def setLocator(self, data, kind=None):
+    def goto(self, *args, **kwarrgs):
+        pass
+
+    def gotoFirst(self, *args, **kwargs):
+        pass
+
+    def gotoLast(self, *args, **kwargs):
         pass

@@ -75,3 +75,6 @@ class View:
             if not getattr(v, w, False):
                 return False
         return True
+
+    def cleanUp(self):
+        pass

@@ -47,6 +47,7 @@ class UpDownEdit (ItemWidget):
 
     def setTextDown(self, text):
 
+        text=str(text)
         self.down.show()
         self.down.setPlainText(text)
         self.down.adjustSize()

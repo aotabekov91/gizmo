@@ -2,8 +2,9 @@ from math import floor, ceil
 from PyQt5 import QtCore, QtGui
 
 from .part import Part
+from ..base import Item
 
-class Render:
+class RenderItem(Item):
 
     canRender=True
     painted=QtCore.pyqtSignal(
@@ -32,6 +33,9 @@ class Render:
         self.setTiles()
         super().setup()
 
+    def size(self):
+        return self.m_size
+
     def setTiles(self):
 
         self.m_parts=[]
@@ -41,15 +45,14 @@ class Render:
 
     def refresh(self, dropCache=False):
 
-        for tile in self.m_parts:
-            tile.refresh(dropCache)
-            if dropCache: 
-                tile.dropCaches(self)
-        super().refresh(dropCache)
+        for p in self.m_parts:
+            p.refresh(dropCache)
 
     def redraw(self, refresh=False):
 
-        if refresh: self.update()
+        if refresh: 
+            self.refresh(refresh)
+            self.update()
         self.prepareGeometryChange()
         self.prepareGeometry()
 

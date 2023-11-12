@@ -1,10 +1,8 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
-
 from .base import Position
 
 class XYPos(Position):
 
-    def getPosition(self):
+    def getPosition(self, data=None, kind=None):
 
         if self.m_curr and self.m_items:
             i=self.m_items[self.m_curr]
@@ -16,25 +14,7 @@ class XYPos(Position):
             return self.m_curr, x, y
         return 1, 0, 0
 
-    def getLocation(self):
-
-        i, x, y = self.getPosition()
-        i = str(i)[:3]
-        x = str(x)[:3]
-        y = str(y)[:3]
-        return ':'.join([i, x, y])
-
-    def parseLocation(self, loc):
-
-        if loc:
-            t=loc.split(':')
-            if len(t)==3:
-                i=int(t[0])
-                x=float(t[1])
-                y=float(t[2])
-                return i, x, y
-
-    def isDifferentPos(
+    def comparePosition(
             self, digit=None, x=0, y=0):
 
         c = self.count() 
@@ -57,3 +37,39 @@ class XYPos(Position):
 
         self.redrawView(digit, x, y)
         self.setVisibleItem()
+        self.positionChanged.emit()
+
+    def redraw(self):
+
+        pos = self.getPosition()
+        self.redrawScene()
+        self.redrawView(*pos)
+        self.setVisibleItem()
+
+    def redrawView(self, digit=1, x=0, y=0):
+
+        vv, hv = 0, 0
+        s = self.scene()
+        r = s.sceneRect()
+        l, t = r.left(), r.top()
+        w, h = r.width(), r.height()
+        for j, i in self.m_items.items():
+            pbr = i.boundingRect()
+            pos = pbr.translated(i.pos())
+            if self.continuousMode:
+                i.setVisible(True)
+            else:
+                if self.m_layout.left(j) == self.m_curr:
+                    i.setVisible(True)
+                    t = pos.top()
+                    h = pos.height()
+                else:
+                    i.setVisible(False)
+                    i.cancelRender()
+            if j == digit:
+                hv = int(pos.left()+x*pos.width())
+                vv = int(pos.top()+y*pos.height())
+        self.setSceneRect(l, t, w, h)
+        self.horizontalScrollBar().setValue(hv)
+        self.verticalScrollBar().setValue(vv)
+        self.viewport().update()
