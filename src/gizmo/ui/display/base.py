@@ -120,12 +120,10 @@ class BaseDisplay(QtWidgets.QWidget):
         if focus: 
             view.setFocus()
 
-    def copyView(self, model):
+    def copyView(self, v):
 
-        source=model.source()
-        for r in self.app.renders:
-            if r.isCompatible(source):
-                return r.getView(model)
+        if v and v.check('canCopy'): 
+            return v.copy()
 
     def focus(self, increment=1):
 
