@@ -33,7 +33,7 @@ class Ear(QtCore.QObject):
             obj=None, 
             config={},
             special=[],
-            wait_run=40,
+            wait_run=5,
             wait_time=200,
             leader_keys={},
             listening=False,
