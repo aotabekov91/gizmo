@@ -23,7 +23,9 @@ class View:
         self.m_id=index
         self.m_model = model
         self.m_config=config
-        super().__init__(parent=parent)
+        super().__init__(
+                parent=parent,
+                objectName=objectName)
         self.setup()
 
     def setSettings(self):

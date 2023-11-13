@@ -13,8 +13,7 @@ class Items(
 
     hasItems=True
     item_class=Item
-    indexChanged=QtCore.pyqtSignal(
-            object, object)
+    indexChanged=QtCore.pyqtSignal(object)
 
     def getItems(self):
         return self.m_items.items()
@@ -38,8 +37,6 @@ class Items(
         self.m_curr=1
         self.m_prev=None
         self.m_items={}
-        self.indexChanged.connect(
-                self.app.window.viewIndexChanged)
         super().setup()
 
     def setModel(self, model):
@@ -114,10 +111,9 @@ class Items(
     def setCurrentIndex(self, idx):
 
         if self.m_curr!=idx:
-            self.m_prev=self.m_curr
-            self.m_curr=idx
-            self.indexChanged.emit(
-                    self, idx)
+            c, p = idx, self.m_curr
+            self.m_curr, self.m_prev=c, p
+            self.indexChanged.emit(c)
 
     def refresh(self):
 

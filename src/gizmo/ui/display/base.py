@@ -2,49 +2,8 @@ from PyQt5 import QtCore, QtWidgets
 
 class BaseDisplay(QtWidgets.QWidget):
 
-    annotationAdded=QtCore.pyqtSignal(
-            object)
-    annotationCreated=QtCore.pyqtSignal(
-            object)
-    annotationRegistered=QtCore.pyqtSignal(
-            object)
-    viewCreated=QtCore.pyqtSignal(
-            object)
-    viewChanged=QtCore.pyqtSignal(
-            object, object)
-    itemChanged = QtCore.pyqtSignal(
-            object, object)
-    itemPainted = QtCore.pyqtSignal(
-            object, object, object, object, object)
-    positionChanged = QtCore.pyqtSignal(
-            object, object, object)
-    itemKeyPressOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    itemHoverMoveOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    itemMouseMoveOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    itemMousePressOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    itemMouseReleaseOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    itemMouseDoubleClickOccured=QtCore.pyqtSignal(
-            [object, object, object])
-    selection=QtCore.pyqtSignal(
-            [object, object])
-    viewKeyPressOccurred=QtCore.pyqtSignal(
-            [object, object])
-    viewHoverMoveOccured=QtCore.pyqtSignal(
-            [object, object])
-    viewMouseMoveOccured=QtCore.pyqtSignal(
-            [object, object])
-    viewMousePressOccured=QtCore.pyqtSignal(
-            [object, object])
-    viewMouseReleaseOccured=QtCore.pyqtSignal(
-            [object, object])
-    viewMouseDoubleClickOccured=QtCore.pyqtSignal(
-            [object, object])
-
+    viewSet=QtCore.pyqtSignal(object)
+    viewChanged=QtCore.pyqtSignal(object)
     def __init__(
             self, 
             *args, 
@@ -61,16 +20,15 @@ class BaseDisplay(QtWidgets.QWidget):
                 parent=window.main,
                 objectName=objectName,
                 )
-        self.setup()
         window.resized.connect(self.update)
-        self.selection.connect(app.selection)
+        self.setup()
 
     def setup(self):
 
         self.count=-1
         self.views={}
-        self.view=None
-        self.prev=None
+        self.m_curr=None
+        self.m_prev=None
         self.renders=[]
         self.setUI()
         self.setConfig()
@@ -106,7 +64,6 @@ class BaseDisplay(QtWidgets.QWidget):
             self, 
             view, 
             how=None, 
-            focus=True
             ):
 
         self.setCurrentView(view)
@@ -117,8 +74,6 @@ class BaseDisplay(QtWidgets.QWidget):
             self.m_layout.addWidget(view)
         self.show()
         view.show()
-        if focus: 
-            view.setFocus()
 
     def copyView(self, v):
 
@@ -171,50 +126,29 @@ class BaseDisplay(QtWidgets.QWidget):
             self, 
             view=None,
             how='reset', 
-            focus=True, 
             **kwargs
             ):
 
-        if how=='reset' and self.view:
+        if how=='reset' and self.m_curr:
             nmodel=view.model()
-            cmodel=self.view.model()
+            cmodel=self.m_curr.model()
             if cmodel==nmodel: 
                 return
         if view: 
             self.count+=1
             self.views[self.count]=view
             self.setView(
-                    view, how, focus, **kwargs)
-            self.viewCreated.emit(view)
+                    view, how, **kwargs)
+            self.viewSet.emit(view)
 
     def currentView(self): 
-        return self.view
+        return self.m_curr
 
     def setCurrentView(self, view):
 
-        if view!=self.view: 
-            self.prev=self.view
-            self.select(
-                    self.prev, False)
-            self.view=view
-            self.select(
-                    self.view, True)
-            self.viewChanged.emit(
-                    self.view, self.prev)
-
-    def select(self, view, cond):
-
-        if view:
-            view.setProperty(
-                    'selected', cond)
-            view.style().unpolish(view)
-            view.style().polish(view)
+        if view!=self.m_curr: 
+            self.m_curr, self.m_prev=view, self.m_curr
+            self.viewChanged.emit(self.m_curr)
 
     def addView(self, view):
         self.m_layout.addWidget(view)
-
-    def split(self, cond):
-        pass
-
-    def update(self): 
-        pass

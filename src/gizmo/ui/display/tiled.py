@@ -25,7 +25,7 @@ class TiledDisplay(BaseDisplay):
             ):
 
         if not view:
-            view=self.view
+            view=self.m_curr
         if not vid and view:
             vid=view.id()
         l=self.m_layout
@@ -114,7 +114,7 @@ class TiledDisplay(BaseDisplay):
 
     def split(self, hsplit=False): 
 
-        copy=self.copyView(self.view)
+        copy=self.copyView(self.m_curr)
         if copy:
             r, v = copy
             r.setView(
