@@ -114,14 +114,13 @@ class TiledDisplay(BaseDisplay):
 
     def split(self, hsplit=False): 
 
-        if self.view: 
-            model=self.view.model()
-            view=self.copyView(model)
-            self.open(
-                    view,
-                    how=None, 
-                    hsplit=hsplit
-                    )
+        copy=self.copyView(self.view)
+        if copy:
+            r, v = copy
+            r.setView(
+                    view=v,
+                    how=None,
+                    hsplit=hsplit)
 
     def equalize(self):
         self.m_layout.equalize()
