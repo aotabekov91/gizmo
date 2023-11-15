@@ -103,17 +103,12 @@ class Items(
         self.horizontalScrollBar().setValue(hv)
         self.viewport().update()
 
-    def setCurrentItem(self, item):
-
-        idx=item.index()
-        self.setCurrentIndex(idx)
-
     def setCurrentIndex(self, idx):
 
         if self.m_curr!=idx:
             c, p = idx, self.m_curr
             self.m_curr, self.m_prev=c, p
-            self.indexChanged.emit(c)
+        self.indexChanged.emit(self.m_curr)
 
     def refresh(self):
 
@@ -144,8 +139,9 @@ class Items(
         y, h =int(r.height()/2-5), 10
         v=QtCore.QRect(x, y, w, h)
         i=self.items(v)
-        if i:
-            self.setCurrentItem(i[0])
+        idx=self.m_curr
+        if i: idx=i[0].index()
+        self.setCurrentIndex(idx)
 
     def visibleItems(self): 
 
