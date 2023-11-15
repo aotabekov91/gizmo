@@ -16,6 +16,7 @@ class Model:
             index=None,
             source=None,
             elements={},
+            render=None,
             **kwargs,
             ):
 
@@ -23,10 +24,14 @@ class Model:
         self.m_data=None
         self.m_loaded=False
         self.m_source=source
+        self.m_render=render
         self.m_elements=elements
         self.kwargs=kwargs
         super().__init__()
         self.setup()
+
+    def render(self):
+        return self.m_render
 
     def setup(self):
         pass

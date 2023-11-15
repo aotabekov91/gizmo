@@ -15,6 +15,7 @@ class View:
             model=None,
             index=None,
             parent=None,
+            render=None,
             objectName='View',
             **kwargs,
             ):
@@ -23,10 +24,14 @@ class View:
         self.m_id=index
         self.m_model = model
         self.m_config=config
+        self.m_render=render
         super().__init__(
                 parent=parent,
                 objectName=objectName)
         self.setup()
+
+    def render(self):
+        return self.m_render
 
     def setSettings(self):
 

@@ -1,4 +1,5 @@
 from .dir import Dir
+from .move import Move
 from .copy import Copy
 from .zoom import Zoom
 from .select import Select
