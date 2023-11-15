@@ -1,9 +1,10 @@
 import re
+from gizmo.utils import tag
 from PyQt5 import QtWidgets, QtCore
-from gizmo.utils import MetaKey, register
+
 from ..base import IconUpDown, WidgetList, InputWidget
 
-class InputList(QtWidgets.QWidget, metaclass=MetaKey):
+class InputList(QtWidgets.QWidget):
 
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
@@ -113,19 +114,19 @@ class InputList(QtWidgets.QWidget, metaclass=MetaKey):
         else:
             self.list.setFocus()
 
-    @register(['<c-j>', '<c-n>'])
+    @tag(['<c-j>', '<c-n>'])
     def moveDown(self, digit=1): 
         self.list.moveDown(digit)
 
-    @register(['<c-k>', '<c-p>'])
+    @tag(['<c-k>', '<c-p>'])
     def moveUp(self, digit=1): 
         self.list.moveUp(digit)
 
-    @register('<c-l>')
+    @tag('<c-l>')
     def setFocusItem(self):
         self.list.setFocusItem()
 
-    @register('<c-f>')
+    @tag('<c-f>')
     def toggleFilter(self):
 
         if self.input.hasFocus():

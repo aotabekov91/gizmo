@@ -125,7 +125,7 @@ class Ear(QtCore.QObject):
         if self.app: 
             self.app.moder.plugsLoaded.connect(
                     self.savePlugKeys)
-            obj=self.app.uiman.qapp
+            obj=self.app.qapp
         else:
             self.saveOwnKeys()
         obj.installEventFilter(self)
@@ -188,50 +188,6 @@ class Ear(QtCore.QObject):
                 self.keysChanged.emit(
                         self.pressed_text)
         self.keyRegistered.emit(event)
-
-    # def eventFilter(
-    #         self, 
-    #         widget, 
-    #         event
-    #         ):
-    #     # if not self.listening:
-    #     #     return False
-    #     # if event.type()!=QtCore.QEvent.KeyPress:
-    #     #     return False
-    #     # m, p  = self.checkSpecial(event)
-    #     # if m:
-    #     #     event.accept()
-    #     #     return True
-    #     # self.registerKey(event)
-    #     # if self.checkLeader(event):
-    #     #     event.accept()
-    #     #     return True
-    #     # elif p in self.delisten_keys:
-    #     #     self.escapePressed.emit()
-    #     #     event.accept()
-    #     #     return True
-    #     # return self.addKeys(event)
-
-    # def addKeys(self, event):
-        # self.timer.stop()
-        # matches, partial = [], []
-        # if self.pressed:
-        #     key, digit = self.getKeys()
-        #     matches, partial=self.getMatches(
-        #             key, digit)
-        #     self.runMatches(
-        #             matches, 
-        #             partial, 
-        #             key, 
-        #             digit)
-        # if matches or partial: 
-        #     return True
-        # # elif self.suffix_functor:
-        #     # return self.suffix_functor(
-        #             # key, digit, event)
-        # else:
-        #     self.clearKeys()
-        #     return False
 
     def eventFilter(
             self, 

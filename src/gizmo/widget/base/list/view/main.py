@@ -1,9 +1,9 @@
+from gizmo.utils import tag
 from PyQt5 import QtCore, QtWidgets
-from gizmo.utils import MetaKey, register
 
 from ..items import IconUpDown
 
-class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
+class ListWidget(QtWidgets.QListWidget):
 
     hideWanted=QtCore.pyqtSignal()
     openWanted=QtCore.pyqtSignal()
@@ -187,22 +187,22 @@ class ListWidget(QtWidgets.QListWidget, metaclass=MetaKey):
         self.setCurrentRow(0)
         self.adjustSize()
 
-    @register('j')
+    @tag('j')
     def moveDown(self): 
 
         self.move(crement=1)
 
-    @register('k')
+    @tag('k')
     def moveUp(self): 
 
         self.move(crement=-1)
 
-    @register('<c-[>')
+    @tag('<c-[>')
     def wantHide(self): 
 
         self.hideWanted.emit()
 
-    @register('<c-m>')
+    @tag('<c-m>')
     def pressReturn(self): 
 
         self.returnPressed.emit()

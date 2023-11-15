@@ -1,11 +1,11 @@
+from gizmo.utils import tag
 from PyQt5 import QtCore, QtWidgets, QtGui
-from gizmo.utils import MetaKey, register
 
 from .proxy import ProxyModel
 from .delegate import Delegate
 from ..items import IconUpDown
 
-class ListView(QtWidgets.QListView, metaclass=MetaKey):
+class ListView(QtWidgets.QListView):
 
     hideWanted=QtCore.pyqtSignal()
     itemChanged=QtCore.pyqtSignal()

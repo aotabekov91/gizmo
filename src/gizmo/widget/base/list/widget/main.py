@@ -1,17 +1,15 @@
 import re
+from gizmo.utils import tag
 from PyQt5 import QtCore, QtWidgets
-from gizmo.utils import MetaKey, register
 
 from ..items import IconUpDown
 
-class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
+class WidgetList(QtWidgets.QListWidget):
 
     hideWanted=QtCore.pyqtSignal()
-    openWanted=QtCore.pyqtSignal(
-            object)
     returnPressed=QtCore.pyqtSignal()
-    widgetDataChanged=QtCore.pyqtSignal(
-            object)
+    openWanted=QtCore.pyqtSignal(object)
+    widgetDataChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -128,11 +126,11 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
                     w.item, w)
         # self.adjustSize()
 
-    @register('gg')
+    @tag('gg')
     def gotoFirst(self): 
         self.goto(1)
 
-    @register('G')
+    @tag('G')
     def goto(self, digit=0):
 
         digit-=1
@@ -145,18 +143,18 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
         c=self.currentItem()
         self.itemChanged.emit(c)
 
-    @register(['j', 'n'])
+    @tag(['j', 'n'])
     def moveDown(self, digit=1): 
         self.move(digit)
 
-    @register(['k', 'p'])
+    @tag(['k', 'p'])
     def moveUp(self, digit=1): 
 
         if digit>0: 
             digit=-1*digit
         self.move(digit)
 
-    @register('l')
+    @tag('l')
     def setFocusItem(self):
 
         i=self.currentItem()
@@ -164,6 +162,6 @@ class WidgetList(QtWidgets.QListWidget, metaclass=MetaKey):
             w=self.itemWidget(i)
             w.setFocus()
 
-    @register('<c-h>')
+    @tag('<c-h>')
     def setFocus(self):
         super().setFocus()

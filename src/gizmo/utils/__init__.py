@@ -1,5 +1,5 @@
-from .ear import Ear
+# from .ear import Ear
+from .tag import tag
 from .task import Task
-from .register import register
-from .meta import MetaKey, MetaConf
+# from .meta import MetaKey
 from .tab_size import setEditorTabSize

@@ -1,8 +1,7 @@
+from gizmo.utils import tag
 from PyQt5 import QtCore, QtWidgets, QtGui
 
-from gizmo.utils import MetaKey, register
-
-class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
+class TreeWidget(QtWidgets.QTreeView):
 
     openWanted=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()
@@ -44,21 +43,21 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                         self.currentIndex())
                 return m.itemFromIndex(index)
 
-    @register('k')
+    @tag('k')
     def up(self, digit=1):
 
         if self.currentIndex(): 
             for d in range(digit): 
                 self.customMove('MoveUp')
 
-    @register('j')
+    @tag('j')
     def down(self, digit=1):
 
         if self.currentIndex(): 
             for d in range(digit): 
                 self.customMove('MoveDown')
 
-    @register('l')
+    @tag('l')
     def expand(self, index=None):
 
         if index: 
@@ -66,7 +65,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         super().expand(
                 self.currentIndex())
 
-    @register('e')
+    @tag('e')
     def expandAll(self, index=None):
 
         if index is None:
@@ -84,7 +83,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             index=index.parent()
             self.expand(index)
 
-    @register('c')
+    @tag('c')
     def collapseAll(self, index=None):
 
         if index is not None and index.isValid():
@@ -95,7 +94,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         else:
             super().collapseAll()
 
-    @register('H')
+    @tag('H')
     def collapseAllInside(self, item=None):
 
         if item is None: 
@@ -106,7 +105,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                 self.collapseAllInside(
                         item.child(i))
 
-    @register('h')
+    @tag('h')
     def collapse(self, index=None):
 
         if index is None: 
@@ -114,7 +113,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
         if index: 
             super().collapse(index)
 
-    @register('d')
+    @tag('d')
     def rootDown(self, digit=1):
 
         for d in range(digit):
@@ -124,7 +123,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                 child=index.child(0,0)
                 self.setCurrentIndex(child)
 
-    @register('u')
+    @tag('u')
     def rootUp(self, digit=1):
 
         for d in range(digit):
@@ -143,7 +142,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
                 )
         self.setCurrentIndex(index)
 
-    @register('gg')
+    @tag('gg')
     def gotoFirst(self):
 
         index=self.rootIndex()
@@ -151,7 +150,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             child=index.child(0, 0)
             self.setCurrentIndex(child)
 
-    @register('gf')
+    @tag('gf')
     def gotoFirstSibling(self): 
 
         idx=self.currentIndex()
@@ -168,7 +167,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             last=index.child(last_row, 0)
             self.setCurrentIndex(last)
 
-    @register('gl')
+    @tag('gl')
     def gotoLastSibling(self): 
 
         index=self.currentIndex()
@@ -178,7 +177,7 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             last=parent.child(last_row, 0)
             self.setCurrentIndex(last)
 
-    @register('G')
+    @tag('G')
     def goto(self, digit=None):
 
         if digit is None:
@@ -194,20 +193,20 @@ class TreeWidget(QtWidgets.QTreeView, metaclass=MetaKey):
             idx = self.indexBelow(idx)
         return idx
 
-    @register('gp')
+    @tag('gp')
     def gotoParent(self):
 
         index=self.currentIndex()
         parent=index.parent()
         self.setCurrentIndex(parent)
 
-    @register('gs')
+    @tag('gs')
     def gotoSiblingDown(self, digit=1):
 
         for d in range(digit):
             self.gotoSibling(kind='down')
 
-    @register('gS')
+    @tag('gS')
     def gotoSiblingUp(self, digit=1):
 
         for d in range(digit):
