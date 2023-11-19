@@ -1,6 +1,6 @@
-from gizmo.widget import ListWidget, CommandStack
+from gizmo.widget import ListWidget, StackedWidget
 
-class CommandWindow(CommandStack):
+class CommandWindow(StackedWidget):
 
     def __init__(
             self, 
@@ -24,15 +24,3 @@ class CommandWindow(CommandStack):
                     exact_match=True, 
                     check_fields=['down']), 
                 'mode')
-
-    # def activate(self): 
-    #     self.activated=True
-    #     self.app.window.show(
-    #             self)
-    #     # self.setFixedSize(
-    #     #         self.app.window.size())
-
-    # def deactivate(self): 
-    #     self.activated=False
-    #     self.app.window.show(
-    #             self.app.window.main)

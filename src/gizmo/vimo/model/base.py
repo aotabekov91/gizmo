@@ -1,4 +1,3 @@
-import re
 from PyQt5 import QtCore
 
 from gizmo.vimo.element import Element
@@ -6,7 +5,6 @@ from gizmo.vimo.element import Element
 class Model:
 
     kind=None
-    pattern=None
     element_class=Element
     loaded=QtCore.pyqtSignal()
     elementCreated=QtCore.pyqtSignal(object)
@@ -45,20 +43,14 @@ class Model:
     def setId(self, idx): 
         self.m_id=idx
 
-    def __eq__(self, other): 
-        return self.m_data==other.m_data
+    def elements(self):
+        return self.m_elements
+
+    def __eq__(self, o): 
+        return o and self.m_data==o.m_data
 
     def __hash__(self): 
         return hash(self.m_data)
 
     def source(self): 
         return self.m_source
-
-    @classmethod
-    def isCompatible(cls, source):
-
-        if source and cls.pattern:
-            return re.match(
-                    cls.pattern, 
-                    source,
-                    re.I)

@@ -3,6 +3,7 @@ from PyQt5 import QtCore
 class View:
 
     position=None
+    hasRender=True
     modelChanged=QtCore.pyqtSignal(
             object, object)
     modelIsToBeChanged=QtCore.pyqtSignal(

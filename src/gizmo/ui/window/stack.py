@@ -1,8 +1,8 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from gizmo.ui.docks import Docks
-from gizmo.widget import StackWidget
 from gizmo.ui.window import MainWindow
+from gizmo.widget import StackedWidget
 from gizmo.ui.statusbar import StatusBar
 from gizmo.ui.window.overlay import Overlay
 
@@ -33,7 +33,7 @@ class StackWindow(QtWidgets.QMainWindow):
     def setStack(self, stack=None):
 
         if not stack:
-            stack=StackWidget(
+            stack=StackedWidget(
                 parent=self,
                 objectName='StackedWidget',
                 )

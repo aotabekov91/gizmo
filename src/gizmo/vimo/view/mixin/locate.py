@@ -1,4 +1,11 @@
+from gizmo.utils import hashabledict
+
 class Locate:
+
+    canLocate=True
+
+    def createLocator(self, data={}):
+        return hashabledict(data)
 
     def findLocator(self, prefix, kind):
 

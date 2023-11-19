@@ -4,15 +4,13 @@ class Leaf(QObject):
 
     def __init__(self, parent=None):
 
-        self.x = 0
-        self.y = 0
-        self.h = 9
-        self.w = 16
         self.ratio = 50
         self.leaves = []
         self.widget = None
         self.hsplit = False
         self.parent = parent
+        self.x, self.y = 0, 0
+        self.h, self.w = 9, 16
 
     def __iter__(self):
 
@@ -27,7 +25,6 @@ class Leaf(QObject):
         self.label.show()
 
     def deactivateLabel(self):
-
         self.label.hide()
 
     def widgets(self):
@@ -52,7 +49,6 @@ class Leaf(QObject):
         return leaf0, length0
 
     def get_shortest(self):
-
         return self._shortest(0)[0]
 
     def insert(self, widget, idx, ratio):
@@ -98,17 +94,16 @@ class Leaf(QObject):
 
     def update(self):
 
-        self.calc_geom(self.x, 
-                       self.y, 
-                       self.w, 
-                       self.h)
+        self.calc_geom(
+                self.x, 
+                self.y, 
+                self.w, 
+                self.h)
 
     def calc_geom(self, x, y, w, h):
 
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
+        self.x, self.y = x, y
+        self.h, self.w = h, w
         if len(self.leaves) > 1:
             leaves=self.leaves
             if self.hsplit:
@@ -124,6 +119,5 @@ class Leaf(QObject):
                 leaves[1].calc_geom(
                         x, y + h0, w, h - h0)
         if self.widget:
-            self.widget.setGeometry(
-                    x, y, w, h)
+            self.widget.setGeometry(x, y, w, h)
             self.widget.show()

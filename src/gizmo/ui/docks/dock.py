@@ -32,7 +32,7 @@ class Dock(QtWidgets.QDockWidget):
 
     def setTab(self, w):
 
-        w.index=self.tab.addWidget(w)
+        w.idx=self.tab.addWidget(w)
         w.setMinimumSize(
                 self.min_w, self.min_h)
         w.position=self.loc
@@ -45,14 +45,14 @@ class Dock(QtWidgets.QDockWidget):
         self.deactivate()
         w.dock=None
 
-    def showWidget(self, widget):
+    def showWidget(self, w):
 
+        idx=w.idx
         self.show()
         self.tab.show()
-        self.tab.setCurrentIndex(
-                widget.index)
-        widget.setFocus()
-        widget.show()
+        self.tab.setCurrentIndex(idx)
+        w.setFocus()
+        w.show()
 
     def toggleFullscreen(self):
 
@@ -91,11 +91,11 @@ class Dock(QtWidgets.QDockWidget):
         s=QtCore.QSize(w, h) 
         self.current.setFixedSize(s)
 
-    def activate(self, widget): 
+    def activate(self, w):
 
         self.setFocus()
-        self.current=widget
-        self.showWidget(widget)
+        self.current=w
+        self.showWidget(w)
         self.focusGained.emit(self)
 
     def deactivate(self, widget=None):

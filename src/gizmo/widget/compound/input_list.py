@@ -1,8 +1,7 @@
 import re
-from gizmo.utils import tag
 from PyQt5 import QtWidgets, QtCore
 
-from ..base import IconUpDown, WidgetList, InputWidget
+from ..base import ListWidget, LineEdit
 
 class InputList(QtWidgets.QWidget):
 
@@ -15,9 +14,9 @@ class InputList(QtWidgets.QWidget):
 
     def __init__(
             self, 
-            list_class=WidgetList, 
+            list_class=ListWidget, 
             objectName='InputList',
-            input_class=InputWidget, 
+            input_class=LineEdit, 
             regex_func=None,
             **kwargs
             ): 
@@ -65,7 +64,7 @@ class InputList(QtWidgets.QWidget):
             self.input.returnPressed.connect(
                     self.inputReturnPressed)
             self.input.textChanged.connect(
-                    self.on_inputChanged)
+                    self.updateInputText)
             self.input.textChanged.connect(
                     self.inputTextChanged)
             self.input.setLabel('Filter')
@@ -84,7 +83,7 @@ class InputList(QtWidgets.QWidget):
     def setList(self, dlist): 
         self.list.setList(dlist)
 
-    def on_inputChanged(self, text):
+    def updateInputText(self, text):
 
         if self.regex_func:
             fields, flags=self.regex_func()
@@ -104,8 +103,7 @@ class InputList(QtWidgets.QWidget):
 
         self.list.filter(
                 flags=flags, 
-                fields=fields
-                )
+                fields=fields)
 
     def setFocus(self):
 
@@ -114,19 +112,6 @@ class InputList(QtWidgets.QWidget):
         else:
             self.list.setFocus()
 
-    @tag(['<c-j>', '<c-n>'])
-    def moveDown(self, digit=1): 
-        self.list.moveDown(digit)
-
-    @tag(['<c-k>', '<c-p>'])
-    def moveUp(self, digit=1): 
-        self.list.moveUp(digit)
-
-    @tag('<c-l>')
-    def setFocusItem(self):
-        self.list.setFocusItem()
-
-    @tag('<c-f>')
     def toggleFilter(self):
 
         if self.input.hasFocus():
@@ -134,18 +119,3 @@ class InputList(QtWidgets.QWidget):
         else:
             self.input.show()
         self.setFocus()
-
-    # def resizeEvent(self, event): 
-    #     super().resizeEvent(event)
-    #     self.adjustSize()
-
-    # def adjustSize(self):
-    #     width=self.size().width()
-    #     height=self.size().height()
-    #     if self.parent(): 
-    #         width=self.parent().size().width()
-    #         height=self.parent().size().height()
-    #     height=height-self.input.size().height()-5
-    #     self.input.setFixedWidth(width)
-    #     # self.list.adjustSize(width, height)
-    #     super().adjustSize()

@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 
 from ..base import BrowserWidget
-from ..base import InputLabelWidget
+from ..base import InputLineEdit
 
 class InputBrowser(QWidget):
 
@@ -15,7 +15,7 @@ class InputBrowser(QWidget):
     returnPressed=pyqtSignal()
     hideWanted=pyqtSignal()
 
-    def __init__ (self, input_class=InputLabelWidget, title=None):
+    def __init__ (self, input_class=InputLineEdit, title=None):
 
         super(InputBrowser, self).__init__()
 

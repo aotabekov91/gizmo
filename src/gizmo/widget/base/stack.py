@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-class StackWidget(QtWidgets.QStackedWidget):
+class StackedWidget(QtWidgets.QStackedWidget):
 
     focusLost=QtCore.pyqtSignal()
     hideWanted=QtCore.pyqtSignal()

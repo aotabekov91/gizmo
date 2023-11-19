@@ -2,8 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from ..base import StackWindow, StackWidget
 from ..base import UpDownEdit, LeftRightEdit
+from ..base import StackWindow, StackedWidget
 from ..base import InputLabelWidget, ListWidget, IconUpDown
 from ..compound import InputListStack, CommandList, InputList
 

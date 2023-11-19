@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
-from ..base import TreeWidget, InputLabelWidget
+from ..base import TreeView, InputLineEdit
 
 class InputTree(QtWidgets.QWidget):
 
@@ -49,8 +49,8 @@ class InputTree(QtWidgets.QWidget):
                 background-color: transparent; 
                 }
                 '''
-        self.tree=TreeWidget()
-        self.input=InputLabelWidget()
+        self.tree=TreeView()
+        self.input=InputLineEdit()
         self.tree.hideWanted.connect(
                 self.hideWanted)
         layout = QtWidgets.QVBoxLayout()
