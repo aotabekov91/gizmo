@@ -10,8 +10,11 @@ from .layout import Layout
 from .search import Search
 from .locate import Locate
 from .pool import PoolItems
-from .tree_go import TreeGo
+from .go_tree import TreeGo
+from .go_view import ViewGo
+from .go_widget import WidgetGo
 from .connect import Connect
-from .tree_move import TreeMove
+from .move_tree import TreeMove
+from .move_view import ViewMove
 from .scene import Scene, MoveScene
 from .highlight import ItemsHighlight

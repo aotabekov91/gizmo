@@ -1,17 +1,8 @@
 from gizmo.utils import tag
 
-from .go import Go
+from .go_view import ViewGo
 
-class TreeGo(Go):
-
-    def go(self, kind, *args, **kwargs):
-
-        if type(kind)==int:
-            self.goto(kind)
-        elif kind=='first':
-            self.gotoFirst()
-        elif kind=='last':
-            self.gotoLast()
+class TreeGo(ViewGo):
 
     @tag('gf', modes=['normal|TreeView'])
     def gotoFirstSibling(self): 

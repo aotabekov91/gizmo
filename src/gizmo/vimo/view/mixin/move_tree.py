@@ -1,7 +1,7 @@
-from .move import Move
+from .move_view import ViewMove
 from gizmo.utils import tag
 
-class TreeMove(Move):
+class TreeMove(ViewMove):
 
     @tag('e', modes=['normal|TreeView'])
     def expandAll(self):

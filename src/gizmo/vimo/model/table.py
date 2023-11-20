@@ -6,18 +6,23 @@ from .base import Model
 class TableModel(Model):
 
     uid='id'
+    m_rows={}
     table=None
     kind='table'
     element_class=Element
+    elementAdded=QtCore.pyqtSignal(object)
+    elementRemoved=QtCore.pyqtSignal(object)
+    elementUpdated=QtCore.pyqtSignal(object)
     elementAddWanted=QtCore.pyqtSignal(object)
     elementRemoveWanted=QtCore.pyqtSignal(object)
-    elementUpdateWanted=QtCore.pyqtSignal(object)
 
     def setup(self):
 
         super().setup()
         self.elementRemoveWanted.connect(
-                self.remove)
+                self.removeElement)
+        self.elementUpdated.connect(
+                self.updateRow)
 
     def getRows(self):
         return self.table.getRow(self.m_id)
@@ -34,6 +39,13 @@ class TableModel(Model):
             self.elementCreated.emit(e)
         self.loaded.emit()
 
+    def find(self, idx, by='id'):
+
+        for e in self.m_elements.values():
+            d=e.data()
+            if idx==d.get(by, None):
+                return e
+
     def get(self, data):
         self.table.getRow(data)
 
@@ -48,9 +60,20 @@ class TableModel(Model):
         self.elementCreated.emit(e)
         self.m_elements[idx]=e
 
-    def remove(self, e):
+    def updateRow(self, e):
+
+        idx=e.index()
+        d={self.uid: idx}
+        self.table.updateRow(d, e.data())
+
+    def removeRow(self, e):
 
         idx=e.index()
         d={self.uid: idx}
         self.table.removeRow(d)
-        self.m_elements.pop(idx)
+
+    def removeElement(self, e):
+
+        self.removeRow(e)
+        self.m_elements.pop(e.index())
+        self.elementRemoved.emit(e)

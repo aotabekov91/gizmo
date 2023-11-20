@@ -1,14 +1,15 @@
-from PyQt5.QtGui import QStandardItemModel
-from gizmo.vimo.item.mixin import StandardItem
+from PyQt5 import QtCore 
+from gizmo.vimo.element import TableElement
+from gizmo.vimo.item.mixin import ListWidgetItem
+from gizmo.vimo.item.lwidget import BaseListWidget
 
 from .table import TableModel
 
-class STableModel(
-        QStandardItemModel,
-        TableModel
-        ):
+class WTableModel(TableModel, QtCore.QObject):
 
-    item_class=StandardItem
+    item_class=ListWidgetItem
+    element_class=TableElement
+    widget_class=BaseListWidget
 
     def setup(self):
 
@@ -18,13 +19,23 @@ class STableModel(
 
     def addItem(self, e):
 
+        w=self.widget_class(e)
+        e.setWidget(w)
         i=self.item_class()
         i.setElement(e)
         self.appendRow(i)
-        return i
+
+    def appendRow(self, i):
+
+        idx=len(self.m_rows)
+        self.m_rows[idx]=i
+
+    def rows(self):
+        return self.m_rows
 
     def connect(self):
 
+        return
         self.rowsAboutToBeRemoved.connect(
                 self.on_rowsAboutToBeRemoved)
         self.rowsAboutToBeInserted.connect(
@@ -49,3 +60,12 @@ class STableModel(
             if i:
                 e=i.element()
                 self.elementAddWanted.emit(e)
+
+    def index(self, row, col):
+        return self.m_rows.get(row, None)
+
+    def rowCount(self):
+        return len(self.m_rows) 
+
+    def getRowIndex(self, row):
+        return row

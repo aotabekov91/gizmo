@@ -4,8 +4,8 @@ from gizmo.widget import ListView as List
 from .base import View 
 
 class ListView(
-        mixin.Go,
-        mixin.Move,
+        mixin.ViewGo,
+        mixin.ViewMove,
         View, 
         List,
         ):

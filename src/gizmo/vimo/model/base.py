@@ -31,6 +31,9 @@ class Model:
     def render(self):
         return self.m_render
 
+    def count(self):
+        return len(self.m_elements)
+
     def setup(self):
         pass
 

@@ -86,3 +86,6 @@ class View:
 
     def cleanUp(self):
         pass
+
+    def __bool__(self):
+        return True
