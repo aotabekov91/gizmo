@@ -12,14 +12,44 @@ class ListWidgetView(
 
     def setModel(self, m):
 
+        self.reconnect('disconnect')
         super().setModel(m)
         if m:
+            print(m.m_elements)
             for i in range(m.rowCount()):
                 m=self.m_model
                 r=m.index(i, 0)
-                i=m.itemFromIndex(r)
-                e=i.element()
-                self.addItem(e.listItem())
-                self.setItemWidget(
-                        e.listItem(),
-                        e.widget())
+                e=m.itemFromIndex(r).element()
+                self.addElement(e)
+        self.reconnect()
+
+    def addElement(self, e):
+
+        print(self.name(), e.m_data)
+        litem=e.listItem()
+        self.addItem(litem)
+        self.setItemWidget(
+                litem, e.widget())
+
+    def reconnect(self, kind='connect'):
+
+        m=self.m_model
+        if m:
+            for f in [
+                     'listItemAdded',
+                     'elementRemoved',
+                     ]:
+                s=getattr(m, f, None)
+                if not s: continue
+                c=getattr(s, f, None)
+                if not c: continue
+                a=getattr(self, f'on_{f}', None) 
+                if a: c(a)
+
+    def on_listItemAdded(self, e):
+        self.addElement(e)
+
+    def on_elementRemoved(self, e):
+
+        row=self.row(e.listItem())
+        self.takeItem(row)

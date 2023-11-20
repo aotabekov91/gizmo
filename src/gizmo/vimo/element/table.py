@@ -8,8 +8,16 @@ class TableElement(Element):
     def widget(self):
         return self.m_widget
 
-    def setListItem(self, item):
+    def setItem(self, item):
+
         self.m_item=item
+        item.setElement(self)
+
+    def item(self):
+        return self.m_item
+
+    def setListItem(self, item):
+        self.m_litem=item
 
     def listItem(self):
-        return self.m_item
+        return self.m_litem

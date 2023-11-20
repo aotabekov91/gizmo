@@ -3,6 +3,7 @@ from .list import ListView
 from .tree import TreeView 
 from .window import Window
 from .wlist import ListWidget
+from .table import TableWidget
 from .stack import StackedWidget
 from .container import Container
 from .label_hint import HintLabel

@@ -4,13 +4,13 @@ from gizmo.vimo.element import Element
 
 class Model:
 
-    kind=None
     element_class=Element
     loaded=QtCore.pyqtSignal()
     elementCreated=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
+            kind=None,
             index=None,
             source=None,
             elements={},
@@ -18,6 +18,7 @@ class Model:
             **kwargs,
             ):
 
+        self.kind=kind
         self.m_id=index
         self.m_data=None
         self.m_loaded=False

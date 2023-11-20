@@ -1,6 +1,4 @@
-from PyQt5.QtGui import QStandardItem
-
-class StandardItem(QStandardItem):
+class Element:
 
     def setElement(self, elem):
         self.m_elem=elem

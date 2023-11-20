@@ -13,6 +13,7 @@ class View:
             self, 
             app=None, 
             config={},
+            name=None,
             model=None,
             index=None,
             parent=None,
@@ -23,6 +24,7 @@ class View:
 
         self.app=app
         self.m_id=index
+        self.m_name=name
         self.m_model = model
         self.m_config=config
         self.m_render=render
@@ -30,6 +32,11 @@ class View:
                 parent=parent,
                 objectName=objectName)
         self.setup()
+
+    def name(self):
+        if self.m_name:
+            return self.m_name
+        return self.__class__.__name__
 
     def render(self):
         return self.m_render
@@ -68,11 +75,6 @@ class View:
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
-
-    def name(self):
-
-        if self.m_model:
-            return self.m_model.id()
 
     def check(self, what, v=None):
 
