@@ -14,7 +14,7 @@ class TreeView(QTreeView):
     returnPressed=pyqtSignal(object, object)
 
     def __init__(self, app, parent, location=None, name=None, model=None):
-        super().__init__(app.window)
+        super().__init__(app.ui)
         self.app=app
         self.name=name
         self.m_model=model
@@ -22,15 +22,15 @@ class TreeView(QTreeView):
         self.location=location
 
         self.header().hide()
-        self.app.window.docks.setTabLocation(self, self.location, self.name)
+        self.app.ui.docks.setTabLocation(self, self.location, self.name)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def deactivate(self):
-        self.app.window.docks.deactivateTabWidget(self)
+        self.app.ui.docks.deactivateTabWidget(self)
 
     def activate(self):
-        self.app.window.docks.activateTabWidget(self)
+        self.app.ui.docks.activateTabWidget(self)
         self.setFocus()
 
     def currentItem(self):

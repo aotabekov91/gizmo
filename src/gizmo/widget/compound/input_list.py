@@ -30,7 +30,7 @@ class InputList(QtWidgets.QWidget):
         self.setListWidget(
                 list_class, **kwargs)
         self.kwargs=kwargs
-        self.setUI()
+        self.setupUI()
 
     def setListWidget(
             self, 
@@ -70,7 +70,7 @@ class InputList(QtWidgets.QWidget):
             self.input.setLabel('Filter')
             self.input.hide()
 
-    def setUI(self):
+    def setupUI(self):
 
         layout = QtWidgets.QVBoxLayout()
         layout.setSpacing(5)

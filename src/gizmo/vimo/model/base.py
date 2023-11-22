@@ -18,9 +18,9 @@ class Model:
             **kwargs,
             ):
 
-        self.kind=kind
         self.m_id=index
         self.m_data=None
+        self.m_kind=kind
         self.m_loaded=False
         self.m_source=source
         self.m_render=render
@@ -28,6 +28,9 @@ class Model:
         self.kwargs=kwargs
         super().__init__()
         self.setup()
+
+    def kind(self):
+        return self.m_kind
 
     def render(self):
         return self.m_render

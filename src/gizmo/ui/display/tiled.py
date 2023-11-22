@@ -5,7 +5,7 @@ from gizmo.widget.layout import TileLayout
 
 class TiledDisplay(BaseDisplay):
 
-    def setUI(self):
+    def setupUI(self):
 
         self.setContentsMargins(
                 0,0,0,0)

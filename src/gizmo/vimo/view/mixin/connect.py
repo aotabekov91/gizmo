@@ -97,7 +97,7 @@ class Connect:
             self.m_scene.itemAdded.connect(
                     self.on_itemAdded)
         if self.app:
-            w=self.app.window
+            w=self.app.ui
             self.indexChanged.connect(
                     w.viewIndexChanged)
             self.positionChanged.connect(

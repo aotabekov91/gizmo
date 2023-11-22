@@ -13,7 +13,7 @@ class LeftRightEdit (ItemWidget):
 
         super().__init__(*args, **kwargs)
 
-    def setUI(self):
+    def setupUI(self):
 
         style_sheet = '''
             QWidget{

@@ -8,9 +8,9 @@ def tag(key=None, modes=[], **kwargs):
             return func(self, *args, **kwargs)
         inner.key=key
         inner.func=func
-        inner.modes=modes
         inner.tagged=True
         inner.kwargs=kwargs
         inner.name=func.__name__
+        inner.modes=modes
         return inner
     return _tag

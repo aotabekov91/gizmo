@@ -17,7 +17,7 @@ class TreeView(QtWidgets.QTreeView):
                  name=None, 
                  model=None):
 
-        super().__init__(app.window)
+        super().__init__(app.ui)
         self.app=app
         self.name=name
         self.m_model=model
@@ -25,7 +25,7 @@ class TreeView(QtWidgets.QTreeView):
         self.location=location
 
         self.header().hide()
-        self.app.window.docks.setTabLocation(
+        self.app.ui.docks.setTabLocation(
                 self, self.location, self.name)
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
@@ -33,10 +33,10 @@ class TreeView(QtWidgets.QTreeView):
                 QtCore.Qt.ScrollBarAlwaysOff)
 
     def deactivate(self):
-        self.app.window.docks.deactivateTabWidget(self)
+        self.app.ui.docks.deactivateTabWidget(self)
 
     def activate(self):
-        self.app.window.docks.activateTabWidget(self)
+        self.app.ui.docks.activateTabWidget(self)
         self.setFocus()
 
     def currentItem(self):

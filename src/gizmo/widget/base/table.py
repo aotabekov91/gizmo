@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel as Label
 from PyQt5.QtWidgets import QTextEdit as TextEdit
 
@@ -12,13 +12,13 @@ class TableWidget(QtWidgets.QWidget):
     def __init__(
             self, 
             element, 
-            listitem,
-            widgetmap,
+            item,
+            wmap={},
             **kwargs):
 
+        self.m_map=wmap
+        self.m_item=item
         self.m_widgets={}
-        self.m_map=widgetmap
-        self.m_item=listitem
         self.m_element=element
         super().__init__(**kwargs)
         self.m_layout=QtWidgets.QGridLayout(self)

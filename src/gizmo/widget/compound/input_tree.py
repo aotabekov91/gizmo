@@ -21,7 +21,7 @@ class InputTree(QtWidgets.QWidget):
                 *args, 
                 **kwargs
                 )
-        layout, style_sheet=self.setUI()
+        layout, style_sheet=self.setupUI()
         self.setLayout(layout)
         self.input.hide()
         self.setup()
@@ -33,7 +33,7 @@ class InputTree(QtWidgets.QWidget):
         self.tree.keysChanged.connect(
                 self.keysChanged)
 
-    def setUI(self):
+    def setupUI(self):
 
         style_sheet='''
             QWidget{

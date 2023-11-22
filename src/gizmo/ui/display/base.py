@@ -30,7 +30,7 @@ class BaseDisplay(QtWidgets.QWidget):
         self.m_curr=None
         self.m_prev=None
         self.renders=[]
-        self.setUI()
+        self.setupUI()
         self.setConfig()
 
     def setConfig(self):
@@ -40,7 +40,7 @@ class BaseDisplay(QtWidgets.QWidget):
             self.m_config=c.get(
                     'Display', {})
 
-    def setUI(self):
+    def setupUI(self):
 
         self.setContentsMargins(
                 0,0,0,0)

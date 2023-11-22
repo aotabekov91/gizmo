@@ -770,27 +770,27 @@ setTitle	src/gizmo/widget/todo/item_.py	/^    def setTitle(self):$/;"	m	class:It
 setTitle	src/gizmo/widget/todo/widgets_/components/qlistwidget.py	/^    def setTitle(self, text):$/;"	m	class:CustomListItem
 setTitle	src/gizmo/widget/todo/widgets_/rest/container_.py	/^    def setTitle(self, title):$/;"	m	class:Container
 setTitle	src/gizmo/widget/todo/widgets_/rest/item_.py	/^    def setTitle(self):$/;"	m	class:Item
-setUI	src/gizmo/ui/display/base.py	/^    def setUI(self):$/;"	m	class:Display
-setUI	src/gizmo/ui/docks/dock.py	/^    def setUI(self):$/;"	m	class:Dock
-setUI	src/gizmo/ui/statusbar/base.py	/^    def setUI(self):$/;"	m	class:StatusBar
-setUI	src/gizmo/ui/window/command.py	/^    def setUI(self):$/;"	m	class:CommandWindow
-setUI	src/gizmo/ui/window/main.py	/^    def setUI(self, display_class, view_class):$/;"	m	class:MainWindow
-setUI	src/gizmo/ui/window/stack.py	/^    def setUI(self, display_class, view_class):$/;"	m	class:StackWindow
-setUI	src/gizmo/widget/base/input/input_label.py	/^    def setUI(self):$/;"	m	class:InputLabelWidget
-setUI	src/gizmo/widget/base/list/items/base.py	/^    def setUI(self):$/;"	m	class:Item
-setUI	src/gizmo/widget/base/list/items/icon.py	/^    def setUI(self):$/;"	m	class:Icon
-setUI	src/gizmo/widget/base/list/items/icon_up_down.py	/^    def setUI(self):$/;"	m	class:IconUpDown
-setUI	src/gizmo/widget/base/list/items/left_right_edit.py	/^    def setUI(self):$/;"	m	class:LeftRightEdit
-setUI	src/gizmo/widget/base/list/items/up_down.py	/^    def setUI(self):$/;"	m	class:UpDown
-setUI	src/gizmo/widget/base/list/items/up_down_edit.py	/^    def setUI(self):$/;"	m	class:UpDownEdit
-setUI	src/gizmo/widget/base/list/list.py	/^    def setUI(self):$/;"	m	class:ListWidget
-setUI	src/gizmo/widget/base/tree.py	/^    def setUI(self):$/;"	m	class:TreeWidget
-setUI	src/gizmo/widget/compound/input_browser.py	/^    def setUI(self):$/;"	m	class:InputBrowser
-setUI	src/gizmo/widget/compound/input_list.py	/^    def setUI(self):$/;"	m	class:InputList
-setUI	src/gizmo/widget/compound/input_tree.py	/^    def setUI(self):$/;"	m	class:InputTree
-setUI	src/gizmo/widget/todo/listwidget.py	/^    def setUI(self):$/;"	m	class:ListWidget
-setUI	src/gizmo/widget/todo/widgets.py	/^    def setUI(self, item_class, list_class, input_class, input_list):$/;"	m	class:InputListStackWindow
-setUI	src/gizmo/widget/todo/widgets_/listwidget.py	/^    def setUI(self):$/;"	m	class:ListWidget
+setupUI	src/gizmo/ui/display/base.py	/^    def setupUI(self):$/;"	m	class:Display
+setupUI	src/gizmo/ui/docks/dock.py	/^    def setupUI(self):$/;"	m	class:Dock
+setupUI	src/gizmo/ui/statusbar/base.py	/^    def setupUI(self):$/;"	m	class:StatusBar
+setupUI	src/gizmo/ui/window/command.py	/^    def setupUI(self):$/;"	m	class:CommandWindow
+setupUI	src/gizmo/ui/window/main.py	/^    def setupUI(self, display_class, view_class):$/;"	m	class:MainWindow
+setupUI	src/gizmo/ui/window/stack.py	/^    def setupUI(self, display_class, view_class):$/;"	m	class:StackWindow
+setupUI	src/gizmo/widget/base/input/input_label.py	/^    def setupUI(self):$/;"	m	class:InputLabelWidget
+setupUI	src/gizmo/widget/base/list/items/base.py	/^    def setupUI(self):$/;"	m	class:Item
+setupUI	src/gizmo/widget/base/list/items/icon.py	/^    def setupUI(self):$/;"	m	class:Icon
+setupUI	src/gizmo/widget/base/list/items/icon_up_down.py	/^    def setupUI(self):$/;"	m	class:IconUpDown
+setupUI	src/gizmo/widget/base/list/items/left_right_edit.py	/^    def setupUI(self):$/;"	m	class:LeftRightEdit
+setupUI	src/gizmo/widget/base/list/items/up_down.py	/^    def setupUI(self):$/;"	m	class:UpDown
+setupUI	src/gizmo/widget/base/list/items/up_down_edit.py	/^    def setupUI(self):$/;"	m	class:UpDownEdit
+setupUI	src/gizmo/widget/base/list/list.py	/^    def setupUI(self):$/;"	m	class:ListWidget
+setupUI	src/gizmo/widget/base/tree.py	/^    def setupUI(self):$/;"	m	class:TreeWidget
+setupUI	src/gizmo/widget/compound/input_browser.py	/^    def setupUI(self):$/;"	m	class:InputBrowser
+setupUI	src/gizmo/widget/compound/input_list.py	/^    def setupUI(self):$/;"	m	class:InputList
+setupUI	src/gizmo/widget/compound/input_tree.py	/^    def setupUI(self):$/;"	m	class:InputTree
+setupUI	src/gizmo/widget/todo/listwidget.py	/^    def setupUI(self):$/;"	m	class:ListWidget
+setupUI	src/gizmo/widget/todo/widgets.py	/^    def setupUI(self, item_class, list_class, input_class, input_list):$/;"	m	class:InputListStackWindow
+setupUI	src/gizmo/widget/todo/widgets_/listwidget.py	/^    def setupUI(self):$/;"	m	class:ListWidget
 setView	src/gizmo/ui/display/base.py	/^    def setView(self, view, how=None, focus=True):$/;"	m	class:Display
 setViewClass	src/gizmo/ui/display/base.py	/^    def setViewClass(self, view_class): self.view_class=view_class$/;"	m	class:Display
 setWidget	src/gizmo/widget/todo/widgets_/shortcut.py	/^    def setWidget(self, parent):$/;"	m	class:SpecialKeyShortcut

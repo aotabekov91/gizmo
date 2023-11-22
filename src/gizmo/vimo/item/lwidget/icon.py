@@ -5,7 +5,7 @@ from .base import ListWidgetItem
 
 class Icon(ListWidgetItem):
 
-    def setUI(self):
+    def setupUI(self):
 
         style_sheet = '''
             QWidget{

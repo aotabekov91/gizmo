@@ -12,6 +12,7 @@ class View:
     def __init__(
             self, 
             app=None, 
+            kind=None,
             config={},
             name=None,
             model=None,
@@ -25,6 +26,7 @@ class View:
         self.app=app
         self.m_id=index
         self.m_name=name
+        self.m_kind=kind
         self.m_model = model
         self.m_config=config
         self.m_render=render
@@ -33,7 +35,11 @@ class View:
                 objectName=objectName)
         self.setup()
 
+    def kind(self):
+        return self.m_kind
+
     def name(self):
+
         if self.m_name:
             return self.m_name
         return self.__class__.__name__

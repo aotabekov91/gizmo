@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 class ListWidget(QListWidget):
 
     def __init__(self, app, parent, location=None, name=None):
-        super().__init__(app.window)
+        super().__init__(app.ui)
 
         self.app=app
         self.name=name
@@ -13,14 +13,14 @@ class ListWidget(QListWidget):
         self.location=location
         self.activated=False
 
-        self.app.window.setTabLocation(self, self.location, self.name)
+        self.app.ui.setTabLocation(self, self.location, self.name)
 
     def deactivate(self):
         if self.activated:
             self.activated=False
-            self.app.window.deactivateTabWidget(self)
+            self.app.ui.deactivateTabWidget(self)
 
     def activate(self):
         self.activated=True
-        self.app.window.activateTabWidget(self)
+        self.app.ui.activateTabWidget(self)
         self.setFocus()

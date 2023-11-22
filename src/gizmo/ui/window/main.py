@@ -9,9 +9,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         super().__init__(
                 *args, **kwargs)
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.container=QtWidgets.QWidget(
                 objectName='MainWindowContainer'

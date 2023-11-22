@@ -16,10 +16,10 @@ class InputListStackWindow(StackWindow):
                  input_class=InputLabelWidget,
                  input_list=None):
         self.label_name=label_name
-        ui=self.setUI(item_class, list_class, input_class, input_list)
+        ui=self.setupUI(item_class, list_class, input_class, input_list)
         super(InputListStackWindow, self).__init__(ui, window_name)
 
-    def setUI(self, item_class, list_class, input_class, input_list):
+    def setupUI(self, item_class, list_class, input_class, input_list):
         if input_list:
             ui=input_list(
                 item_class=IconUpDown, 

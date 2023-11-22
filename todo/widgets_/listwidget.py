@@ -17,17 +17,17 @@ class ListWidget (PlugListWidget):
         self.name=name
         self.m_parent=parent
         self.location=location
-        self.app.window.docks.setTabLocation(self, self.location, self.name)
+        self.app.ui.docks.setTabLocation(self, self.location, self.name)
 
-    def setUI(self):
-        super().setUI(listWidget=CustomListWidget)
+    def setupUI(self):
+        super().setupUI(listWidget=CustomListWidget)
         self.input.removeLabel()
 
     def deactivate(self):
-        self.app.window.docks.deactivateTabWidget(self)
+        self.app.ui.docks.deactivateTabWidget(self)
 
     def activate(self):
-        self.app.window.docks.activateTabWidget(self)
+        self.app.ui.docks.activateTabWidget(self)
         self.adjustSize()
         self.list.setFocus()
 
@@ -86,7 +86,7 @@ class ListWidget (PlugListWidget):
 #     keyPressEventOccurred=pyqtSignal(object)
 
 #     def __init__(self, app, parent, location=None, name=None):
-#         super(ListWidget, self).__init__(app.window)
+#         super(ListWidget, self).__init__(app.ui)
 
 #         self.style_sheet='''
 #             QWidget{
@@ -128,7 +128,7 @@ class ListWidget (PlugListWidget):
 #         self.input.returnPressed.connect(self.returnPressed)
 #         self.input.hide()
 
-#         self.app.window.docks.setTabLocation(self, self.location, self.name)
+#         self.app.ui.docks.setTabLocation(self, self.location, self.name)
 
 #     def setText(self, text):
 #         self.input.setText(text)
@@ -136,12 +136,12 @@ class ListWidget (PlugListWidget):
 #     def deactivate(self):
 #         if self.activated:
 #             self.activated=False
-#             self.app.window.docks.deactivateTabWidget(self)
+#             self.app.ui.docks.deactivateTabWidget(self)
 
 #     def activate(self):
 #         if not self.activated:
 #             self.activated=True
-#             self.app.window.docks.activateTabWidget(self)
+#             self.app.ui.docks.activateTabWidget(self)
 #             self.list.setFocus()
 
 #     def setList(self, dlist):

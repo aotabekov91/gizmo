@@ -36,9 +36,9 @@ class ListWidget(QtWidgets.QListWidget):
         self.enable_filter=enable_filter
         self.item_position=item_position
         self.text_non_found=text_non_found
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.setSpacing(2)
         self.setVerticalScrollBarPolicy(

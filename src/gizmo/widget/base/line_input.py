@@ -17,9 +17,9 @@ class InputLineEdit(QtWidgets.QWidget):
                 *args, 
                 objectName=objectName,
                 **kwargs) 
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.m_label= QtWidgets.QLabel(
                 objectName='InputLabel')

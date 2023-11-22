@@ -25,9 +25,9 @@ class WidgetList(QtWidgets.QListWidget):
         self.widget=widget
         super().__init__(
                 objectName=objectName)
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)

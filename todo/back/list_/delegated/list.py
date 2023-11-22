@@ -27,7 +27,7 @@ class ListView(QtWidgets.QListView):
                 objectName=objectName,
                 )
         self.setup()
-        self.setUI()
+        self.setupUI()
 
     def setup(self):
 
@@ -37,7 +37,7 @@ class ListView(QtWidgets.QListView):
         self.source=QtGui.QStandardItemModel()
         self.proxy.setSourceModel(self.source)
 
-    def setUI(self):
+    def setupUI(self):
 
         self.setSpacing(2)
         self.setVerticalScrollBarPolicy(

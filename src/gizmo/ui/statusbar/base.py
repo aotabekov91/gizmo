@@ -15,9 +15,9 @@ class StatusBar(QtWidgets.QStatusBar):
         super(StatusBar, self).__init__(
                 objectName=objectName)
         self.window=window
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.container=QtWidgets.QWidget(
                 objectName='Container')

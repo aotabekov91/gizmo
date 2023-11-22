@@ -28,7 +28,7 @@ class StackWindow(QtWidgets.QMainWindow):
                 **kwargs
                 )
         self.setStack(stack)
-        self.setUI()
+        self.setupUI()
 
     def setStack(self, stack=None):
 
@@ -51,7 +51,7 @@ class StackWindow(QtWidgets.QMainWindow):
         self.setContentsMargins(
                 0, 0, 0, 0)
 
-    def setUI(self):
+    def setupUI(self):
 
         self.docks=Docks(self)
         self.bar=StatusBar(self)

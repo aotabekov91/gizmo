@@ -20,10 +20,10 @@ class ListWidget (Stack):
         self.name=name
         self.m_parent=parent
         self.location=location
-        self.app.window.docks.setTabLocation(self, self.location, self.name)
-        self.setUI()
+        self.app.ui.docks.setTabLocation(self, self.location, self.name)
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
         self.list=InputList(widget_class=UpDownEdit)
         self.setMainWidget(self.list)
@@ -38,10 +38,10 @@ class ListWidget (Stack):
         pass
 
     def deactivate(self):
-        self.app.window.docks.deactivateTabWidget(self)
+        self.app.ui.docks.deactivateTabWidget(self)
 
     def activate(self):
-        self.app.window.docks.activateTabWidget(self)
+        self.app.ui.docks.activateTabWidget(self)
         self.adjustSize()
         self.setFocus()
 

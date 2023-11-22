@@ -13,11 +13,11 @@ class CommandWindow(StackedWidget):
                 *args, **kwargs)
 
         self.app=app
-        self.setUI()
+        self.setupUI()
 
-    def setUI(self):
+    def setupUI(self):
 
-        self.app.window.add(
+        self.app.ui.add(
                 self, 'command')
         self.addWidget(
                 ListWidget(

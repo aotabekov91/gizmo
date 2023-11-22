@@ -4,25 +4,35 @@ from gizmo.vimo.element import TableElement
 
 class TableModel(Model):
 
-    uid='id'
-    m_rows={}
-    table=None
     element_class=TableElement
     elementAdded=QtCore.pyqtSignal(object)
     elementRemoved=QtCore.pyqtSignal(object)
     elementUpdated=QtCore.pyqtSignal(object)
 
+    def setup(self):
+
+        self.m_rows={}
+        super().setup()
+        self.m_listwidget=None
+        self.m_uid=self.kwargs.get(
+                'uid', 'id')
+        self.m_table=self.kwargs.get(
+                'table', None)
+
+    def listWidget(self):
+        return self.m_listwidget
+
+    def setListWidget(self, listwidget=None):
+        self.m_listwidget=listwidget
+
     def getTableRows(self):
-        return self.table.getRow(self.m_id)
+        return self.m_table.getRow(self.m_id)
 
     def load(self):
 
-        print(self.m_id)
-        print('loading', self.getTableRows())
-
         for row in self.getTableRows():
             self.createElement(
-                    row[self.uid], row)
+                    row[self.m_uid], row)
         self.loaded.emit()
 
     def createElement(self, idx, data):
@@ -43,32 +53,31 @@ class TableModel(Model):
                 return e
 
     def getTableRow(self, data):
-        return self.table.getRow(data)
+        return self.m_table.getRow(data)
 
     def addTableRow(self, data):
 
-        idx=self.table.writeRow(data)
-        rs=self.getTableRow({self.uid:idx})
+        idx=self.m_table.writeRow(data)
+        rs=self.getTableRow({self.m_uid:idx})
         return rs[0]
 
     def updateTableRow(self, e):
 
         idx=e.index()
-        d={self.uid: idx}
-        self.table.updateRow(d, e.data())
+        d={self.m_uid: idx}
+        self.m_table.updateRow(d, e.data())
         return e
 
     def removeTableRow(self, e):
 
         idx=e.index()
-        d={self.uid: idx}
-        self.table.removeRow(d)
+        d={self.m_uid: idx}
+        self.m_table.removeRow(d)
         return e
 
     def updateElement(self, e, data):
 
-        d=e.data()
-        e.update(data)
+        e.m_data.update(data)
         self.updateTableRow(e)
         self.elementUpdated(e)
         return e
@@ -83,5 +92,7 @@ class TableModel(Model):
     def addElement(self, data):
 
         data=self.addTableRow(data)
-        idx=data[self.uid]
-        return self.createElement(idx, data)
+        idx=data[self.m_uid]
+        e=self.createElement(idx, data)
+        self.elementAdded.emit(e)
+        return e

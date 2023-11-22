@@ -22,11 +22,11 @@ class InputBrowser(QWidget):
         self.waiting=False
         self.setInputWidget(input_class=input_class)
 
-        self.setUI()
+        self.setupUI()
 
         if title: self.input.setLabel(title)
 
-    def setUI(self):
+    def setupUI(self):
 
         self.style_sheet='''
             QWidget{
