@@ -2,7 +2,10 @@ from PyQt5 import QtCore
 
 class View:
 
-    position=None
+    name=None
+    kind=None
+    position={}
+    isUnique=False
     hasRender=True
     modelChanged=QtCore.pyqtSignal(
             object, object)
@@ -12,7 +15,6 @@ class View:
     def __init__(
             self, 
             app=None, 
-            kind=None,
             config={},
             name=None,
             model=None,
@@ -25,8 +27,6 @@ class View:
 
         self.app=app
         self.m_id=index
-        self.m_name=name
-        self.m_kind=kind
         self.m_model = model
         self.m_config=config
         self.m_render=render
@@ -35,14 +35,16 @@ class View:
                 objectName=objectName)
         self.setup()
 
-    def kind(self):
-        return self.m_kind
+    def setup(self):
 
-    def name(self):
+        self.setName()
+        self.setSettings()
+        self.setupScrollBars()
 
-        if self.m_name:
-            return self.m_name
-        return self.__class__.__name__
+    def setName(self):
+
+        c=self.__class__.__name__
+        self.name=self.name or c
 
     def render(self):
         return self.m_render
@@ -52,11 +54,6 @@ class View:
         c=self.m_config
         for k, v in c.items():
             setattr(self, k, v)
-
-    def setup(self):
-
-        self.setSettings()
-        self.setupScrollBars()
 
     def setId(self, vid):
         self.m_id=vid
@@ -97,3 +94,9 @@ class View:
 
     def __bool__(self):
         return True
+
+    @classmethod
+    def isCompatible(cls, model):
+
+        w=getattr(model, 'wantView', [])
+        return cls.name or cls.__name__ in w
