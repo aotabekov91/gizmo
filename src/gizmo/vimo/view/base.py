@@ -5,12 +5,15 @@ class View:
     name=None
     kind=None
     position={}
-    isUnique=False
-    hasRender=True
+    activated=False
     modelChanged=QtCore.pyqtSignal(
             object, object)
     modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
+    activateWanted=QtCore.pyqtSignal(
+            object)
+    octivateWanted=QtCore.pyqtSignal(
+            object)
 
     def __init__(
             self, 
@@ -20,16 +23,15 @@ class View:
             model=None,
             index=None,
             parent=None,
-            render=None,
             objectName='View',
             **kwargs,
             ):
 
         self.app=app
         self.m_id=index
+        self.m_name=name
         self.m_model = model
         self.m_config=config
-        self.m_render=render
         super().__init__(
                 parent=parent,
                 objectName=objectName)
@@ -44,10 +46,8 @@ class View:
     def setName(self):
 
         c=self.__class__.__name__
+        c=self.m_name or c
         self.name=self.name or c
-
-    def render(self):
-        return self.m_render
 
     def setSettings(self):
 
@@ -69,6 +69,7 @@ class View:
         self.modelIsToBeChanged.emit(
                 self, self.m_model)
         self.m_model=model
+        self.kind=model.kind
         self.modelChanged.emit(
                 self, model)
 
@@ -92,11 +93,20 @@ class View:
     def cleanUp(self):
         pass
 
+    def toggle(self):
+
+        if self.activated: 
+            self.activated=False
+            self.octivateWanted.emit(self)
+        else:
+            self.activated=True
+            self.activateWanted.emit(self)
+
     def __bool__(self):
         return True
 
     @classmethod
     def isCompatible(cls, model):
 
-        w=getattr(model, 'wantView', [])
-        return cls.name or cls.__name__ in w
+        n=cls.name or cls.__name__
+        return n in getattr(model, 'wantView', [])

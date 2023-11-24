@@ -6,8 +6,11 @@ from gizmo.vimo.element import Element
 class Model:
 
     kind=None
+    name=None
     wantView=[]
+    isType=False
     pattern=None
+    wantUniqView=False
     element_class=Element
     loaded=QtCore.pyqtSignal()
     elementCreated=QtCore.pyqtSignal(object)
@@ -18,11 +21,13 @@ class Model:
             source=None,
             elements={},
             render=None,
+            name=None,
             **kwargs,
             ):
 
         self.m_id=index
         self.m_data=None
+        self.m_name=None
         self.m_loaded=False
         self.m_source=source
         self.m_render=render
@@ -32,7 +37,14 @@ class Model:
         self.setup()
 
     def setup(self):
+
         self.setKind()
+        self.setName()
+
+    def setName(self):
+
+        c=self.__class__.__name__
+        self.name=self.name or c
 
     def setKind(self):
 
@@ -76,3 +88,7 @@ class Model:
             p=cls.pattern
             return re.match(
                     p, source, re.I)
+
+    @classmethod
+    def getSourceName(cls, source):
+        return source

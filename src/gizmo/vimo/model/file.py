@@ -7,7 +7,6 @@ class FileSystemModel(
         Model, 
         QFileSystemModel):
 
-    kind='files'
     root_path='/'
 
     def id(self):
