@@ -66,12 +66,13 @@ class View:
 
     def setModel(self, model):
 
-        self.modelIsToBeChanged.emit(
-                self, self.m_model)
-        self.m_model=model
-        self.kind=model.kind
-        self.modelChanged.emit(
-                self, model)
+        if self.m_model!=model:
+            self.modelIsToBeChanged.emit(
+                    self, self.m_model)
+            self.m_model=model
+            self.kind=model.kind
+            self.modelChanged.emit(
+                    self, model)
 
     def setupScrollBars(self):
 

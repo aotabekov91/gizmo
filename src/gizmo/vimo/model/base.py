@@ -44,6 +44,7 @@ class Model:
     def setName(self):
 
         c=self.__class__.__name__
+        c=self.m_name or c
         self.name=self.name or c
 
     def setKind(self):
@@ -70,7 +71,7 @@ class Model:
         return self.m_elements
 
     def __eq__(self, o): 
-        return o and self.m_data==o.m_data
+        return o and id(self)==id(o)
 
     def __hash__(self): 
         return hash(self.m_data)
@@ -82,7 +83,7 @@ class Model:
         pass
 
     @classmethod
-    def isCompatible(cls, source):
+    def isCompatible(cls, source, **kwargs):
 
         if source and cls.pattern:
             p=cls.pattern
@@ -90,5 +91,5 @@ class Model:
                     p, source, re.I)
 
     @classmethod
-    def getSourceName(cls, source):
+    def getSourceName(cls, source, **kwargs):
         return source

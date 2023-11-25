@@ -9,12 +9,6 @@ class WTableModel(STableModel):
     widget_class=TableWidget
     list_item_class=ListWidgetItem
 
-    def setup(self):
-
-        super().setup()
-        self.m_wmap=self.kwargs.get(
-                'widget_map', {})
-
     def removeElement(self, e):
 
         super().removeElement(e)
@@ -40,7 +34,7 @@ class WTableModel(STableModel):
         w=self.widget_class(
                 item=l,
                 element=e, 
-                wmap=self.m_wmap,
+                wmap=self.widget_map,
                 )
         e.setWidget(w)
         l.setElement(e)

@@ -4,6 +4,7 @@ from gizmo.vimo.element import TableElement
 
 class TableModel(Model):
 
+    table_name=None
     element_class=TableElement
     elementAdded=QtCore.pyqtSignal(object)
     elementRemoved=QtCore.pyqtSignal(object)
@@ -14,10 +15,6 @@ class TableModel(Model):
         self.m_rows={}
         super().setup()
         self.m_listwidget=None
-        self.m_uid=self.kwargs.get(
-                'uid', 'id')
-        self.m_table=self.kwargs.get(
-                'table', None)
 
     def listWidget(self):
         return self.m_listwidget
@@ -26,13 +23,17 @@ class TableModel(Model):
         self.m_listwidget=listwidget
 
     def getTableRows(self):
-        return self.m_table.getRow(self.m_id)
+
+        if self.m_id:
+            return self.table.getRow(
+                    self.m_id)
+        return []
 
     def load(self):
 
         for row in self.getTableRows():
             self.createElement(
-                    row[self.m_uid], row)
+                    row[self.uid], row)
         self.loaded.emit()
 
     def createElement(self, idx, data):
@@ -53,26 +54,26 @@ class TableModel(Model):
                 return e
 
     def getTableRow(self, data):
-        return self.m_table.getRow(data)
+        return self.table.getRow(data)
 
     def addTableRow(self, data):
 
-        idx=self.m_table.writeRow(data)
-        rs=self.getTableRow({self.m_uid:idx})
+        idx=self.table.writeRow(data)
+        rs=self.getTableRow({self.uid:idx})
         return rs[0]
 
     def updateTableRow(self, e):
 
         idx=e.index()
-        d={self.m_uid: idx}
-        self.m_table.updateRow(d, e.data())
+        d={self.uid: idx}
+        self.table.updateRow(d, e.data())
         return e
 
     def removeTableRow(self, e):
 
         idx=e.index()
-        d={self.m_uid: idx}
-        self.m_table.removeRow(d)
+        d={self.uid: idx}
+        self.table.removeRow(d)
         return e
 
     def updateElement(self, e, data):
@@ -92,7 +93,7 @@ class TableModel(Model):
     def addElement(self, data):
 
         data=self.addTableRow(data)
-        idx=data[self.m_uid]
+        idx=data[self.uid]
         e=self.createElement(idx, data)
         self.elementAdded.emit(e)
         return e

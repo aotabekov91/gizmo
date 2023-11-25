@@ -7,12 +7,11 @@ class ViewMove(Move):
     def _move(self, arg):
 
         m=getattr(QtWidgets.QAbstractItemView, arg, None)
-        if m:
+        if not m is None:
             i=self.moveCursor(m, QtCore.Qt.NoModifier)
             self.setCurrentIndex(i)
 
     def move(self, kind, digit=1):
-
 
         func=None
         if kind=='up':

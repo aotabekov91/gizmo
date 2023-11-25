@@ -10,22 +10,24 @@ class ListWidgetView(
         ListWidget,
         ):
 
-    def setModel(self, m):
+    def setModel(self, model=None, **kwargs):
 
+        if self.m_model==model: return
+        super().setModel(model)
+        if not model: return
         self.setListWidget()
-        super().setModel(m)
-        if m:
-            for i in range(m.rowCount()):
-                m=self.m_model
-                r=m.index(i, 0)
-                e=m.itemFromIndex(r).element()
-                self.addElement(e)
-                self.setListWidget(self)
+        for i in range(model.rowCount()):
+            model=self.m_model
+            r=model.index(i, 0)
+            e=model.itemFromIndex(r).element()
+            self.addElement(e)
+            self.setListWidget(self)
 
     def setListWidget(self, widget=None):
 
-        m=self.m_model
-        if m: m.setListWidget(widget)
+        if self.m_model: 
+            self.m_model.setListWidget(
+                    widget)
 
     def addElement(self, e):
 
