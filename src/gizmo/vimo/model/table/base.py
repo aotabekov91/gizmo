@@ -4,7 +4,7 @@ from gizmo.vimo.element import TableElement
 
 class TableModel(Model):
 
-    table_name=None
+    table=None
     element_class=TableElement
     elementAdded=QtCore.pyqtSignal(object)
     elementRemoved=QtCore.pyqtSignal(object)
@@ -24,7 +24,7 @@ class TableModel(Model):
 
     def getTableRows(self):
 
-        if self.m_id:
+        if self.m_id and self.table:
             return self.table.getRow(
                     self.m_id)
         return []
@@ -54,34 +54,45 @@ class TableModel(Model):
                 return e
 
     def getTableRow(self, data):
-        return self.table.getRow(data)
+
+        if self.table:
+            return self.table.getRow(data)
+        return []
 
     def addTableRow(self, data):
 
-        idx=self.table.writeRow(data)
-        rs=self.getTableRow({self.uid:idx})
-        return rs[0]
+        if self.table:
+            idx=self.table.writeRow(data)
+            rs=self.getTableRow({self.uid:idx})
+            return rs[0]
+        return None
 
     def updateTableRow(self, e):
 
-        idx=e.index()
-        d={self.uid: idx}
-        self.table.updateRow(d, e.data())
-        return e
+        if self.table:
+            idx=e.index()
+            d={self.uid: idx}
+            self.table.updateRow(d, e.data())
+            return e
+        return None
 
     def removeTableRow(self, e):
 
-        idx=e.index()
-        d={self.uid: idx}
-        self.table.removeRow(d)
-        return e
+        if self.table:
+            idx=e.index()
+            d={self.uid: idx}
+            self.table.removeRow(d)
+            return e
+        return None
 
     def updateElement(self, e, data):
 
-        e.m_data.update(data)
-        self.updateTableRow(e)
-        self.elementUpdated(e)
-        return e
+        if self.table:
+            e.m_data.update(data)
+            self.updateTableRow(e)
+            self.elementUpdated.emit(e)
+            return e
+        return None
 
     def removeElement(self, e):
 
@@ -94,6 +105,11 @@ class TableModel(Model):
 
         data=self.addTableRow(data)
         idx=data[self.uid]
-        e=self.createElement(idx, data)
-        self.elementAdded.emit(e)
+        e=self.element(idx)
+        if e:
+            e.setData(data)
+            self.elementUpdated.emit(e)
+        else:
+            e=self.createElement(idx, data)
+            self.elementAdded.emit(e)
         return e

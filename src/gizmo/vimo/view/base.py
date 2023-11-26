@@ -39,9 +39,9 @@ class View:
 
     def setup(self):
 
+        self.setConf()
         self.setName()
-        self.setSettings()
-        self.setupScrollBars()
+        self.setBars()
 
     def setName(self):
 
@@ -49,7 +49,7 @@ class View:
         c=self.m_name or c
         self.name=self.name or c
 
-    def setSettings(self):
+    def setConf(self):
 
         c=self.m_config
         for k, v in c.items():
@@ -74,7 +74,7 @@ class View:
             self.modelChanged.emit(
                     self, model)
 
-    def setupScrollBars(self):
+    def setBars(self):
 
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
@@ -97,11 +97,19 @@ class View:
     def toggle(self):
 
         if self.activated: 
-            self.activated=False
-            self.octivateWanted.emit(self)
+            self.octivate()
         else:
-            self.activated=True
-            self.activateWanted.emit(self)
+            self.activate()
+
+    def octivate(self):
+
+        self.activated=False
+        self.octivateWanted.emit(self)
+
+    def activate(self):
+
+        self.activated=True
+        self.activateWanted.emit(self)
 
     def __bool__(self):
         return True

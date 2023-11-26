@@ -17,11 +17,12 @@ class Model:
 
     def __init__(
             self, 
+            config={},
+            name=None,
             index=None,
             source=None,
             elements={},
             render=None,
-            name=None,
             **kwargs,
             ):
 
@@ -30,6 +31,7 @@ class Model:
         self.m_name=None
         self.m_loaded=False
         self.m_source=source
+        self.m_config=config
         self.m_render=render
         self.m_elements=elements
         self.kwargs=kwargs
@@ -38,8 +40,15 @@ class Model:
 
     def setup(self):
 
+        self.setConf()
         self.setKind()
         self.setName()
+
+    def setConf(self):
+
+        c=self.m_config
+        for k, v in c.items():
+            setattr(self, k, v)
 
     def setName(self):
 
@@ -66,6 +75,9 @@ class Model:
 
     def setId(self, idx): 
         self.m_id=idx
+
+    def element(self, idx):
+        return self.m_elements.get(idx, None)
 
     def elements(self):
         return self.m_elements
