@@ -2,6 +2,10 @@ from .base import Element
 
 class TableElement(Element):
 
+    m_item=None
+    m_litem=None
+    m_widget=None
+
     def setWidget(self, widget):
         self.m_widget=widget
 

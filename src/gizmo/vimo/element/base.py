@@ -1,8 +1,10 @@
 from PyQt5 import QtGui, QtCore
 
-class Element:
+class Element(QtCore.QObject):
 
-    changed=QtCore.pyqtSignal()
+    dataSet=QtCore.pyqtSignal()
+    dataUpdated=QtCore.pyqtSignal()
+    dataChanged=QtCore.pyqtSignal()
 
     def __init__(
             self, 
@@ -14,17 +16,27 @@ class Element:
         self.m_id = index
         self.m_model = model
         self.m_norm= QtGui.QTransform()
-        self.setData(data)
         super().__init__()
+        self.setData(data)
         self.setup()
         self.load()
         self.updateTrans()
 
-    def data(self): 
+    def data(self, field=None): 
+
+        if field:
+            return self.m_data.get(field, None)
         return self.m_data
 
     def setData(self, data):
+        
         self.m_data=data
+        self.dataSet.emit()
+
+    def updateData(self, data):
+
+        self.m_data.update(data)
+        self.dataUpdated.emit()
 
     def updateTrans(self):
 

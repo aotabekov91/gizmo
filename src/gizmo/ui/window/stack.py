@@ -59,9 +59,7 @@ class StackWindow(QtWidgets.QMainWindow):
         self.main=MainWindow(self)
         self.overlay=Overlay(self)
         self.stack.addWidget(
-                self.main, 
-                'main', 
-                main=True)
+                self.main, 'main', True)
         self.bar.hide()
 
     def on_stackResized(self, event):

@@ -18,9 +18,10 @@ class WTableModel(STableModel):
     def addElement(self, data):
 
         e=super().addElement(data)
-        w=self.listWidget()
-        if w: w.addElement(e)
-        self.createListItem(e)
+        if not e.listItem():
+            self.createListItem(e)
+            w=self.listWidget()
+            if w: w.addElement(e)
 
     def createElement(self, idx, data):
 

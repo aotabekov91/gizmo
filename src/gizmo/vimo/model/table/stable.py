@@ -24,9 +24,11 @@ class STableModel(
 
     def createItem(self, e):
 
-        i=self.item_class()
-        e.setItem(i)
-        self.appendRow(i)
+        i=e.item()
+        if not i:
+            i=self.item_class()
+            e.setItem(i)
+            self.appendRow(i)
         return i
 
     def removeElement(self, e):

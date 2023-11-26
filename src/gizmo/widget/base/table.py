@@ -1,4 +1,5 @@
-from PyQt5 import QtWidgets
+from functools import partial
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QLabel as Label
 from PyQt5.QtWidgets import QTextEdit as TextEdit
 
@@ -8,6 +9,9 @@ class TableWidget(QtWidgets.QWidget):
         'Label': Label,
         'TextEdit':TextEdit
         }
+
+    widgetDataChanged=QtCore.pyqtSignal(
+            object, object)
 
     def __init__(
             self, 
@@ -21,28 +25,42 @@ class TableWidget(QtWidgets.QWidget):
         self.m_widgets={}
         self.m_element=element
         super().__init__(**kwargs)
-        self.m_layout=QtWidgets.QGridLayout(self)
-        self.setLayout(self.m_layout)
         self.setup()
 
     def setup(self):
+        
+        self.m_layout=QtWidgets.QGridLayout(self)
+        self.setLayout(self.m_layout)
+        self.m_element.dataUpdated.connect(
+                self.updateData)
+        self.setData()
+
+    def setData(self):
+
+        for n, d in self.m_map.items():
+            w, p = d['w'], d['p']
+            p=[int(f) for f in p.split('x')]
+            w=self.wmap[w](parent=self)
+            self.m_layout.addWidget(w, *p)
+            s=getattr(w, 'widgetTextChanged', None)
+            if s: s.connect(self.widgetDataChanged)
+            self.m_widgets[n]=(w, s)
+        self.updateData()
+
+    def updateData(self):
 
         data=self.m_element.data()
-        for n, d in self.m_map.items():
-            k=d['w']
-            p=[int(f) for f in d['p'].split('x')]
-            w=self.wmap[k](parent=self)
-            self.m_layout.addWidget(w, *p)
-            self.m_widgets[n]=w
-            t=str(data[n])
-            self.set(n, t)
+        for n in self.m_widgets.keys():
+            self.set(n, str(data[n]))
 
     def set(self, n, t):
 
-        w=self.m_widgets[n]
+        w, s = self.m_widgets[n]
+        if s: s.disconnect(self.widgetDataChanged)
         w.setText(str(t))
         w.adjustSize()
         self.adjustSize()
+        if s: s.connect(self.widgetDataChanged)
 
     def adjustSize(self):
 

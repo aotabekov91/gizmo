@@ -33,7 +33,7 @@ class Model:
         self.m_source=source
         self.m_config=config
         self.m_render=render
-        self.m_elements=elements
+        self.m_elements=elements.copy()
         self.kwargs=kwargs
         super().__init__()
         self.setup()

@@ -25,15 +25,13 @@ class TableModel(Model):
     def getTableRows(self):
 
         if self.m_id and self.table:
-            return self.table.getRow(
-                    self.m_id)
+            return self.table.getRow(self.m_id)
         return []
 
     def load(self):
 
-        for row in self.getTableRows():
-            self.createElement(
-                    row[self.uid], row)
+        for r in self.getTableRows():
+            self.createElement(r[self.uid], r)
         self.loaded.emit()
 
     def createElement(self, idx, data):
@@ -58,14 +56,6 @@ class TableModel(Model):
         if self.table:
             return self.table.getRow(data)
         return []
-
-    def addTableRow(self, data):
-
-        if self.table:
-            idx=self.table.writeRow(data)
-            rs=self.getTableRow({self.uid:idx})
-            return rs[0]
-        return None
 
     def updateTableRow(self, e):
 
@@ -101,15 +91,22 @@ class TableModel(Model):
         self.elementRemoved.emit(e)
         return e
 
+    def addTableRow(self, data):
+
+        if self.table:
+            idx=self.table.writeRow(data)
+            rs=self.getTableRow({self.uid:idx})
+            return rs[0]
+
     def addElement(self, data):
 
-        data=self.addTableRow(data)
-        idx=data[self.uid]
+        r=self.addTableRow(data)
+        idx=r[self.uid]
         e=self.element(idx)
         if e:
-            e.setData(data)
+            e.updateData(r)
             self.elementUpdated.emit(e)
         else:
-            e=self.createElement(idx, data)
+            e=self.createElement(idx, r)
             self.elementAdded.emit(e)
         return e
