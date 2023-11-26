@@ -1,3 +1,4 @@
+from PyQt5 import QtCore
 from .base import Element
 
 class TableElement(Element):
@@ -6,8 +7,13 @@ class TableElement(Element):
     m_litem=None
     m_widget=None
 
-    def setWidget(self, widget):
-        self.m_widget=widget
+    def setWidget(self, w):
+
+        self.m_widget=w
+        s=getattr(w, 'widgetDataChanged', None)
+        if s and self.m_model: 
+            m=self.m_model
+            s.connect(m.widgetDataChanged)
 
     def widget(self):
         return self.m_widget

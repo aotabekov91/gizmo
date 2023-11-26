@@ -8,6 +8,13 @@ class WTableModel(STableModel):
 
     widget_class=TableWidget
     list_item_class=ListWidgetItem
+    widgetDataChanged=QtCore.pyqtSignal(object)
+
+    def setup(self):
+
+        super().setup()
+        self.widgetDataChanged.connect(
+                self.updateTableRow)
 
     def removeElement(self, e):
 
@@ -34,8 +41,7 @@ class WTableModel(STableModel):
         w=self.widget_class(
                 item=l,
                 element=e, 
-                wmap=self.widget_map,
-                )
+                wmap=self.widget_map)
         e.setWidget(w)
         l.setElement(e)
         e.setListItem(l)

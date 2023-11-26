@@ -1,17 +1,19 @@
 from functools import partial
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QLabel as Label
-from PyQt5.QtWidgets import QTextEdit as TextEdit
+
+from .label import Label
+from .line_edit import LineEdit
+from .text_edit import TextEdit
 
 class TableWidget(QtWidgets.QWidget):
 
     wmap={
         'Label': Label,
-        'TextEdit':TextEdit
+        'TextEdit':TextEdit,
+        'LineEdit': LineEdit,
         }
 
-    widgetDataChanged=QtCore.pyqtSignal(
-            object, object)
+    widgetDataChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -40,27 +42,34 @@ class TableWidget(QtWidgets.QWidget):
         for n, d in self.m_map.items():
             w, p = d['w'], d['p']
             p=[int(f) for f in p.split('x')]
-            w=self.wmap[w](parent=self)
+            w=self.wmap[w](parent=self, index=n)
             self.m_layout.addWidget(w, *p)
-            s=getattr(w, 'widgetTextChanged', None)
-            if s: s.connect(self.widgetDataChanged)
-            self.m_widgets[n]=(w, s)
+            s=getattr(w, 'widgetDataChanged', None)
+            if s: s.connect(self.on_widgetDataChanged)
+            self.m_widgets[n]=w
         self.updateData()
+
+    def on_widgetDataChanged(self, cdict):
+
+        d=self.m_element.data()
+        d.update(cdict)
+        self.widgetDataChanged.emit(
+                self.m_element)
 
     def updateData(self):
 
-        data=self.m_element.data()
+        d=self.m_element.data()
         for n in self.m_widgets.keys():
-            self.set(n, str(data[n]))
+            self.set(n, str(d[n]))
 
     def set(self, n, t):
 
-        w, s = self.m_widgets[n]
-        if s: s.disconnect(self.widgetDataChanged)
+        w = self.m_widgets[n]
+        w.m_reporting=False
         w.setText(str(t))
         w.adjustSize()
         self.adjustSize()
-        if s: s.connect(self.widgetDataChanged)
+        w.m_reporting=True
 
     def adjustSize(self):
 
