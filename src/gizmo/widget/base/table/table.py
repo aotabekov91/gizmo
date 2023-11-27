@@ -22,7 +22,7 @@ class TableWidget(QtWidgets.QWidget):
             wmap={},
             **kwargs):
 
-        self.m_map=wmap
+        self.m_wmap=wmap
         self.m_item=item
         self.m_widgets={}
         self.m_element=element
@@ -39,22 +39,19 @@ class TableWidget(QtWidgets.QWidget):
 
     def setData(self):
 
-        for n, d in self.m_map.items():
-            w, p = d['w'], d['p']
+        items = self.m_wmap.items()
+        for i, (n, d) in enumerate(items):
+            w=d.get('w', 'Label')
+            p=d.get('p', f'{i}x0x1x1')
             p=[int(f) for f in p.split('x')]
-            w=self.wmap[w](parent=self, index=n)
+            w=self.wmap[w](
+                    index=n,
+                    parent=self, 
+                    element=self.m_element,
+                    )
             self.m_layout.addWidget(w, *p)
-            s=getattr(w, 'widgetDataChanged', None)
-            if s: s.connect(self.on_widgetDataChanged)
             self.m_widgets[n]=w
         self.updateData()
-
-    def on_widgetDataChanged(self, cdict):
-
-        d=self.m_element.data()
-        d.update(cdict)
-        self.widgetDataChanged.emit(
-                self.m_element)
 
     def updateData(self):
 

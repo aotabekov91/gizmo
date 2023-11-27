@@ -6,6 +6,7 @@ from .stable import STableModel
 
 class WTableModel(STableModel):
 
+    widget_map={}
     widget_class=TableWidget
     list_item_class=ListWidgetItem
     widgetDataChanged=QtCore.pyqtSignal(object)
@@ -41,8 +42,27 @@ class WTableModel(STableModel):
         w=self.widget_class(
                 item=l,
                 element=e, 
-                wmap=self.widget_map)
+                wmap=self.widget_map,
+                )
         e.setWidget(w)
         l.setElement(e)
         e.setListItem(l)
         return e
+
+    @classmethod
+    def isCompatible(cls, s, **kwargs):
+
+        c=s and s==cls.pattern
+        if not c: return
+        c=kwargs.get('config', {})
+        return c.get('widget_map', False)
+
+    @classmethod
+    def getSourceName(
+            cls, 
+            source, 
+            name=None,
+            index=None, 
+            **kwargs):
+
+        return (index, name, source)

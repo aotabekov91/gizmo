@@ -5,6 +5,7 @@ from gizmo.vimo.element import TableElement
 class TableModel(Model):
 
     table=None
+    wantUniqView=True
     element_class=TableElement
     elementAdded=QtCore.pyqtSignal(object)
     elementRemoved=QtCore.pyqtSignal(object)
@@ -32,7 +33,7 @@ class TableModel(Model):
 
         for r in self.getTableRows():
             self.createElement(r[self.uid], r)
-        self.loaded.emit()
+        self.loaded.emit(self)
 
     def createElement(self, idx, data):
 
@@ -57,21 +58,21 @@ class TableModel(Model):
             return self.table.getRow(data)
         return []
 
-    def updateTableRow(self, e):
-
-        if self.table:
-            idx=e.index()
-            d={self.uid: idx}
-            self.table.updateRow(d, e.data())
-            return e
-        return None
-
     def removeTableRow(self, e):
 
         if self.table:
             idx=e.index()
             d={self.uid: idx}
             self.table.removeRow(d)
+            return e
+        return None
+
+    def updateTableRow(self, e):
+
+        if self.table:
+            idx=e.index()
+            d={self.uid: idx}
+            self.table.updateRow(d, e.data())
             return e
         return None
 

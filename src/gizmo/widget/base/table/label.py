@@ -6,8 +6,10 @@ class Label(QtWidgets.QLabel):
             self,
             *args,
             index=None, 
+            element=None,
             **kwargs):
 
         self.m_index=index
+        self.m_element=element
         super().__init__(
                 *args, **kwargs)

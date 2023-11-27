@@ -2,18 +2,20 @@ from PyQt5 import QtWidgets, QtCore
 
 class TextEdit(QtWidgets.QTextEdit):
 
-    widgetDataChanged=QtCore.pyqtSignal(object)
-
     def __init__(
             self,
             *args,
             index=None,
+            parent=None,
+            element=None,
             wait_time=1000,
             **kwargs):
 
         self.m_index=index
+        self.m_parent=parent
         self.m_wait=wait_time
         self.m_reporting=False
+        self.m_element=element
         super().__init__(
                 *args, **kwargs)
         self.textChanged.connect(
@@ -37,5 +39,9 @@ class TextEdit(QtWidgets.QTextEdit):
 
         self.timer.stop()
         t=self.toPlainText()
-        d={self.m_index: t}
-        self.widgetDataChanged.emit(d)
+        d=self.m_element.data()
+        d.update({self.m_index: t})
+        p=self.m_parent
+        if p:
+           p.widgetDataChanged.emit(
+                   self.m_element)

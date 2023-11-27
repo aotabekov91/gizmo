@@ -6,7 +6,9 @@ class LineEdit(QtWidgets.QLineEdit):
             self, 
             *args, 
             index=None,
+            element=None,
             **kwargs):
 
         self.m_index=index
+        self.m_element=element
         super().__init__(*args, **kwargs)

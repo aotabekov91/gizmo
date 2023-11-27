@@ -115,7 +115,7 @@ class View:
         return True
 
     @classmethod
-    def isCompatible(cls, model):
+    def isCompatible(cls, m, **kwargs):
 
         n=cls.name or cls.__name__
-        return n in getattr(model, 'wantView', [])
+        return n in getattr(m, 'wantView', [])

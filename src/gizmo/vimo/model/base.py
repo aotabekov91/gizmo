@@ -12,7 +12,7 @@ class Model:
     pattern=None
     wantUniqView=False
     element_class=Element
-    loaded=QtCore.pyqtSignal()
+    loaded=QtCore.pyqtSignal(object)
     elementCreated=QtCore.pyqtSignal(object)
 
     def __init__(
@@ -92,16 +92,15 @@ class Model:
         return self.m_source
 
     def load(self):
-        pass
+        self.loaded.emit(self)
 
     @classmethod
-    def isCompatible(cls, source, **kwargs):
+    def isCompatible(cls, s, **kwargs):
 
-        if source and cls.pattern:
+        if s and cls.pattern:
             p=cls.pattern
-            return re.match(
-                    p, source, re.I)
+            return re.match(p, s, re.I)
 
     @classmethod
-    def getSourceName(cls, source, **kwargs):
-        return source
+    def getSourceName(cls, s, **kwargs):
+        return s
