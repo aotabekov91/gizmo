@@ -5,7 +5,10 @@ from gizmo.widget.layout import TileLayout
 
 class TiledDisplay(BaseDisplay):
 
+    canGo=True
+    canMove=True
     canSplit=True
+    canFullscreen=True
 
     def setupUI(self):
 
@@ -74,26 +77,43 @@ class TiledDisplay(BaseDisplay):
             self.m_layout.removeWidget(
                     c.widget)
 
-    def toggleFullscreen(self):
+    def toggleFullscreen(
+            self, view=None, **kwargs):
         raise
 
-    def goto(self, kind=None, digit=None):
+    def goto(
+            self, 
+            view=None, 
+            kind=None, 
+            digit=None
+            ):
 
         n = self.m_layout.goto(kind, digit)
         if n: self.setCurrentView(n.widget)
         return n
 
-    def move(self, kind):
+    def move(
+            self, 
+            view=None, 
+            kind=None
+            ):
 
-        return self.m_layout.move(
-                kind)
+        return self.m_layout.move(kind)
 
-    def flip(self, kind):
+    def flip(
+            self, 
+            view=None, 
+            kind=None
+            ):
 
-        return self.m_layout.flip(
-                kind)
+        return self.m_layout.flip(kind)
 
-    def resize(self, direction, kind):
+    def resize(
+            self, 
+            view=None,
+            direction=None, 
+            kind=None
+            ):
 
         return self.m_layout.resize(
                 direction, kind)
@@ -101,7 +121,8 @@ class TiledDisplay(BaseDisplay):
     def split(
             self, 
             view=None, 
-            kind='vertical'):
+            kind='vertical'
+            ):
 
         v=view or self.m_curr
         cond=v.check('canCopy')

@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 
 class BaseDisplay(QtWidgets.QWidget):
 
+    canScale=True
     viewSet=QtCore.pyqtSignal(object)
     viewChanged=QtCore.pyqtSignal(object)
 
@@ -80,12 +81,14 @@ class BaseDisplay(QtWidgets.QWidget):
 
     def connectView(self, v):
 
+        v.isDisplayView=True
         if hasattr(v, 'focusGained'):
             v.focusGained.connect(
                     self.setCurrentView)
 
     def disconnectView(self, v):
 
+        delattr(v, 'isDisplayView')
         if hasattr(v, 'focusGained'):
             v.focusGained.disconnect(
                     self.setCurrentview)
@@ -163,3 +166,9 @@ class BaseDisplay(QtWidgets.QWidget):
 
     def addView(self, view):
         self.m_layout.addWidget(view)
+
+    def scale(self, view=None, **kwargs):
+
+        v = view or self.m_curr 
+        if v and hasattr(v, 'canScale'):
+            v.scale(**kwargs)

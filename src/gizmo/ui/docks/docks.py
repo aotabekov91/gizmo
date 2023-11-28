@@ -4,6 +4,10 @@ from .dock import Dock
 
 class Docks(QtCore.QObject):
 
+    canGo=True
+    canMove=True
+    canScale=True
+
     def __init__(self, window):
 
         super(Docks, self).__init__(
@@ -67,36 +71,48 @@ class Docks(QtCore.QObject):
                 m=getattr(d.current, 'mode', None)
                 if m: m.deactivate()
 
-    def move(self, loc, dock=None):
+    def move(
+            self, 
+            kind, 
+            dock=None,
+            **kwargs,
+            ):
 
         d = dock or self.current
-        if d and d.current:
-            n=self.setTab(
-                    d.current, loc)
-            if n: 
-                n.showWidget(n.current)
+        n = getattr(self, kind, None)
+        if n and d and d.isVisible():
+            n=self.setTab(d.current, kind)
+            if n: n.activate(n.current)
 
-    def goto(self, loc):
+    def goto(
+            self, 
+            kind=None, 
+            **kwargs
+            ):
 
-        d=getattr(self, loc, None)
-        if d and d.current:
-            m=getattr(d.current, 'mode', None)
-            if m: m.activate()
+        d = getattr(self, kind, None)
+        if d and d.isVisible():
+            d.current.setFocus()
 
-    def zoomIn(self, digit=1, dock=None): 
+    def scale(
+            self, 
+            kind, 
+            digit=1, 
+            dock=None, 
+            **kwargs):
 
         d=dock or self.current
-        if d: d.zoomIn(digit)
+        if d and d.isVisible(): 
+            d.scale(kind, digit)
 
-    def zoomOut(self, digit=1, dock=None): 
-
-        d=dock or self.current
-        if d: d.zoomOut(digit)
-
-    def toggleFullscreen(self, dock=None):
+    def toggleFullscreen(
+            self, 
+            dock=None, 
+            **kwargs):
 
         d = dock or self.current
-        if d: d.toggleFullscreen()
+        if d and d.isVisible(): 
+            d.toggleFullscreen()
 
     def setCurrent(self, dock):
         self.current=dock

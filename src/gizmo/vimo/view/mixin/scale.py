@@ -10,13 +10,13 @@ class Scale:
 
     def scale(self, kind, *args, **kwargs):
 
-        if kind=='fitToWidth':
+        if kind=='width':
             self.setFitMode('width')
-        elif kind=='fitToHeight':
+        elif kind=='height':
             self.setFitMode('height')
-        elif kind=='zoomIn':
+        elif kind=='in':
             self.setZoom('in', *args, **kwargs)
-        elif kind=='zoomOut':
+        elif kind=='out':
             self.setZoom('out', *args, **kwargs)
 
     def setFitMode(self, mode):

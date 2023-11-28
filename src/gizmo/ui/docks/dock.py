@@ -37,12 +37,14 @@ class Dock(QtWidgets.QDockWidget):
                 self.min_w, self.min_h)
         w.position=self.loc
         w.dock=self
+        w.isDockView=True
         self.current=w
 
     def delTab(self, w):
 
         self.tab.removeWidget(w)
         self.deactivate()
+        delattr(w, 'isDockView')
         w.dock=None
 
     def showWidget(self, w):
@@ -65,15 +67,10 @@ class Dock(QtWidgets.QDockWidget):
             w.setFixedSize(self.fullscreen)
             self.fullscreen=None
 
-    def zoomIn(self, digit=1): 
+    def scale(self, kind, digit=1):
 
-        if self.current: 
-            self.setZoom('in', digit)
-
-    def zoomOut(self, digit=1): 
-
-        if self.current: 
-            self.setZoom('out', digit)
+        if self.current:
+            self.setZoom(kind, digit)
 
     def setZoom(self, kind, digit=1):
 
@@ -81,15 +78,17 @@ class Dock(QtWidgets.QDockWidget):
             zf=(1.-self.zfactor)**digit
         elif kind=='in':
             zf=(1.+self.zfactor)**digit
-        s=self.current.size()
-        w=s.width()
-        h=s.height()
+        else: 
+            return
+        s=self.size()
+        w, h = s.width(), s.height()
+        c=self.current.size()
         if self.loc in ['left', 'right']:
-            w=int(w*zf)
+            w=int(c.width()*zf)
+            self.current.setFixedWidth(w)
         else:
-            h=int(h*zf)
-        s=QtCore.QSize(w, h) 
-        self.current.setFixedSize(s)
+            h=int(c.height()*zf)
+            self.current.setFixedHeight(h)
 
     def activate(self, w):
 
