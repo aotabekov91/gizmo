@@ -64,6 +64,7 @@ class BaseDisplay(QtWidgets.QWidget):
             self, 
             view, 
             how=None, 
+            **kwargs,
             ):
 
         self.setCurrentView(view)
@@ -72,13 +73,22 @@ class BaseDisplay(QtWidgets.QWidget):
             self.m_layout.addWidget(view)
         elif how=='below':
             self.m_layout.addWidget(view)
+        self.connectView(view)
         self.show()
         view.show()
 
-    def copyView(self, v):
+    def connectView(self, v):
 
-        if v and v.check('canCopy'): 
-            return v.copy()
+        if hasattr(v, 'focusGained'):
+            v.focusGained.connect(
+                    self.setCurrentView)
+
+    def disconnectView(self, v):
+
+        if hasattr(v, 'focusGained'):
+            v.focusGained.disconnect(
+                    self.setCurrentview)
+
 
     def focus(self, increment=1):
 

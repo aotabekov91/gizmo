@@ -41,19 +41,19 @@ class MoveScene(Scene):
         if self.check('hasLayout'):
             h=self.m_layout.height(h)
             w=self.m_layout.height(w)
-        if kind=='up':
+        if kind=='screenUp':
             dx=vb.value() - h*digit
             dx=max(0, dx) 
             vb.setValue(int(dx))
-        elif kind=='down':
+        elif kind=='screenDown':
             dx=vb.value() + h*digit
             dx=min(sh, dx) 
             vb.setValue(int(dx))
-        elif kind=='left':
+        elif kind=='screenLeft':
             dy=hb.value() - w*digit
             dy=max(0, dy) 
             hb.setValue(int(dy))
-        elif kind=='right':
+        elif kind=='screenRight':
             dy=hb.value() + w*digit
             dy=min(sw, dy) 
             hb.setValue(int(dy))
@@ -62,10 +62,11 @@ class MoveScene(Scene):
 
     def move(self, kind, digit=1):
 
+        if 'screen' in kind:
+            return self.moveScreen(kind, digit)
         s=self.size()
         h, w=s.height(), s.width()
         sr=self.scene().sceneRect()
-        sh, sw = sr.height(), sr.width()
         vb=self.verticalScrollBar()
         hb=self.horizontalScrollBar()
         if self.check('hasLayout'):

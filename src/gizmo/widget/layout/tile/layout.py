@@ -2,10 +2,7 @@ from .leaf import Leaf
 
 class TileLayout:
 
-    def __init__(
-            self, 
-            parent=None
-            ):
+    def __init__(self, parent=None):
 
         self.delta=10
         self.ratio=1.6
@@ -37,7 +34,8 @@ class TileLayout:
     def addWidget(self, widget, hsplit=False):
 
         leaf = self.current
-        leaf.hsplit=hsplit
+        # leaf.hsplit=hsplit
+        leaf.hsplit=not hsplit #shortfix
         widget.setParent(self.parent)
         self.current = leaf.insert(
                 widget,

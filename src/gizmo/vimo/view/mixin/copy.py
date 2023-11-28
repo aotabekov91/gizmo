@@ -2,10 +2,12 @@ class Copy:
 
     canCopy=True
 
-    def copy(self):
+    def copy(self, *args, **kwargs):
 
-        s=self.m_model.source()
-        for r in self.app.renders:
-            if not r.isCompatible(s):
-                continue
-            return r, r.getView(self.m_model)
+        m=self.m_model
+        c=self.m_config
+        v=self.app.handler.getView(
+                self.m_model, config=self.m_config)
+        self.app.handler.setView(v)
+        self.app.handler.activateView(
+                v, *args, **kwargs)

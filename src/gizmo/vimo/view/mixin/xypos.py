@@ -2,7 +2,9 @@ from PyQt5 import QtCore
 
 class XYPos:
 
+    canJump=True
     canPosition=True
+    positionJumped=QtCore.pyqtSignal()
     positionChanged=QtCore.pyqtSignal()
 
     def getPosition(self, data=None, kind=None):
@@ -34,6 +36,7 @@ class XYPos:
 
         self.redrawView(digit, x, y)
         self.setVisibleItem()
+        self.positionJumped.emit()
         self.positionChanged.emit()
 
     def redraw(self):

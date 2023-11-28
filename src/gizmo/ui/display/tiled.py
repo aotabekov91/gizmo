@@ -5,6 +5,8 @@ from gizmo.widget.layout import TileLayout
 
 class TiledDisplay(BaseDisplay):
 
+    canSplit=True
+
     def setupUI(self):
 
         self.setContentsMargins(
@@ -56,23 +58,18 @@ class TiledDisplay(BaseDisplay):
         else:
             self.m_layout.addWidget(
                     view, **kwargs)
+        self.connectView(view)
         self.show()
         view.show()
-        if focus: 
-            self.focusView(view)
+        self.focusView(view)
 
     def focusView(self, view):
 
-        self.setCurrentView(
-                view)
-        self.m_layout.focusWidget(
-                view)
+        self.setCurrentView(view)
+        self.m_layout.focusWidget(view)
 
     def addWidget(
-            self, 
-            widget, 
-            hsplit=False
-            ):
+            self, widget, hsplit=False):
 
         self.m_layout.addWidget(
                 widget, hsplit)
@@ -112,15 +109,19 @@ class TiledDisplay(BaseDisplay):
         return self.m_layout.resize(
                 direction, kind)
 
-    def split(self, hsplit=False): 
+    def split(
+            self, view=None, kind='vertical'):
 
-        copy=self.copyView(self.m_curr)
-        if copy:
-            r, v = copy
-            r.setView(
-                    view=v,
-                    how=None,
-                    hsplit=hsplit)
+        view=view or self.m_curr
+        if not view.check('canCopy'): 
+            return
+        if kind=='vertical':
+            hsplit=False
+        elif kind=='horizontal':
+            hsplit=True
+        else:
+            return
+        view.copy(how=None, hsplit=hsplit)
 
     def equalize(self):
         self.m_layout.equalize()

@@ -4,8 +4,9 @@ class Scale:
 
     canScale=True
     scaleMode=None
-    scaleFactor = 0.1
-    scaleModeChanged=QtCore.pyqtSignal(object)
+    zoomFactor = 0.1
+    scaleModeChanged=QtCore.pyqtSignal(
+            object, object)
 
     def scale(self, kind, *args, **kwargs):
 
@@ -24,7 +25,8 @@ class Scale:
         if hasattr(self, 'hasItems'):
             self.fitItemsView(mode)
         self.redraw()
-        self.scaleModeChanged.emit(mode)
+        self.scaleModeChanged.emit(
+                self, mode)
 
     def fitItemsView(self, mode):
 
@@ -44,11 +46,11 @@ class Scale:
     def setZoom(self, kind='out', digit=1):
 
         self.scaleMode='scale'
-        zf = self.scaleFactor
+        sf = self.zoomFactor
         if kind=='out':
-            zf=(1.-zf)**digit
+            zf=(1.-sf)**digit
         elif kind=='in':
-            zf=(1.+zf)**digit
+            zf=(1.+sf)**digit
         self.setZoomFactor(zf)
         self.scaleModeChanged.emit(
                 self, self.scaleMode)

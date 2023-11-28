@@ -6,7 +6,6 @@ from .wlist import ListWidget
 from .table import TableWidget
 from .stack import StackedWidget
 from .container import Container
-from .label_hint import HintLabel
 from .browser import BrowserWidget
 from .message import MessageWidget
 from .line_input import InputLineEdit

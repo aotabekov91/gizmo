@@ -10,6 +10,7 @@ class Model:
     wantView=[]
     isType=False
     pattern=None
+    isLoaded=False
     wantUniqView=False
     element_class=Element
     loaded=QtCore.pyqtSignal(object)
@@ -92,7 +93,9 @@ class Model:
         return self.m_source
 
     def load(self):
+
         self.loaded.emit(self)
+        self.isLoaded=True
 
     @classmethod
     def isCompatible(cls, s, **kwargs):

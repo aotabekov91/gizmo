@@ -48,3 +48,10 @@ class StatusBar(QtWidgets.QStatusBar):
         self.setContentsMargins(0,0,0,0)
         self.setSizeGripEnabled(False)
         self.bottom.hide()
+
+    def toggle(self):
+
+        if self.isVisible():
+            self.hide()
+        else:
+            self.show()

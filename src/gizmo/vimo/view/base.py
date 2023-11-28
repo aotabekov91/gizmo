@@ -6,14 +6,18 @@ class View:
     kind=None
     position={}
     activated=False
+    focusLost=QtCore.pyqtSignal(
+            object)
+    focusGained=QtCore.pyqtSignal(
+            object)
     modelChanged=QtCore.pyqtSignal(
-            object, object)
-    modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
     activateWanted=QtCore.pyqtSignal(
             object)
     octivateWanted=QtCore.pyqtSignal(
             object)
+    modelIsToBeChanged=QtCore.pyqtSignal(
+            object, object)
 
     def __init__(
             self, 
@@ -119,3 +123,8 @@ class View:
 
         n=cls.name or cls.__name__
         return n in getattr(m, 'wantView', [])
+
+    def setFocus(self):
+
+        super().setFocus()
+        self.focusGained.emit(self)
