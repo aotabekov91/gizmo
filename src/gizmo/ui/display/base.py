@@ -4,6 +4,7 @@ class BaseDisplay(QtWidgets.QWidget):
 
     viewSet=QtCore.pyqtSignal(object)
     viewChanged=QtCore.pyqtSignal(object)
+
     def __init__(
             self, 
             *args, 

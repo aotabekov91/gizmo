@@ -31,13 +31,16 @@ class TileLayout:
             self.focusLeaf(leaf)
             return leaf
 
-    def addWidget(self, widget, hsplit=False):
+    def addWidget(
+            self, 
+            widget, 
+            hsplit=False, 
+            **kwargs):
 
-        leaf = self.current
-        # leaf.hsplit=hsplit
-        leaf.hsplit=not hsplit #shortfix
+        l = self.current
+        l.hsplit=hsplit
         widget.setParent(self.parent)
-        self.current = leaf.insert(
+        self.current = l.insert(
                 widget,
                 int(self.lower_right), 
                 self.ratio)
@@ -71,12 +74,10 @@ class TileLayout:
 
     def update(self):
 
-        rect=self.parent.rect()
-        self.root.calc_geom(
-                rect.x(),
-                rect.y(),
-                rect.width(), 
-                rect.height())
+        r=self.parent.rect()
+        x, y = r.x(), r.y()
+        w, h = r.width(), r.height()
+        self.root.calc_geom(x, y, w, h)
 
     def toggleSplit(self):
 
@@ -104,7 +105,7 @@ class TileLayout:
             x, y  = self.current.x, self.current.y
             w, h =  self.current.w, self.current.h
             if d=='up':
-                if not p.hsplit and l is p.leaves[1]:
+                if p.hsplit and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = x + w * 0.5
                     while n_.widget is None:
@@ -115,7 +116,7 @@ class TileLayout:
                             n_ = n_.leaves[0]
                     return n_
             elif d=='down':
-                if not p.hsplit and l is p.leaves[0]:
+                if p.hsplit and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = x + w * 0.5
                     while n_.widget is None:
@@ -125,8 +126,8 @@ class TileLayout:
                         else:
                             n_ = n_.leaves[1]
                     return n_
-            elif d=='right':
-                if p.hsplit and l is p.leaves[1]:
+            elif d=='left':
+                if not p.hsplit and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = y + h * 0.5
                     while n_.widget is None:
@@ -136,8 +137,8 @@ class TileLayout:
                         else:
                             n_ = n_.leaves[0]
                     return n_
-            elif d=='left':
-                if p.hsplit and l is p.leaves[0]:
+            elif d=='right':
+                if not p.hsplit and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = y + h * 0.5
                     while n_.widget is None:
@@ -167,27 +168,27 @@ class TileLayout:
         if digit is not None:
             widgets = list(self.root.widgets())
             if 0<digit<len(widgets):
-                widget=widgets[digit]
-                return self.focusWidget(widget)
+                w=widgets[digit]
+                return self.focusWidget(w)
         elif kind in pos:
             leaf = self.findLeaf(kind)
             self.focusLeaf(leaf)
             return leaf
         elif kind == 'next':
-            widget = self.findSibling(
+            w = self.findSibling(
                     self.current.widget, 'next')
-            return self.focusWidget(widget)
+            return self.focusWidget(w)
         elif kind == 'prev':
-            widget = self.findSibling(
+            w = self.findSibling(
                     self.current.widget, 'prev')
-            return self.focusWidget(widget)
+            return self.focusWidget(w)
         elif kind == 'first':
-            widget=next(self.root.widgets(), None)
-            return self.focusWidget(widget)
+            w=next(self.root.widgets(), None)
+            return self.focusWidget(w)
         elif kind == 'last':
             widgets = list(self.root.widgets())
-            widget = widgets[-1] if len(widgets) else None
-            return self.focusWidget(widget)
+            w = widgets[-1] if len(widgets) else None
+            return self.focusWidget(w)
 
     def move(self, d):
 

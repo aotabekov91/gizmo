@@ -50,33 +50,25 @@ class TiledDisplay(BaseDisplay):
             ):
 
         self.setCurrentView(view)
-        if how=='reset':
-            self.clear()
-            self.m_layout.addWidget(view)
-        elif how=='below':
-            self.m_layout.addWidget(view)
-        else:
-            self.m_layout.addWidget(
-                    view, **kwargs)
+        if how=='reset': self.clear()
+        self.addWidget(view, **kwargs)
         self.connectView(view)
         self.show()
         view.show()
-        self.focusView(view)
-
-    def focusView(self, view):
-
-        self.setCurrentView(view)
-        self.m_layout.focusWidget(view)
 
     def addWidget(
-            self, widget, hsplit=False):
+            self, 
+            widget, 
+            **kwargs,
+            ):
 
         self.m_layout.addWidget(
-                widget, hsplit)
+                widget, **kwargs)
 
     def removeWidget(self):
 
         c=self.m_layout.current
+        self.disconnectView(c.widget)
         if c and c.widget: 
             self.focusPrevious()
             self.m_layout.removeWidget(
@@ -87,11 +79,8 @@ class TiledDisplay(BaseDisplay):
 
     def goto(self, kind=None, digit=None):
 
-        n = self.m_layout.goto(
-                kind, digit)
-        if n:
-            w=n.widget
-            self.setCurrentView(w)
+        n = self.m_layout.goto(kind, digit)
+        if n: self.setCurrentView(n.widget)
         return n
 
     def move(self, kind):
@@ -110,18 +99,16 @@ class TiledDisplay(BaseDisplay):
                 direction, kind)
 
     def split(
-            self, view=None, kind='vertical'):
+            self, 
+            view=None, 
+            kind='vertical'):
 
-        view=view or self.m_curr
-        if not view.check('canCopy'): 
-            return
-        if kind=='vertical':
-            hsplit=False
-        elif kind=='horizontal':
-            hsplit=True
-        else:
-            return
-        view.copy(how=None, hsplit=hsplit)
+        v=view or self.m_curr
+        cond=v.check('canCopy')
+        if cond and kind=='vertical':
+            v.copy(how=None, hsplit=False)
+        elif cond and kind=='horizontal':
+            v.copy(how=None, hsplit=True)
 
     def equalize(self):
         self.m_layout.equalize()

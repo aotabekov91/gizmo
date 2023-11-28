@@ -106,7 +106,7 @@ class Leaf(QObject):
         self.h, self.w = h, w
         if len(self.leaves) > 1:
             leaves=self.leaves
-            if self.hsplit:
+            if not self.hsplit:
                 w0 = int(self.ratio * w * 0.01 + 0.5)
                 leaves[0].calc_geom(
                         x, y, w0, h)
