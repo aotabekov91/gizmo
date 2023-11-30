@@ -10,6 +10,7 @@ def tag(key=None, modes=[], **kwargs):
         inner.func=func
         inner.tagged=True
         inner.kwargs=kwargs
+        inner.isTagged=True
         inner.name=func.__name__
         inner.modes=modes
         return inner
