@@ -84,7 +84,7 @@ class Docks(QtCore.QObject):
             n=self.setTab(d.current, kind)
             if n: n.activate(n.current)
 
-    def goto(
+    def goTo(
             self, 
             kind=None, 
             **kwargs

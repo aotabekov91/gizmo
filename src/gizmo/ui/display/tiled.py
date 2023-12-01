@@ -81,7 +81,7 @@ class TiledDisplay(BaseDisplay):
             self, view=None, **kwargs):
         raise
 
-    def goto(
+    def goTo(
             self, 
             view=None, 
             kind=None, 
@@ -127,9 +127,9 @@ class TiledDisplay(BaseDisplay):
         v=view or self.m_curr
         cond=v.check('canCopy')
         if cond and kind=='vertical':
-            v.copy(how=None, hsplit=False)
+            v.copy(how=None, horizontal=False)
         elif cond and kind=='horizontal':
-            v.copy(how=None, hsplit=True)
+            v.copy(how=None, horizontal=True)
 
     def equalize(self):
         self.m_layout.equalize()

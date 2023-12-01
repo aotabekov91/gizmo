@@ -92,6 +92,9 @@ class Model:
     def source(self): 
         return self.m_source
 
+    def resetConfigure(self, **kwargs):
+        pass
+
     def load(self):
 
         self.loaded.emit(self)

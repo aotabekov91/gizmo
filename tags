@@ -403,13 +403,13 @@ getDownSize	src/gizmo/widget/base/list/items/up_down_edit.py	/^    def getDownSi
 getRightSize	src/gizmo/widget/base/list/items/left_right_edit.py	/^    def getRightSize(self):$/;"	m	class:LeftRightEdit
 getSettings	src/gizmo/ui/configure.py	/^    def getSettings(self): return self.settings$/;"	m	class:Configure
 getWidget	src/gizmo/widget/base/list/list.py	/^    def getWidget(self, row=None): $/;"	m	class:ListWidget
-goto	src/gizmo/ui/view/base.py	/^    def goto(self, digit): pass$/;"	m	class:View
-gotoBegin	src/gizmo/ui/view/base.py	/^    def gotoBegin(self): pass$/;"	m	class:View
-gotoEnd	src/gizmo/ui/view/base.py	/^    def gotoEnd(self): pass$/;"	m	class:View
-gotoEnd	src/gizmo/widget/base/tree.py	/^    def gotoEnd(self): $/;"	m	class:TreeWidget
-gotoParent	src/gizmo/widget/base/tree.py	/^    def gotoParent(self):$/;"	m	class:TreeWidget
-gotoSibling	src/gizmo/widget/base/tree.py	/^    def gotoSibling(self, kind='up'):$/;"	m	class:TreeWidget
-gotoStart	src/gizmo/widget/base/tree.py	/^    def gotoStart(self):$/;"	m	class:TreeWidget
+goto	src/gizmo/ui/view/base.py	/^    def goTo(self, digit): pass$/;"	m	class:View
+gotoBegin	src/gizmo/ui/view/base.py	/^    def goToBegin(self): pass$/;"	m	class:View
+gotoEnd	src/gizmo/ui/view/base.py	/^    def goToEnd(self): pass$/;"	m	class:View
+gotoEnd	src/gizmo/widget/base/tree.py	/^    def goToEnd(self): $/;"	m	class:TreeWidget
+gotoParent	src/gizmo/widget/base/tree.py	/^    def goToParent(self):$/;"	m	class:TreeWidget
+gotoSibling	src/gizmo/widget/base/tree.py	/^    def goToSibling(self, kind='up'):$/;"	m	class:TreeWidget
+gotoStart	src/gizmo/widget/base/tree.py	/^    def goToStart(self):$/;"	m	class:TreeWidget
 hide	src/gizmo/widget/base/stack.py	/^    def hide(self):$/;"	m	class:StackWidget
 hide	src/gizmo/widget/compound/input_browser.py	/^    def hide(self): self.hideWanted.emit()$/;"	m	class:InputBrowser
 hide	src/gizmo/widget/todo/components/qmessage.py	/^    def hide(self):$/;"	m	class:MessageMainWindow

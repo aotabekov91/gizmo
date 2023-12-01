@@ -32,7 +32,7 @@ class XYPos:
             cc = any([cc, abs(y-cy) > 0.001])
             return cc
 
-    def goto(self, digit=1, x=0, y=0):
+    def goTo(self, digit=1, x=0, y=0):
 
         self.redrawView(digit, x, y)
         self.setVisibleItem()

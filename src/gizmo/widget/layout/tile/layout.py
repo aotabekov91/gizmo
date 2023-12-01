@@ -34,11 +34,11 @@ class TileLayout:
     def addWidget(
             self, 
             widget, 
-            hsplit=False, 
+            horizontal=False, 
             **kwargs):
 
         l = self.current
-        l.hsplit=hsplit
+        l.horizontal=horizontal
         widget.setParent(self.parent)
         self.current = l.insert(
                 widget,
@@ -82,8 +82,8 @@ class TileLayout:
     def toggleSplit(self):
 
         if self.current.parent:
-            cond = self.current.parent.hsplit
-            self.current.parent.hsplit = not cond
+            cond = self.current.parent.horizontal
+            self.current.parent.horizontal = not cond
             self.update()
 
     def findSibling(self, widget, kind='next'):
@@ -105,45 +105,45 @@ class TileLayout:
             x, y  = self.current.x, self.current.y
             w, h =  self.current.w, self.current.h
             if d=='up':
-                if p.hsplit and l is p.leaves[1]:
+                if p.horizontal and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = x + w * 0.5
                     while n_.widget is None:
                         c = n_.leaves[1].x < center
-                        if not n_.hsplit or c:
+                        if not n_.horizontal or c:
                             n_ = n_.leaves[1]
                         else:
                             n_ = n_.leaves[0]
                     return n_
             elif d=='down':
-                if p.hsplit and l is p.leaves[0]:
+                if p.horizontal and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = x + w * 0.5
                     while n_.widget is None:
                         c = n_.leaves[1].x > center
-                        if not n_.hsplit or c:
+                        if not n_.horizontal or c:
                             n_ = n_.leaves[0]
                         else:
                             n_ = n_.leaves[1]
                     return n_
             elif d=='left':
-                if not p.hsplit and l is p.leaves[1]:
+                if not p.horizontal and l is p.leaves[1]:
                     n_ = p.leaves[0]
                     center = y + h * 0.5
                     while n_.widget is None:
                         c = n_.leaves[1].y < center
-                        if n_.hsplit or c:
+                        if n_.horizontal or c:
                             n_ = n_.leaves[1]
                         else:
                             n_ = n_.leaves[0]
                     return n_
             elif d=='right':
-                if not p.hsplit and l is p.leaves[0]:
+                if not p.horizontal and l is p.leaves[0]:
                     n_ = p.leaves[1]
                     center = y + h * 0.5
                     while n_.widget is None:
                         c = n_.leaves[1].y > center
-                        if n_.hsplit or c:
+                        if n_.horizontal or c:
                             n_ = n_.leaves[0]
                         else:
                             n_ = n_.leaves[1]
@@ -162,7 +162,7 @@ class TileLayout:
             self.root.equalize()
             self.update()
 
-    def goto(self, kind, digit):
+    def goTo(self, kind, digit):
 
         pos=['right', 'left', 'down', 'up']
         if digit is not None:
@@ -203,9 +203,9 @@ class TileLayout:
             self.removeWidget(leaf.widget)
             newroot = Leaf()
 
-            newroot.hsplit = True
+            newroot.horizontal = True
             if d in ['up', 'down']:
-                newroot.hsplit = False
+                newroot.horizontal = False
 
             newroot.leaves = [self.root, leaf]
             if d in ['left', 'up']:
@@ -222,9 +222,9 @@ class TileLayout:
         l = self.current
         p = l.parent
         while p:
-            c = not p.hsplit
+            c = not p.horizontal
             if d in ['left', 'right']:
-                c = p.hsplit
+                c = p.horizontal
             cond = c and l is p.leaves[0]
             if d in ['left', 'up']:
                 cond = c and l is p.leaves[1]
@@ -240,9 +240,9 @@ class TileLayout:
         l = self.current
         p = l.parent
         while p:
-            cond = not p.hsplit
+            cond = not p.horizontal
             if d in ['left', 'right']: 
-                cond = p.hsplit
+                cond = p.horizontal
             if d in ['right', 'down']:
                 cond = cond and l is p.leaves[0]
                 ratio=max(5, p.ratio - self.delta)

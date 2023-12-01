@@ -118,6 +118,9 @@ class View:
     def __bool__(self):
         return True
 
+    def resetConfigure(self, **kwargs):
+        pass
+
     @classmethod
     def isCompatible(cls, m, **kwargs):
 

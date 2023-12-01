@@ -73,10 +73,10 @@ class CursorMixin:
     def open(self, *arg, **kwargs):
         pass
 
-    def gotoEnd(self): 
+    def goToEnd(self): 
         pass
 
-    def gotoBegin(self): 
+    def goToBegin(self): 
         pass
 
     def save(self, *args, **kwargs): 

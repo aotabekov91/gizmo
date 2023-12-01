@@ -7,7 +7,7 @@ class Leaf(QObject):
         self.ratio = 50
         self.leaves = []
         self.widget = None
-        self.hsplit = False
+        self.horizontal = False
         self.parent = parent
         self.x, self.y = 0, 0
         self.h, self.w = 9, 16
@@ -71,7 +71,7 @@ class Leaf(QObject):
         self.leaves = keep.leaves
         for c in self.leaves:
             c.parent = self
-        self.hsplit = keep.hsplit
+        self.horizontal = keep.horizontal
         self.ratio = keep.ratio
         self.widget = keep.widget
         return self
@@ -82,7 +82,7 @@ class Leaf(QObject):
             return 1, 1
         h0, v0 = self.leaves[0].equalize()
         h1, v1 = self.leaves[1].equalize()
-        if self.hsplit:
+        if self.horizontal:
             h = h0 + h1
             v = max(v0, v1)
             self.ratio = 100 * h0 / h
@@ -106,7 +106,7 @@ class Leaf(QObject):
         self.h, self.w = h, w
         if len(self.leaves) > 1:
             leaves=self.leaves
-            if not self.hsplit:
+            if not self.horizontal:
                 w0 = int(self.ratio * w * 0.01 + 0.5)
                 leaves[0].calc_geom(
                         x, y, w0, h)

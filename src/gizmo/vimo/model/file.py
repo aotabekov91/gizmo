@@ -10,7 +10,7 @@ class FileSystemModel(
     root_path='/'
 
     def id(self):
-        return '/'
+        return self.rootPath()
 
     def setup(self):
         
@@ -23,6 +23,4 @@ class FileSystemModel(
         return self.index(path)
 
     def element(self, idx):
-
-        idx=idx or self.currentIndex()
         return self.filePath(idx)

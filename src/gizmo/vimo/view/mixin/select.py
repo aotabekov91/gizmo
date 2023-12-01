@@ -18,6 +18,11 @@ class Select:
 
     def clearSelection(self):
 
-        for i in self.m_item.values():
+        for i in self.m_items.values():
             if self.check('canSelect', i):
                 i.select()
+
+    def cleanUp(self):
+
+        super().cleanUp()
+        self.clearSelection()

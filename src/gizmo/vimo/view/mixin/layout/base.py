@@ -36,7 +36,7 @@ class Layout:
         if pos and items:
             c=self.m_layout.prev(
                     idx, self.count())
-            self.goto(c)
+            self.goTo(c)
         
     def nextItem(self, digit=1): 
 
@@ -46,4 +46,4 @@ class Layout:
         if pos and items:
             c=self.m_layout.next(
                     idx, self.count())
-            self.goto(c)
+            self.goTo(c)

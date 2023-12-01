@@ -77,10 +77,10 @@ class BaseView:
     def open(self, *arg, **kwargs):
         pass
 
-    def gotoEnd(self): 
+    def goToEnd(self): 
         pass
 
-    def gotoBegin(self): 
+    def goToBegin(self): 
         pass
 
     def save(self, *args, **kwargs): 
@@ -222,8 +222,8 @@ class BaseView:
         self.selection.emit(
                 self, self.m_selected)
 
-    def gotoFirst(self): 
-        self.goto(1)
+    def goToFirst(self): 
+        self.goTo(1)
 
     def element(self, idx):
 
@@ -313,7 +313,7 @@ class BaseView:
             c=self.count()
             l=self.m_layout
             cur=l.previousPage(self.m_curr, c)
-            self.goto(cur)
+            self.goTo(cur)
         
     def next(self): 
 
@@ -321,7 +321,7 @@ class BaseView:
             c=self.count()
             l=self.m_layout
             cur=l.nextPage(self.m_curr, c)
-            self.goto(cur)
+            self.goTo(cur)
 
     def setZoom(self, kind='out', digit=1):
 
@@ -334,7 +334,7 @@ class BaseView:
             zf=(1.+zf)**digit
         self.setZoomFactor(zf)
 
-    def goto(self, *args, **kwargs):
+    def goTo(self, *args, **kwargs):
 
         c=self.isDifferentPos(
                 *args, **kwargs)

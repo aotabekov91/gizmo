@@ -5,7 +5,6 @@ from .base import View
 
 class ListView(
         mixin.ViewGo,
-        mixin.ViewMove,
         View, 
         List,
         ):

@@ -5,7 +5,6 @@ from .base import View
 
 class ListWidgetView(
         mixin.WidgetGo,
-        mixin.ViewMove,
         View,
         ListWidget,
         ):

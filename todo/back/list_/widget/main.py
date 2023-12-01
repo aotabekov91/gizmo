@@ -46,7 +46,7 @@ class WidgetList(QtWidgets.QListWidget):
             rnum += digit
             if rnum<0: rnum=c-1
             if rnum>c-1: rnum=0
-            self.goto(rnum+1)
+            self.goTo(rnum+1)
 
     def sizeHint(self):
 
@@ -127,11 +127,11 @@ class WidgetList(QtWidgets.QListWidget):
         # self.adjustSize()
 
     @tag('gg')
-    def gotoFirst(self): 
-        self.goto(1)
+    def goToFirst(self): 
+        self.goTo(1)
 
     @tag('G')
-    def goto(self, digit=0):
+    def goTo(self, digit=0):
 
         digit-=1
         if digit<0:

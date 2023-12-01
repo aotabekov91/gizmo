@@ -112,22 +112,23 @@ class TreeView(QtWidgets.QTreeView):
             func=self.expand
         for i in range(digit): func()
 
-    def gotoFirst(self):
+    def goToFirst(self):
 
         idx=self.rootIndex()
         if idx: 
             child=idx.child(0, 0)
             self.setCurrentIndex(child)
             
-    def gotoLast(self): 
+    def goToLast(self): 
 
         idx=self.rootIndex()
         if idx: 
-            lr=self.model().rowCount(idx)-1
+            m=self.model()
+            lr=m.rowCount(idx)-1
             last=idx.child(lr, 0)
             self.setCurrentIndex(last)
 
-    def gotoFirstSibling(self): 
+    def goToFirstSibling(self): 
 
         idx=self.currentIndex()
         if idx:
@@ -135,7 +136,7 @@ class TreeView(QtWidgets.QTreeView):
             f=p.child(0, 0)
             self.setCurrentIndex(f)
 
-    def gotoLastSibling(self): 
+    def goToLastSibling(self): 
 
         index=self.currentIndex()
         if index:
@@ -144,7 +145,7 @@ class TreeView(QtWidgets.QTreeView):
             last=parent.child(last_row, 0)
             self.setCurrentIndex(last)
 
-    def goto(self, digit=1):
+    def goTo(self, digit=1):
 
         idx=self.getRowIndex(digit)
         self.setCurrentIndex(idx)
@@ -156,22 +157,22 @@ class TreeView(QtWidgets.QTreeView):
             idx = self.indexBelow(idx)
         return idx
 
-    def gotoParent(self):
+    def goToParent(self):
 
         idx=self.currentIndex()
         self.setCurrentIndex(idx.parent())
 
-    def gotoSiblingDown(self, digit=1):
+    def goToSiblingDown(self, digit=1):
 
         for d in range(digit):
-            self.gotoSibling(kind='down')
+            self.goToSibling(kind='down')
 
-    def gotoSiblingUp(self, digit=1):
+    def goToSiblingUp(self, digit=1):
 
         for d in range(digit):
-            self.gotoSibling(kind='up')
+            self.goToSibling(kind='up')
 
-    def gotoSibling(self, kind='up'):
+    def goToSibling(self, kind='up'):
 
         idx=self.currentIndex()
         p=idx.parent()

@@ -1,7 +1,7 @@
-from .go import Go
+from .goto import *
 from .dir import Dir
-from .move import Move
 from .copy import Copy
+from .scene import Scene
 from .scale import Scale
 from .items import Items
 from .xypos import XYPos
@@ -10,11 +10,5 @@ from .layout import Layout
 from .search import Search
 from .locate import Locate
 from .pool import PoolItems
-from .go_tree import TreeGo
-from .go_view import ViewGo
-from .go_widget import WidgetGo
 from .connect import Connect
-from .move_tree import TreeMove
-from .move_view import ViewMove
-from .scene import Scene, MoveScene
 from .highlight import ItemsHighlight
