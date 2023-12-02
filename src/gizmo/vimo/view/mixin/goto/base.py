@@ -6,9 +6,17 @@ class Go:
     positionChanged=QtCore.pyqtSignal()
     indexChanged=QtCore.pyqtSignal(object)
 
-    def go(self, kind='', *args, **kwargs):
+    def go(
+           self, 
+           *args, 
+           kind='', 
+           mode='', 
+           **kwargs
+           ):
 
         k=''
         if kind: k=kind[0].title()+kind[1:]
-        f=getattr(self, f'goTo{k}', None)
+        n=f'goTo{k}'
+        if mode: n=mode+n[0].title()+n[1:]
+        f=getattr(self, n,  None)
         if f: f(*args, **kwargs)

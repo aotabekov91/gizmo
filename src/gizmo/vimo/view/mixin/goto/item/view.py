@@ -4,7 +4,7 @@ from ..base import Go
 
 class ViewGo(Go):
 
-    def goTo(self, digit=1):
+    def goTo(self, digit=None):
 
         if digit is None:
             self.goToLast()

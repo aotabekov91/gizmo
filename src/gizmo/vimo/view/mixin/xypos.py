@@ -34,10 +34,13 @@ class XYPos:
 
     def goTo(self, digit=1, x=0, y=0):
 
-        self.redrawView(digit, x, y)
-        self.setVisibleItem()
-        self.positionJumped.emit()
-        self.positionChanged.emit()
+        if digit is None:
+            self.goToLast()
+        else:
+            self.redrawView(digit, x, y)
+            self.setVisibleItem()
+            self.positionJumped.emit()
+            self.positionChanged.emit()
 
     def redraw(self):
 

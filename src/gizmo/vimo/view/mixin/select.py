@@ -26,3 +26,4 @@ class Select:
 
         super().cleanUp()
         self.clearSelection()
+        self.m_selection=None
