@@ -1,12 +1,12 @@
+from gizmo import widget
 from gizmo.vimo.view import mixin
-from gizmo.widget import ListView as List
 
 from .base import View 
 
 class ListView(
         mixin.ViewGo,
         View, 
-        List,
+        widget.ListView,
         ):
 
     def setModel(self, model):
@@ -14,4 +14,4 @@ class ListView(
         if model:
             self.m_model
             super().setModel(model)
-            super(List, self).setModel(model)
+            super(widget.ListView, self).setModel(model)

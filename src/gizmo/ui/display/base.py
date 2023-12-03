@@ -139,7 +139,7 @@ class BaseDisplay(QtWidgets.QWidget):
     def setupView(
             self, 
             view=None,
-            how='reset', 
+            how=None, 
             **kwargs
             ):
 

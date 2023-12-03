@@ -20,7 +20,7 @@ class ListWidgetView(
             r=model.index(i, 0)
             e=model.itemFromIndex(r).element()
             self.addElement(e)
-            self.setListWidget(self)
+            model.setListWidget(self)
 
     def setListWidget(self, widget=None):
 

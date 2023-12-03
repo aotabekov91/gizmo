@@ -48,7 +48,6 @@ class TiledDisplay(BaseDisplay):
             self, 
             view, 
             how=None, 
-            focus=True, 
             **kwargs
             ):
 
@@ -56,6 +55,7 @@ class TiledDisplay(BaseDisplay):
         if how=='reset': self.clear()
         self.addWidget(view, **kwargs)
         self.connectView(view)
+        self.setCurrentView(view)
         self.show()
         view.show()
 

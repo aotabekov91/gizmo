@@ -12,14 +12,12 @@ class ListView(QtWidgets.QListView):
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
 
-    def currentItem(self):
+    def currentItem(self, idx=None):
 
         m=self.model()
         if m:
+            idx= idx or self.currentIndex()
+            if type(m)==QtCore.QSortFilterProxyModel:
+                idx=m.mapToSource(idx)
             if hasattr(m, 'itemFromIndex'):
-                return m.itemFromIndex(
-                        self.currentIndex())
-            elif type(m)==QtCore.QSortFilterProxyModel:
-                index=m.mapToSource(
-                        self.currentIndex())
-                return m.itemFromIndex(index)
+                return m.itemFromIndex(idx)

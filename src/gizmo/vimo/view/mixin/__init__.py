@@ -1,6 +1,7 @@
 from .goto import *
 from .dir import Dir
 from .copy import Copy
+from .hint import Hint
 from .scene import Scene
 from .scale import Scale
 from .items import Items

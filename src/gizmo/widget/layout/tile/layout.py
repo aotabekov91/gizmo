@@ -34,7 +34,7 @@ class TileLayout:
     def addWidget(
             self, 
             widget, 
-            horizontal=False, 
+            horizontal=True, 
             **kwargs):
 
         l = self.current
@@ -202,15 +202,12 @@ class TileLayout:
             leaf = self.current
             self.removeWidget(leaf.widget)
             newroot = Leaf()
-
-            newroot.horizontal = True
             if d in ['up', 'down']:
+                newroot.horizontal = True
+                newroot.leaves = [self.root, leaf]
+            elif d in ['left', 'right']:
                 newroot.horizontal = False
-
-            newroot.leaves = [self.root, leaf]
-            if d in ['left', 'up']:
                 newroot.leaves = [leaf, self.root]
-
             self.root.parent = newroot
             leaf.parent = newroot
             self.root = newroot
