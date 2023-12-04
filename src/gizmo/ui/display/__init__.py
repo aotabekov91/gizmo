@@ -1,3 +1,4 @@
 from .base import BaseDisplay
-from .tiled import TiledDisplay as Display
+from .tabbed import TabbedTileDisplay
+from .tiled import TileDisplay as Display
 from .splitter import SplitterDisplay# as Display

@@ -3,7 +3,7 @@ from PyQt5 import QtCore
 from gizmo.ui.display import BaseDisplay
 from gizmo.widget.layout import TileLayout
 
-class TiledDisplay(BaseDisplay):
+class TileDisplay(BaseDisplay):
 
     canGo=True
     canMove=True

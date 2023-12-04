@@ -59,6 +59,13 @@ class View:
         for k, v in c.items():
             setattr(self, k, v)
 
+    def setBars(self):
+
+        self.setHorizontalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(
+                QtCore.Qt.ScrollBarAlwaysOff)
+
     def setId(self, vid):
         self.m_id=vid
 
@@ -77,13 +84,6 @@ class View:
             self.kind=model.kind
             self.modelChanged.emit(
                     self, model)
-
-    def setBars(self):
-
-        self.setHorizontalScrollBarPolicy(
-                QtCore.Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(
-                QtCore.Qt.ScrollBarAlwaysOff)
 
     def check(self, what, v=None):
 

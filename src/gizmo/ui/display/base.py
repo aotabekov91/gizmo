@@ -10,6 +10,7 @@ class BaseDisplay(QtWidgets.QWidget):
             self, 
             *args, 
             app=None,
+            parent=None,
             window=None,
             objectName='Display',
             config={},
@@ -19,10 +20,10 @@ class BaseDisplay(QtWidgets.QWidget):
         self.app=app
         self.m_config=config
         super().__init__(
-                parent=window.main,
+                parent=parent,
                 objectName=objectName,
                 )
-        window.resized.connect(self.update)
+        # window.resized.connect(self.update) # todo
         self.setup()
 
     def setup(self):

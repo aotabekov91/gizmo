@@ -1,2 +1,2 @@
 from .window import * 
-from .display import Display
+from .display import Display, TabbedTileDisplay
