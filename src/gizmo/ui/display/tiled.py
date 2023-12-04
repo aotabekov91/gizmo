@@ -88,7 +88,7 @@ class TiledDisplay(BaseDisplay):
             digit=None
             ):
 
-        n = self.m_layout.goto(kind, digit)
+        n = self.m_layout.goTo(kind, digit)
         if n: self.setCurrentView(n.widget)
         return n
 

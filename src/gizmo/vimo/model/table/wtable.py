@@ -32,17 +32,21 @@ class WTableModel(STableModel):
     def createElement(self, idx, data):
 
         e=super().createElement(idx, data)
+        self.createWidget(e)
         return self.createListItem(e)
+
+    def createWidget(self, e):
+
+        w=self.widget_class(
+                element=e, 
+                wmap=self.widget_map)
+        e.setWidget(w)
 
     def createListItem(self, e):
 
         l=self.list_item_class()
-        w=self.widget_class(
-                item=l,
-                element=e, 
-                wmap=self.widget_map,
-                )
-        e.setWidget(w)
+        w=e.widget()
+        w.setListItem(l)
         l.setElement(e)
         e.setListItem(l)
         return e

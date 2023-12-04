@@ -11,16 +11,38 @@ class ListWidgetView(
 
     def setModel(self, model=None, **kwargs):
 
-        if self.m_model==model: return
-        super().setModel(model)
-        if not model: return
+        if id(self.m_model)==id(model): 
+            return
+        self.cleanUp()
         self.setListWidget()
+        super().setModel(model)
         for i in range(model.rowCount()):
-            model=self.m_model
             r=model.index(i, 0)
             e=model.itemFromIndex(r).element()
             self.addElement(e)
             model.setListWidget(self)
+
+    def setItemWidget(self, item, widget):
+
+        m=super(ListWidget, self).model()
+        index=m.index(self.row(item))
+        if widget: 
+            widget.setParent(self.viewport())
+            widget.installEventFilter(self)
+            widget.show()
+            self.dataChanged(index, index)
+
+    def cleanUp(self):
+
+        m=self.m_model
+        if not m: return
+        for i in range(m.rowCount()):
+            r=m.index(i, 0)
+            e=m.itemFromIndex(r).element()
+            w=e.widget()
+            w.setParent(None)
+            w.removeEventFilter(self)
+            w.hide()
 
     def setListWidget(self, widget=None):
 
@@ -36,5 +58,5 @@ class ListWidgetView(
 
     def removeElement(self, e):
 
-        row=self.row(e.listItem())
-        self.takeItem(row)
+        i=e.listItem()
+        self.takeItem(i.row())

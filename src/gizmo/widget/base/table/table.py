@@ -18,9 +18,10 @@ class TableWidget(QtWidgets.QWidget):
     def __init__(
             self, 
             element, 
-            item,
+            item=None,
             wmap={},
-            **kwargs):
+            **kwargs
+            ):
 
         self.m_wmap=wmap
         self.m_item=item
@@ -28,6 +29,11 @@ class TableWidget(QtWidgets.QWidget):
         self.m_element=element
         super().__init__(**kwargs)
         self.setup()
+
+    def setListItem(self, item):
+
+        self.m_item=item
+        self.adjustSize()
 
     def setup(self):
         
@@ -72,4 +78,5 @@ class TableWidget(QtWidgets.QWidget):
 
         super().adjustSize()
         h=self.sizeHint()
-        self.m_item.setSizeHint(h)
+        if self.m_item:
+            self.m_item.setSizeHint(h)
