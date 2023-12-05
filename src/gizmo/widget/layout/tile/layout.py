@@ -196,17 +196,25 @@ class TileLayout:
             w = widgets[-1] if len(widgets) else None
             return self.focusWidget(w)
 
-    def move(self, kind=None, digit=None):
+    def move(
+            self, 
+            kind=None, 
+            digit=None, 
+            leaf=None,
+            view=None,
+            ):
 
-        leaf=None
-        if not digit is None:
-            digit-=1
-            widgets = list(self.root.widgets())
-            if 0<=digit<len(widgets):
-                w=widgets[digit]
-                leaf=self.getLeaf(w)
-        else:
-            leaf = self.findLeaf(kind)
+        if not leaf:
+            if not digit is None:
+                digit-=1
+                widgets = list(self.root.widgets())
+                if 0<=digit<len(widgets):
+                    w=widgets[digit]
+                    leaf=self.getLeaf(w)
+            else:
+                leaf = self.findLeaf(kind)
+        if view:
+            self.focusWidget(view)
         if leaf:
             nw, cw= self.current.widget, leaf.widget
             leaf.widget, self.current.widget = nw, cw

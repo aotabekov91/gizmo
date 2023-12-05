@@ -4,6 +4,7 @@ from .tiled import TileDisplay
 
 class TabbedTileDisplay(view.Tabber):
 
+    canFullscreen=True
     tab_class=TileDisplay
 
     def __init__(
@@ -31,20 +32,29 @@ class TabbedTileDisplay(view.Tabber):
         if self.current_tab:
             self.current_tab.update()
 
-    def tabMove(self, kind=None, digit=None):
+    def tabMove(
+            self, 
+            kind=None, 
+            digit=None,
+            ttab=None,
+            ftab=None,
+            view=None,
+            ):
 
-        c = not digit is None
-        if kind == 'moveTo' and c:
-            idx=max(0, digit-1)
-            c=self.current_tab
-            n=self.widget(idx)
-            if c and n:
-                v=c.closeView()
-                n.setupView(view=v)
-                if c.count()==0:
-                    self.tabClose(c)
-                self.tabSet(n)
+        if kind == 'moveTo':
+            if not ttab:
+                idx=max(0, digit-1)
+                ttab=self.widget(idx)
+            if not ftab:
+                ftab=self.current_tab
+            if ftab and ttab:
+                view=ftab.closeView(view)
+                ttab.setView(view=view)
+                if ftab.count()==0:
+                    self.tabClose(ftab)
+                self.tabSet(ttab)
                 self.setFocus()
+            return view
         else:
             super().tabMove(
                     kind=kind, digit=digit)
@@ -52,7 +62,7 @@ class TabbedTileDisplay(view.Tabber):
     def tabAddNew(self, copy=False, emit=True):
 
         ctab=self.current_tab
-        super().tabAddNew()
+        ntab=super().tabAddNew()
         if copy:
             v=ctab.currentView()
             m=v.model()
@@ -63,6 +73,7 @@ class TabbedTileDisplay(view.Tabber):
         elif emit:
             self.app.handler.viewChanged.emit(
                     self)
+        return ntab
 
     def setupView(self, view, *args, **kwargs):
         
@@ -79,3 +90,33 @@ class TabbedTileDisplay(view.Tabber):
 
         c=self.current_tab
         if c: return c.currentView()
+
+    def toggleFullscreen(self, view=None):
+
+        t=self.current_tab
+        v = view or self.currentView()
+        if not v: return
+        c=getattr(v, 'm_fullscreen', False)
+        if c: 
+            if t.count()!=1: return 
+            v.m_fullscreen=False
+            p=v.m_prev_tab
+            digit=p.m_tab_idx+1
+            self.tabMove(
+                    digit=digit,
+                    kind='moveTo')
+            # p.move(leaf=v.m_prev_leaf)
+        else: 
+            if t.count()<=1: return
+            v.m_prev_tab=t
+            v.m_fullscreen=True
+            prev=t.m_layout.findSibling(v, kind='prev')
+            v.m_prev_leaf=t.m_layout.getLeaf(prev)
+            ttab=self.tabAddNew()
+            digit=ttab.m_tab_idx+1
+            self.tabMove(
+                    ftab=t,
+                    view=v,
+                    digit=digit,
+                    kind='moveTo',
+                    )

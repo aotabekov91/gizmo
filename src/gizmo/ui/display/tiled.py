@@ -8,7 +8,6 @@ class TileDisplay(BaseDisplay):
     canGo=True
     canMove=True
     canSplit=True
-    canFullscreen=True
 
     def setupUI(self):
 
@@ -79,10 +78,6 @@ class TileDisplay(BaseDisplay):
             self.m_layout.removeWidget(
                     c.widget)
 
-    def toggleFullscreen(
-            self, view=None, **kwargs):
-        raise
-
     def goTo(
             self, 
             view=None, 
@@ -99,9 +94,15 @@ class TileDisplay(BaseDisplay):
             view=None, 
             kind=None,
             digit=None,
+            leaf=None,
             ):
 
-        return self.m_layout.move(kind, digit)
+        return self.m_layout.move(
+                kind=kind, 
+                digit=digit,
+                leaf=leaf,
+                view=view,
+                )
 
     def flip(
             self, 
