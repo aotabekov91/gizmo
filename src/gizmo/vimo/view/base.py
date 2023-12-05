@@ -11,7 +11,7 @@ class View:
     focusGained=QtCore.pyqtSignal(
             object)
     modelChanged=QtCore.pyqtSignal(
-            object, object)
+            object)
     activateWanted=QtCore.pyqtSignal(
             object)
     octivateWanted=QtCore.pyqtSignal(
@@ -85,8 +85,7 @@ class View:
                     self, self.m_model)
             self.m_model=model
             self.kind=model.kind
-            self.modelChanged.emit(
-                    self, model)
+            self.modelChanged.emit(model)
 
     def check(self, what, v=None):
 

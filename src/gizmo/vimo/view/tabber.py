@@ -116,9 +116,8 @@ class Tabber(
             delattr(tab, 'm_tab_idx')
             delattr(tab, 'hasTabber')
         tab=self.widget(idx-1)
-        if tab:
-            self.tabSet(tab)
-            self.setFocus()
+        if tab: self.tabSet(tab)
+        self.setFocus()
 
     def tabSet(self, tab):
 

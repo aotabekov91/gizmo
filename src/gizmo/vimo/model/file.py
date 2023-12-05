@@ -10,7 +10,10 @@ class FileSystemModel(
     root_path='/'
 
     def id(self):
-        return self.rootPath()
+
+        if not self.m_id:
+            return self.rootPath()
+        return self.m_id
 
     def setup(self):
         

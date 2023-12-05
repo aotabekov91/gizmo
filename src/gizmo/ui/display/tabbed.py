@@ -44,6 +44,7 @@ class TabbedTileDisplay(view.Tabber):
                 if c.count()==0:
                     self.tabClose(c)
                 self.tabSet(n)
+                self.setFocus()
         else:
             super().tabMove(
                     kind=kind, digit=digit)
