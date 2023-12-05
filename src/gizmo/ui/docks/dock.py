@@ -7,6 +7,7 @@ class Dock(QtWidgets.QDockWidget):
     def __init__(
             self, 
             loc=None, 
+            window=None,
             min_width=200,
             min_height=200,
             zoom_factor=0.1,
@@ -19,6 +20,7 @@ class Dock(QtWidgets.QDockWidget):
         self.loc=loc
         self.current=None
         self.fullscreen=None
+        self.m_window=window
         self.min_w=min_width
         self.min_h=min_height
         self.zfactor=zoom_factor
@@ -56,13 +58,20 @@ class Dock(QtWidgets.QDockWidget):
         w.setFocus()
         w.show()
 
-    def toggleFullscreen(self):
+    def toggleFullscreen(self, w=None):
 
-        w=self.current
-        p=self.parent()
+        w = w or self.current
         if not self.fullscreen:
+            ws = w.size()
             self.fullscreen=w.size()
-            w.setFixedSize(p.size())
+            s = self.m_window.stack.size()
+            if self.loc in ['left', 'right']:
+                w_=s.width()+ws.width()
+                s.setWidth(w_)
+            else:
+                h_=s.height()+ws.height()
+                s.setHeight(h_)
+            w.setFixedSize(s)
         else:
             w.setFixedSize(self.fullscreen)
             self.fullscreen=None

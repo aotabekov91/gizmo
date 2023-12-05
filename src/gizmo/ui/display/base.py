@@ -4,7 +4,7 @@ class BaseDisplay(QtWidgets.QWidget):
 
     canScale=True
     viewSet=QtCore.pyqtSignal(object)
-    viewChanged=QtCore.pyqtSignal(object)
+    # viewChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -23,7 +23,6 @@ class BaseDisplay(QtWidgets.QWidget):
                 parent=parent,
                 objectName=objectName,
                 )
-        # window.resized.connect(self.update) # todo
         self.setup()
 
     def setup(self):
@@ -163,7 +162,7 @@ class BaseDisplay(QtWidgets.QWidget):
 
         if view!=self.m_curr: 
             self.m_curr, self.m_prev=view, self.m_curr
-            self.viewChanged.emit(self.m_curr)
+            # self.viewChanged.emit(self.m_curr)
 
     def addView(self, view):
         self.m_layout.addWidget(view)

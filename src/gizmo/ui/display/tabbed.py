@@ -1,5 +1,4 @@
 from gizmo.vimo import view
-from gizmo.utils import tag
 
 from .tiled import TileDisplay
 
@@ -22,53 +21,43 @@ class TabbedTileDisplay(view.Tabber):
         window.resized.connect(self.update)
         self.show()
 
-    def newTab(self):
-
-        ctab=self.m_current_tab
-        if ctab:
-            v=ctab.currentView()
-            ntab=self.createTab()
-            m=v.model()
-            s=m.source()
-            c=self.app.handler.handleOpen(
-                    source=s,
-                    config=m.m_config
-                    )
-
-    def update(self):
-
-        if self.m_current_tab:
-            self.m_current_tab.update()
-
     def setup(self):
 
         super().setup()
-        self.setupCurrent()
+        self.tabAddNew(emit=False)
 
-    def setupCurrent(self):
+    def update(self):
 
-        d=self.getTab()
-        self.addTab(d)
-        self.setTab(d)
+        if self.current_tab:
+            self.current_tab.update()
+
+    def tabAddNew(self, copy=False, emit=True):
+
+        ctab=self.current_tab
+        super().tabAddNew()
+        if copy:
+            v=ctab.currentView()
+            m=v.model()
+            s=m.source()
+            self.app.handler.handleOpen(
+                    source=s,
+                    config=m.m_config)
+        elif emit:
+            self.app.handler.viewChanged.emit(
+                    self)
 
     def setupView(self, view, *args, **kwargs):
         
-        if self.m_current_tab:
-            self.m_current_tab.setupView(
+        if self.current_tab:
+            self.current_tab.setupView(
                     view, *args, **kwargs)
             view.m_tabber=self
             view.hasTabber=True
             view.setParent(
-                    self.m_current_tab)
+                    self.current_tab)
             self.setFocus()
 
-    def setFocus(self):
+    def currentView(self):
 
-        super().setFocus()
-        c=self.m_current_tab
-        if c: 
-            c.update()
-            c.show()
-            c.setFocus() 
-            v=c.currentView()
-            v.setFocus()
+        c=self.current_tab
+        if c: return c.currentView()

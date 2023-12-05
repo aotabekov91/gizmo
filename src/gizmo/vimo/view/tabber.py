@@ -1,4 +1,3 @@
-from gizmo.utils import tag
 from PyQt5 import QtWidgets, QtCore
 
 from .base import View
@@ -10,58 +9,39 @@ class Tabber(
 
     hasTabs=True
     tab_class=None
+    current_tab=None
 
-    def setup(self):
+    def tabAddNew(self, copy=False):
 
-        self.setConf()
-        self.setName()
-        self.m_current_tab=None
-        self.m_label=QtWidgets.QLabel(self.name)
-
-    def newTab(self):
-
-        ctab=self.m_current_tab
-        if ctab:
-            ntab=self.createTab()
-            ntab.setModel(ctab.model())
-            ridx=ctab.rootIndex()
-            ntab.setRootIndex(ridx)
-            self.setFocus()
-
-    def createTab(self):
-
-        ntab=self.getTab()
-        self.addTab(ntab)
-        self.setTab(ntab)
+        ptab=self.current_tab
+        if copy and ptab:
+            if hasattr(ptab, 'canCopy'):
+                ntab=ptab.copy()
+        else:
+            ntab=self.tabGet()
+        self.tabAdd(ntab)
+        self.tabSet(ntab)
+        self.setFocus()
         return ntab
 
-    def goTo(self, digit=1):
+    def tabGoTo(self, digit=1):
 
         ntab=self.widget(digit-1)
         if ntab:
-            self.setTab(ntab)
+            self.tabSet(ntab)
             self.setFocus()
 
     def tabGoToNext(self):
 
-        ctab=self.m_current_tab
+        ctab=self.current_tab
         idx=ctab.m_tab_idx+1
         if idx>self.count()-1: idx=0
         ntab=self.widget(idx)
-        print(ntab)
         if ntab:
-            self.setTab(ntab)
+            self.tabSet(ntab)
             self.setFocus()
 
-    def setModel(self, model):
-
-        if not self.m_current_tab:
-            tab=self.getTab()
-            self.addTab(tab)
-            self.setTab(tab)
-        self.m_current_tab.setModel(model)
-
-    def getTab(self):
+    def tabGet(self):
 
         return self.tab_class(
                 parent=self,
@@ -71,7 +51,7 @@ class Tabber(
                 config=self.m_config,
                 objectName=self.objectName())
 
-    def addTab(self, tab):
+    def tabAdd(self, tab):
 
         tab.m_tabber=self
         tab.hasTabber=True
@@ -79,11 +59,9 @@ class Tabber(
         tab.m_tab_label=QtWidgets.QLabel()
         tab.m_tab_name=tab.m_tab_idx
 
-    @tag('<c-d><c-d>', modes=['normal|View'])
-    def delTab(self, tab=None):
+    def tabClose(self, tab=None):
 
-        tab = tab or self.m_current_tab
-        print(tab)
+        tab = tab or self.current_tab
         if tab:
             idx=tab.m_tab_idx
             tab.m_tabber=None
@@ -94,18 +72,24 @@ class Tabber(
             delattr(tab, 'hasTabber')
         tab=self.widget(idx-1)
         if tab:
-            self.setTab(tab)
+            self.tabSet(tab)
             self.setFocus()
 
-    def setTab(self, tab):
+    def tabMove(self, kind=None, digit=None):
+        raise
 
-        self.m_current_tab=tab
+    def tabMoveTo(self, digit=None):
+        raise
+
+    def tabSet(self, tab):
+
+        self.current_tab=tab
         self.setCurrentIndex(tab.m_tab_idx)
 
     def setFocus(self):
 
         super().setFocus()
-        if self.m_current_tab:
-            self.m_current_tab.setFocus()
+        if self.current_tab:
+            self.current_tab.setFocus()
             self.focusGained.emit(
-                    self.m_current_tab)
+                    self.current_tab)

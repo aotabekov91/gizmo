@@ -35,9 +35,12 @@ class TextEdit(QtWidgets.QTextEdit):
         if self.m_reporting:
             self.timer.start(self.m_wait)
 
+
     def reportChange(self):
 
         self.timer.stop()
+        self.readjust()
+
         t=self.toPlainText()
         d=self.m_element.data()
         d.update({self.m_index: t})
@@ -45,3 +48,16 @@ class TextEdit(QtWidgets.QTextEdit):
         if p:
            p.widgetDataChanged.emit(
                    self.m_element)
+
+    def adjustSize(self):
+
+        super().adjustSize()
+        self.readjust()
+
+    def readjust(self):
+
+        doc=self.document()
+        size=doc.size().toSize()
+        height=max(20, size.height())
+        self.setFixedHeight(height)
+        self.m_parent.adjustSize()

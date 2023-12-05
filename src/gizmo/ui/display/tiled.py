@@ -23,26 +23,26 @@ class TileDisplay(BaseDisplay):
         self.hide()
         self.m_layout.clear()
 
-    def closeView(
-            self, 
-            view=None, 
-            vid=None
-            ):
+    def closeView(self, view=None):
 
-        if not view:
-            view=self.m_curr
-        if not vid and view:
-            vid=view.id()
+        prev=None
+        found=None
         l=self.m_layout
+        view = view or self.m_curr
         for w in l.root.widgets():
-            if w.view.id()==vid:
+            if w==view:
+                found=w
+                view.octivate()
                 l.focusWidget(w)
-                p=l.focus('prev')
-                if p:
-                    l.removeWidget(w)
-                    self.setCurrentView(
-                            p.widget)
-                return w
+                p=l.goTo('prev')
+                l.removeWidget(w)
+                if p: 
+                    prev=p.widget
+                else:
+                    self.app.handler.setView(None)
+                    self.app.handler.setType(None)
+        self.setCurrentView(prev)
+        return found
 
     def setView(
             self, 
@@ -139,3 +139,9 @@ class TileDisplay(BaseDisplay):
 
     def update(self):
         self.m_layout.update()
+
+    def setFocus(self):
+
+        super().setFocus()
+        v=self.currentView()
+        if v: v.setFocus()

@@ -162,7 +162,7 @@ class TileLayout:
             self.root.equalize()
             self.update()
 
-    def goTo(self, kind, digit):
+    def goTo(self, kind, digit=1):
 
         pos=['right', 'left', 'down', 'up']
         if digit is not None:

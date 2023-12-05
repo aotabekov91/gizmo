@@ -55,3 +55,17 @@ class StatusBar(QtWidgets.QStatusBar):
             self.hide()
         else:
             self.show()
+
+    def octivateBottom(self, label=':', edit=''):
+
+        self.edit.clear()
+        self.bottom.hide()
+        self.edit.setText(str(edit))
+        self.mode.setText(str(label))
+
+    def activateBottom(self, label=':', edit=''):
+
+        self.bottom.show()
+        self.edit.setFocus()
+        self.edit.setText(str(edit))
+        self.mode.setText(str(label))

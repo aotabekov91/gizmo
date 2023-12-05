@@ -7,6 +7,7 @@ class Docks(QtCore.QObject):
     canGo=True
     canMove=True
     canScale=True
+    canFullscreen=True
 
     def __init__(self, window):
 
@@ -15,7 +16,6 @@ class Docks(QtCore.QObject):
         self.docks=[]
         self.current=None
         self.m_window=window
-        self.fullscreen=False
         self.createDocks()
 
     def createDocks(self):
@@ -40,7 +40,7 @@ class Docks(QtCore.QObject):
                 }
 
         for loc, r in locs.items():
-            d = Dock(loc)
+            d = Dock(loc, self.m_window)
             d.title=QtWidgets.QWidget()
             d.setTitleBarWidget(d.title)
             self.m_window.addDockWidget(r, d)
@@ -115,4 +115,9 @@ class Docks(QtCore.QObject):
             d.toggleFullscreen()
 
     def setCurrent(self, dock):
+
         self.current=dock
+        for d in self.docks:
+            if d==dock: continue
+            if d.fullscreen and d.isVisible():
+                d.toggleFullscreen()

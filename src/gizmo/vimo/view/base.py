@@ -18,6 +18,7 @@ class View:
             object)
     modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
+    closeWanted=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -61,6 +62,8 @@ class View:
 
     def setBars(self):
 
+        t='horizontalScrollBarPolicy'
+        if not hasattr(self, t): return
         self.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(
@@ -131,3 +134,9 @@ class View:
 
         super().setFocus()
         self.focusGained.emit(self)
+
+    def close(self):
+
+        self.octivate()
+        self.closeWanted.emit(self)
+        raise #todo
