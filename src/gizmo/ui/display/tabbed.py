@@ -31,6 +31,23 @@ class TabbedTileDisplay(view.Tabber):
         if self.current_tab:
             self.current_tab.update()
 
+    def tabMove(self, kind=None, digit=None):
+
+        c = not digit is None
+        if kind == 'moveTo' and c:
+            idx=max(0, digit-1)
+            c=self.current_tab
+            n=self.widget(idx)
+            if c and n:
+                v=c.closeView()
+                n.setupView(view=v)
+                if c.count()==0:
+                    self.tabClose(c)
+                self.tabSet(n)
+        else:
+            super().tabMove(
+                    kind=kind, digit=digit)
+
     def tabAddNew(self, copy=False, emit=True):
 
         ctab=self.current_tab

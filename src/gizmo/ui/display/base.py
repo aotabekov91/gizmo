@@ -27,11 +27,10 @@ class BaseDisplay(QtWidgets.QWidget):
 
     def setup(self):
 
-        self.count=-1
-        self.views={}
+        self.m_views={}
+        self.m_count=-1
         self.m_curr=None
         self.m_prev=None
-        self.renders=[]
         self.setupUI()
         self.setConfig()
 
@@ -91,8 +90,7 @@ class BaseDisplay(QtWidgets.QWidget):
         delattr(v, 'isDisplayView')
         if hasattr(v, 'focusGained'):
             v.focusGained.disconnect(
-                    self.setCurrentview)
-
+                    self.setCurrentView)
 
     def focus(self, increment=1):
 
@@ -149,8 +147,8 @@ class BaseDisplay(QtWidgets.QWidget):
             if cmodel==nmodel: 
                 return
         if view: 
-            self.count+=1
-            self.views[self.count]=view
+            self.m_count+=1
+            self.m_views[self.m_count]=view
             self.setView(
                     view, how, **kwargs)
             self.viewSet.emit(view)

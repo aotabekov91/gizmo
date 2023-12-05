@@ -24,9 +24,38 @@ class Tabber(
         self.setFocus()
         return ntab
 
-    def tabGoTo(self, digit=1):
+    def tabMove(self, kind=None, digit=None):
 
-        ntab=self.widget(digit-1)
+        idx=self.currentIndex()
+        w=self.widget(idx)
+        if kind=='left':
+            idx=max(0, idx-1)
+        elif kind=='right':
+            idx+=1
+        elif type(digit)==int:
+            idx=digit-1
+        else:
+            return
+        self.removeWidget(w)
+        self.insertWidget(idx, w)
+        self.tabSet(w)
+        self.setFocus()
+
+    def tabGoTo(self, kind=None, digit=None):
+
+        if kind=='prev':
+            c=self.currentIndex()
+            digit=max(0, c-1)
+        elif kind=='next':
+            c=self.currentIndex()
+            digit=min(self.count()-1, c+1)
+        elif type(digit)==int:
+            digit-=1
+        elif digit is None:
+            digit=self.count()
+        else:
+            return
+        ntab=self.widget(digit)
         if ntab:
             self.tabSet(ntab)
             self.setFocus()
@@ -59,6 +88,22 @@ class Tabber(
         tab.m_tab_label=QtWidgets.QLabel()
         tab.m_tab_name=tab.m_tab_idx
 
+    def insertWidget(self, idx, w):
+
+        super().insertWidget(idx, w)
+        self.tabReindex()
+
+    def removeWidget(self, w):
+
+        super().removeWidget(w)
+        self.tabReindex()
+
+    def tabReindex(self):
+
+        for i in range(self.count()):
+            w=self.widget(i)
+            w.m_tab_idx=i
+
     def tabClose(self, tab=None):
 
         tab = tab or self.current_tab
@@ -74,12 +119,6 @@ class Tabber(
         if tab:
             self.tabSet(tab)
             self.setFocus()
-
-    def tabMove(self, kind=None, digit=None):
-        raise
-
-    def tabMoveTo(self, digit=None):
-        raise
 
     def tabSet(self, tab):
 

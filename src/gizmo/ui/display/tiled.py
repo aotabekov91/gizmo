@@ -30,18 +30,20 @@ class TileDisplay(BaseDisplay):
         l=self.m_layout
         view = view or self.m_curr
         for w in l.root.widgets():
-            if w==view:
-                found=w
-                view.octivate()
-                l.focusWidget(w)
-                p=l.goTo('prev')
-                l.removeWidget(w)
-                if p: 
-                    prev=p.widget
-                else:
-                    self.app.handler.setView(None)
-                    self.app.handler.setType(None)
+            if w!=view: continue
+            found=w
+            w.octivate()
+            l.focusWidget(w)
+            p=l.goTo('prev')
+            l.removeWidget(w)
+            if p: 
+                prev=p.widget
+            else:
+                self.app.handler.setView(None)
+                self.app.handler.setType(None)
         self.setCurrentView(prev)
+        if found: 
+            self.disconnectView(found)
         return found
 
     def setView(
@@ -51,7 +53,7 @@ class TileDisplay(BaseDisplay):
             **kwargs
             ):
 
-        self.setCurrentView(view)
+        # self.setCurrentView(view)
         if how=='reset': self.clear()
         self.addWidget(view, **kwargs)
         self.connectView(view)
@@ -95,10 +97,11 @@ class TileDisplay(BaseDisplay):
     def move(
             self, 
             view=None, 
-            kind=None
+            kind=None,
+            digit=None,
             ):
 
-        return self.m_layout.move(kind)
+        return self.m_layout.move(kind, digit)
 
     def flip(
             self, 
@@ -145,3 +148,6 @@ class TileDisplay(BaseDisplay):
         super().setFocus()
         v=self.currentView()
         if v: v.setFocus()
+
+    def count(self):
+        return self.m_layout.count()

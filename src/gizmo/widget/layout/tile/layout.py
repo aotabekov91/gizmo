@@ -11,6 +11,11 @@ class TileLayout:
         self.lower_right=True
         self.current = self.root
 
+    def count(self):
+
+        widgets = list(self.root.widgets())
+        return len(widgets)
+
     def getLeaf(self, widget):
 
         for leaf in self.root:
@@ -166,8 +171,9 @@ class TileLayout:
 
         pos=['right', 'left', 'down', 'up']
         if digit is not None:
+            digit-=1
             widgets = list(self.root.widgets())
-            if 0<digit<len(widgets):
+            if 0<=digit<len(widgets):
                 w=widgets[digit]
                 return self.focusWidget(w)
         elif kind in pos:
@@ -190,9 +196,17 @@ class TileLayout:
             w = widgets[-1] if len(widgets) else None
             return self.focusWidget(w)
 
-    def move(self, d):
+    def move(self, kind=None, digit=None):
 
-        leaf = self.findLeaf(d)
+        leaf=None
+        if not digit is None:
+            digit-=1
+            widgets = list(self.root.widgets())
+            if 0<=digit<len(widgets):
+                w=widgets[digit]
+                leaf=self.getLeaf(w)
+        else:
+            leaf = self.findLeaf(kind)
         if leaf:
             nw, cw= self.current.widget, leaf.widget
             leaf.widget, self.current.widget = nw, cw
@@ -202,10 +216,10 @@ class TileLayout:
             leaf = self.current
             self.removeWidget(leaf.widget)
             newroot = Leaf()
-            if d in ['up', 'down']:
+            if kind in ['up', 'down']:
                 newroot.horizontal = True
                 newroot.leaves = [self.root, leaf]
-            elif d in ['left', 'right']:
+            elif kind in ['left', 'right']:
                 newroot.horizontal = False
                 newroot.leaves = [leaf, self.root]
             self.root.parent = newroot
