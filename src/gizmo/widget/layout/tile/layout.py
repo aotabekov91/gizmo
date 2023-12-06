@@ -232,10 +232,12 @@ class TileLayout(QtCore.QObject):
             newroot = Leaf()
             if kind in ['up', 'down']:
                 newroot.horizontal = True
-                newroot.leaves = [self.root, leaf]
             elif kind in ['left', 'right']:
                 newroot.horizontal = False
+            if kind in ['up', 'left']:
                 newroot.leaves = [leaf, self.root]
+            elif kind in ['donw', 'right']:
+                newroot.leaves = [self.root, leaf]
             self.root.parent = newroot
             leaf.parent = newroot
             self.root = newroot
