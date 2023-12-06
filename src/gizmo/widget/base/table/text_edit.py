@@ -2,13 +2,15 @@ from PyQt5 import QtWidgets, QtCore
 
 class TextEdit(QtWidgets.QTextEdit):
 
+    canEdit=True
+
     def __init__(
             self,
             *args,
             index=None,
             parent=None,
             element=None,
-            wait_time=1000,
+            wait_time=100,
             **kwargs):
 
         self.m_index=index

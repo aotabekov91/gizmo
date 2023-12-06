@@ -1,14 +1,15 @@
+from PyQt5 import QtGui
 from .utils import BaseScene
 
 class Scene:
 
     hasScene=True
+    sceneColor='black'
     scene_class=BaseScene
 
     def setup(self):
 
         self.m_scene=None
-        self.sceneColor=None
         super().setup()
         self.setupScene()
 
@@ -20,7 +21,7 @@ class Scene:
             self.setScene(s)
             if self.sceneColor:
                 s.setBackgroundBrush(
-                        self.sceneColor)
+                        QtGui.QColor(self.sceneColor))
 
     def clearScene(self):
 

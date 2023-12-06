@@ -2,6 +2,8 @@ from PyQt5 import QtWidgets
 
 class LineEdit(QtWidgets.QLineEdit):
 
+    canEdit=True
+
     def __init__(
             self, 
             *args, 

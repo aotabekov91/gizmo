@@ -4,6 +4,7 @@ from gizmo.widget import ListWidget
 from .base import View
 
 class ListWidgetView(
+        mixin.Input,
         mixin.WidgetGo,
         View,
         ListWidget,
@@ -49,10 +50,7 @@ class ListWidgetView(
             e=m.itemFromIndex(r).element()
             l=e.listItem()
             l.setHidden(True)
-            if ci==l:
-                l.m_current_idx=True
-            else:
-                l.m_current_idx=False
+            l.m_current_idx=ci==l
 
     def setListWidget(self, widget=None):
 
@@ -63,4 +61,4 @@ class ListWidgetView(
     def removeElement(self, e):
 
         i=e.listItem()
-        self.takeItem(i.row())
+        self.takeItem(self.row(i))

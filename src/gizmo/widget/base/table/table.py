@@ -1,4 +1,3 @@
-from functools import partial
 from PyQt5 import QtWidgets, QtCore
 
 from .label import Label
@@ -10,9 +9,9 @@ class TableWidget(QtWidgets.QWidget):
     wmap={
         'Label': Label,
         'TextEdit':TextEdit,
-        'LineEdit': LineEdit,
+        'LineEdit': LineEdit
         }
-
+    hasWidgets=True
     widgetDataChanged=QtCore.pyqtSignal(object)
 
     def __init__(
@@ -58,6 +57,9 @@ class TableWidget(QtWidgets.QWidget):
             self.m_layout.addWidget(w, *p)
             self.m_widgets[n]=w
         self.updateData()
+
+    def widgets(self):
+        return self.m_widgets
 
     def updateData(self):
 

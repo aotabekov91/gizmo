@@ -102,7 +102,6 @@ class TableModel(Model):
 
     def addTableRow(self, data):
 
-        print(data)
         if self.table:
             idx=self.table.writeRow(data)
             rs=self.getTableRow({self.uid:idx})
