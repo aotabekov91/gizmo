@@ -8,6 +8,34 @@ class Scale:
     scaleModeChanged=QtCore.pyqtSignal(
             object, object)
 
+    def setParent(self, p):
+
+        if self.parent(): self.reconnect('disconnect')
+        super().setParent(p)
+        if self.parent(): self.reconnect()
+
+    def reconnect(self, kind='connect'):
+
+        p=self.parent()
+        g=getattr(p, 'geometryChanged', None)
+        if g: 
+            c=getattr(g, kind)
+            c(self.updateFit)
+
+    def setStates(self, states):
+
+        super().setStates(states)
+        sm=s.get('scaleMode', None)
+        if sm=='scale':
+            self.setZoomFactor()
+        else:
+            self.updateFit()
+
+    def updateFit(self):
+
+        if self.scaleMode in ['width', 'height']:
+            self.setFitMode()
+
     def scale(self, kind, *args, **kwargs):
 
         if kind=='width':
@@ -21,7 +49,8 @@ class Scale:
 
     def setFitMode(self, mode):
 
-        self.scaleMode=mode
+        self.setState('scaleMode', mode)
+        self.delState('currentZoomFactor')
         if hasattr(self, 'hasItems'):
             self.fitItemsView(mode)
         self.redraw()
@@ -33,19 +62,18 @@ class Scale:
         s=self.size()
         w, h = s.width(), s.height()
         if hasattr(self, 'hasLayout'):
-            w=self.m_layout.width(h)
+            w=self.m_layout.width(w)
             h=self.m_layout.height(h)
         for j, i in self.getItems():
             dw, dh = i.displayedSize()
             if mode =='width':
-                s=w/dw
+                zf=w/dw
             else:
-                s=min([w/float(dw), h/float(dh)])
-            i.setZoomFactor(s)
+                zf=min([w/float(dw), h/float(dh)])
+            i.setZoomFactor(zf)
 
     def setZoom(self, kind='out', digit=1):
 
-        self.scaleMode='scale'
         sf = self.zoomFactor
         if kind=='out':
             zf=(1.-sf)**digit
@@ -55,10 +83,12 @@ class Scale:
         self.scaleModeChanged.emit(
                 self, self.scaleMode)
 
-    def setZoomFactor(self, zfactor):
+    def setZoomFactor(self, factor):
 
+        self.setState('scaleMode', 'scale')
+        self.setState('currentZoomFactor', factor)
         if hasattr(self, 'hasItems'):
-            self.zoomItemsView(zfactor)
+            self.zoomItemsView(factor)
         self.redraw()
 
     def zoomItemsView(self, zfactor):

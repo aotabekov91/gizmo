@@ -9,6 +9,8 @@ class TileDisplay(BaseDisplay):
     canMove=True
     canSplit=True
 
+    geometryChanged=QtCore.pyqtSignal()
+
     def setupUI(self):
 
         self.setContentsMargins(
@@ -16,6 +18,8 @@ class TileDisplay(BaseDisplay):
         self.setContextMenuPolicy(
                 QtCore.Qt.NoContextMenu)
         self.m_layout = TileLayout(self)
+        self.m_layout.geometryChanged.connect(
+                self.geometryChanged)
 
     def clear(self):
 

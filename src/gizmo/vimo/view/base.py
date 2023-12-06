@@ -19,9 +19,11 @@ class View:
     modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
     closeWanted=QtCore.pyqtSignal(object)
+    stateChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
+            state={},
             app=None, 
             config={},
             name=None,
@@ -33,6 +35,7 @@ class View:
             ):
 
         self.app=app
+        self.m_state={}
         self.m_id=index
         self.m_name=name
         self.m_model = model
@@ -40,6 +43,7 @@ class View:
         super().__init__(
                 parent=parent,
                 objectName=objectName)
+        self.setStates(state)
         self.setup()
 
     def setup(self):
@@ -48,16 +52,31 @@ class View:
         self.setName()
         self.setBars()
 
+    def setStates(self, state):
+
+        if self.m_state!=state:
+            self.m_state=state
+            self.setConf(state)
+            self.stateChanged.emit(self)
+
+    def setState(self, name, value):
+
+        setattr(self, name, value)
+        self.m_state[name]=value
+
+    def delState(self, name):
+        self.m_state.pop(name, None)
+
     def setName(self):
 
         c=self.__class__.__name__
         c=self.m_name or c
         self.name=self.name or c
 
-    def setConf(self):
+    def setConf(self, data=None):
 
-        c=self.m_config
-        for k, v in c.items():
+        data= data or self.m_config
+        for k, v in data.items():
             setattr(self, k, v)
 
     def setBars(self):

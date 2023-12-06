@@ -1,6 +1,10 @@
+from PyQt5 import QtCore
+
 from .leaf import Leaf
 
-class TileLayout:
+class TileLayout(QtCore.QObject):
+
+    geometryChanged=QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
 
@@ -10,6 +14,7 @@ class TileLayout:
         self.parent=parent
         self.lower_right=True
         self.current = self.root
+        super().__init__(parent)
 
     def count(self):
 
@@ -83,6 +88,7 @@ class TileLayout:
         x, y = r.x(), r.y()
         w, h = r.width(), r.height()
         self.root.calc_geom(x, y, w, h)
+        self.geometryChanged.emit()
 
     def toggleSplit(self):
 

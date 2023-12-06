@@ -6,8 +6,13 @@ class Copy:
 
         m=self.m_model
         c=self.m_config
+        s=self.m_state.copy()
         v=self.app.handler.getView(
-                self.m_model, config=self.m_config)
+                state=s,
+                model=m,
+                config=c,
+                )
         self.app.handler.setView(v)
         self.app.handler.activateView(
                 v, *args, **kwargs)
+        v.setStates(s)
