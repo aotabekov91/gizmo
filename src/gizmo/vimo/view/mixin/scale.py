@@ -8,11 +8,29 @@ class Scale:
     scaleModeChanged=QtCore.pyqtSignal(
             object, object)
 
+    def setup(self):
+
+        super().setup()
+        self.stateWanted.connect(
+                self.updateScaleState)
+
+    def updateScaleState(self, n, v):
+
+        if n=='scaleMode':
+            self.updateFit()
+
+    def updateFit(self):
+
+        if self.scaleMode in ['width', 'height']:
+            self.setFitMode(self.scaleMode)
+
     def setParent(self, p):
 
-        if self.parent(): self.reconnect('disconnect')
+        if self.parent(): 
+            self.reconnect('disconnect')
         super().setParent(p)
-        if self.parent(): self.reconnect()
+        if self.parent(): 
+            self.reconnect()
 
     def reconnect(self, kind='connect'):
 
@@ -21,20 +39,6 @@ class Scale:
         if g: 
             c=getattr(g, kind)
             c(self.updateFit)
-
-    def setStates(self, states):
-
-        super().setStates(states)
-        sm=s.get('scaleMode', None)
-        if sm=='scale':
-            self.setZoomFactor()
-        else:
-            self.updateFit()
-
-    def updateFit(self):
-
-        if self.scaleMode in ['width', 'height']:
-            self.setFitMode()
 
     def scale(self, kind, *args, **kwargs):
 
@@ -64,6 +68,7 @@ class Scale:
         if hasattr(self, 'hasLayout'):
             w=self.m_layout.width(w)
             h=self.m_layout.height(h)
+        zf=1
         for j, i in self.getItems():
             dw, dh = i.displayedSize()
             if mode =='width':

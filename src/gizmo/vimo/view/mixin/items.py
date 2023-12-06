@@ -37,17 +37,20 @@ class Items(Scene, Layout):
     def setModel(self, model):
 
         self.clearScene()
-        if model:
-            super().setModel(model)
-            self.setItems()
+        if model and id(self.m_model)!=id(model):
+            self.modelIsToBeChanged.emit(
+                    self, self.m_model)
+            self.m_model=model
+            self.kind=model.kind
+            self.setItems(model)
             self.redraw()
 
-    def setItems(self):
+    def setItems(self, model):
 
         self.m_items={}
         c=self.m_config.get('Item', {})
         if self.item_class:
-            elems=self.m_model.elements()
+            elems=model.elements()
             for j, e in enumerate(elems.values()): 
                 i=self.item_class(
                         config=c,
@@ -55,6 +58,8 @@ class Items(Scene, Layout):
                         element=e,
                         )
                 self.setupItem(i)
+        self.modelChanged.emit(model)
+        self.modelLoaded.emit(self, model)
 
     def setupItem(self, i):
 

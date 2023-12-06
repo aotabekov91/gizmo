@@ -6,17 +6,14 @@ from ..items import Items
 class PoolItems(Items):
 
     canPool=True
-    modelLoaded=QtCore.pyqtSignal(
-            object, object)
 
     def setup(self):
 
         super().setup()
         self.pool=QtCore.QThreadPool()
 
-    def setItems(self):
+    def setItems(self, m):
 
-        m=self.m_model
         self.m_items={}
         sf=self.scaleFactor
         c=self.m_config.get('Item', {})
@@ -38,3 +35,5 @@ class PoolItems(Items):
         self.redraw()
         self.modelLoaded.emit(
                 self, self.m_model)
+        self.modelChanged.emit(
+                self.m_model)

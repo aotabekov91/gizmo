@@ -10,8 +10,14 @@ class View:
             object)
     focusGained=QtCore.pyqtSignal(
             object)
+    modelLoaded=QtCore.pyqtSignal(
+            object, object)
     modelChanged=QtCore.pyqtSignal(
             object)
+    stateChanged=QtCore.pyqtSignal(
+            object, object)
+    stateWanted=QtCore.pyqtSignal(
+            object, object)
     activateWanted=QtCore.pyqtSignal(
             object)
     octivateWanted=QtCore.pyqtSignal(
@@ -19,7 +25,6 @@ class View:
     modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
     closeWanted=QtCore.pyqtSignal(object)
-    stateChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -52,17 +57,22 @@ class View:
         self.setName()
         self.setBars()
 
-    def setStates(self, state):
+    def setStates(self, state, want=False):
 
         if self.m_state!=state:
             self.m_state=state
-            self.setConf(state)
-            self.stateChanged.emit(self)
+            for k, v in state.items():
+                self.setState(k, v, want)
 
-    def setState(self, name, value):
+    def setState(self, n, v, want=False):
 
-        setattr(self, name, value)
-        self.m_state[name]=value
+        ov=getattr(self, n, None)
+        if ov!=v:
+            setattr(self, n, v)
+            self.m_state[n]=v
+            self.stateChanged.emit(n, v)
+            if want:
+                self.stateWanted.emit(n, v)
 
     def delState(self, name):
         self.m_state.pop(name, None)
@@ -105,6 +115,7 @@ class View:
             self.m_model=model
             self.kind=model.kind
             self.modelChanged.emit(model)
+            self.modelLoaded.emit(self, model)
 
     def check(self, what, v=None):
 

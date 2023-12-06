@@ -56,7 +56,6 @@ class TileDisplay(BaseDisplay):
             **kwargs
             ):
 
-        # self.setCurrentView(view)
         if how=='reset': self.clear()
         self.addWidget(view, **kwargs)
         self.connectView(view)

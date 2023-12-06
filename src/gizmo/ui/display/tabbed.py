@@ -49,7 +49,7 @@ class TabbedTileDisplay(view.Tabber):
                 ftab=self.current_tab
             if ftab and ttab:
                 view=ftab.closeView(view)
-                ttab.setView(view=view)
+                ttab.setupView(view=view)
                 if ftab.count()==0:
                     self.tabClose(ftab)
                 self.tabSet(ttab)
