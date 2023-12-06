@@ -25,9 +25,17 @@ class TableModel(Model):
 
     def getTableRows(self):
 
+        rows=[]
         if self.m_id and self.table:
-            return self.table.getRow(self.m_id)
-        return []
+            rows=self.table.getRow(self.m_id)
+            autocreate=self.m_config.get(
+                    'autocreate', False)
+            if rows: return rows
+            if not autocreate: return rows
+            self.addTableRow(self.id())
+            self.m_config['autocreate']=False
+            return self.getTableRows()
+        return rows
 
     def load(self):
 
@@ -94,6 +102,7 @@ class TableModel(Model):
 
     def addTableRow(self, data):
 
+        print(data)
         if self.table:
             idx=self.table.writeRow(data)
             rs=self.getTableRow({self.uid:idx})
