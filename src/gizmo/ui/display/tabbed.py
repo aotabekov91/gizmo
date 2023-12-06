@@ -16,6 +16,7 @@ class TabbedTileDisplay(view.Tabber):
         super().__init__(
                 app=app, 
                 parent=window.main,
+                objectName='DisplayView',
                 **kwargs,
                 )
         self.m_window=window

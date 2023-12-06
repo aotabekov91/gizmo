@@ -16,45 +16,49 @@ class ListWidgetView(
         self.cleanUp()
         self.setListWidget()
         super().setModel(model)
+        first=None
+        current=False
         for i in range(model.rowCount()):
             r=model.index(i, 0)
             e=model.itemFromIndex(r).element()
-            self.addElement(e)
+            current=self.addElement(e)
+            if i==0: first=e
             model.setListWidget(self)
+        if not current and first:
+            l=first.listItem()
+            self.setCurrentItem(l)
 
-    def setItemWidget(self, item, widget):
+    def addElement(self, e):
 
-        m=super(ListWidget, self).model()
-        index=m.index(self.row(item))
-        if widget: 
-            widget.setParent(self.viewport())
-            widget.installEventFilter(self)
-            widget.show()
-            self.dataChanged(index, index)
+        i=e.listItem()
+        self.addItem(i)
+        i.setHidden(False)
+        ci=getattr(i, 'm_current_idx', False)
+        self.setItemWidget(i, e.widget())
+        if ci: 
+            self.setCurrentItem(i)
+            return True
 
     def cleanUp(self):
 
         m=self.m_model
         if not m: return
+        ci=self.currentItem()
         for i in range(m.rowCount()):
             r=m.index(i, 0)
             e=m.itemFromIndex(r).element()
-            w=e.widget()
-            w.setParent(None)
-            w.removeEventFilter(self)
-            w.hide()
+            l=e.listItem()
+            l.setHidden(True)
+            if ci==l:
+                l.m_current_idx=True
+            else:
+                l.m_current_idx=False
 
     def setListWidget(self, widget=None):
 
         if self.m_model: 
             self.m_model.setListWidget(
                     widget)
-
-    def addElement(self, e):
-
-        i=e.listItem()
-        self.addItem(i)
-        self.setItemWidget(i, e.widget())
 
     def removeElement(self, e):
 
