@@ -8,7 +8,7 @@ class TileDisplay(BaseDisplay):
     canGo=True
     canMove=True
     canSplit=True
-
+    canCloseView=True
     geometryChanged=QtCore.pyqtSignal()
 
     def setupUI(self):
