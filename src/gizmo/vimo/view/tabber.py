@@ -10,14 +10,32 @@ class Tabber(
     hasTabs=True
     tab_class=None
     current_tab=None
+    tabViewCreated=QtCore.pyqtSignal(
+            object)
+
+    def setup(self):
+
+        super().setup()
+        self.tabViewCreated.connect(
+                self.tabRegister)
+
+    def tabRegister(self, view):
+        self.app.uiman.setupUI(ui=view)
+
+    def tabCopy(self, tab=None):
+
+        ptab=tab or self.current_tab
+        if ptab and hasattr(ptab, 'canCopy'): 
+            copy=ptab.copy()
+            self.tabViewCreated.emit(copy)
+            return copy
 
     def tabAddNew(self, copy=False):
 
-        ptab=self.current_tab
-        if copy and ptab:
-            if hasattr(ptab, 'canCopy'):
-                ntab=ptab.copy()
-        else:
+        ntab=None
+        if copy: 
+            ntab=self.tabCopy()
+        if not ntab: 
             ntab=self.tabGet()
         self.tabAdd(ntab)
         self.tabSet(ntab)
@@ -72,13 +90,15 @@ class Tabber(
 
     def tabGet(self):
 
-        return self.tab_class(
+        view=self.tab_class(
                 parent=self,
                 app=self.app,
                 index=self.m_id,
                 name=self.m_name,
                 config=self.m_config,
                 objectName=self.objectName())
+        self.tabViewCreated.emit(view)
+        return view
 
     def tabAdd(self, tab):
 

@@ -168,4 +168,3 @@ class View:
 
         self.octivate()
         self.closeWanted.emit(self)
-        raise #todo
