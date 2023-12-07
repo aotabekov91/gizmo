@@ -1,5 +1,6 @@
 from PyQt5 import QtCore
 
+from gizmo.vimo.view import View
 from gizmo.ui.display import BaseDisplay
 from gizmo.widget.layout import TileLayout
 
