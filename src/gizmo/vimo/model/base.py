@@ -29,7 +29,7 @@ class Model:
 
         self.m_id=index
         self.m_data=None
-        self.m_name=None
+        self.m_name=name
         self.m_loaded=False
         self.m_source=source
         self.m_config=config
@@ -103,9 +103,9 @@ class Model:
     @classmethod
     def isCompatible(cls, s, **kwargs):
 
-        if s and cls.pattern:
-            p=cls.pattern
-            return re.match(p, s, re.I)
+        if type(s)!=str: return
+        if not cls.pattern: return
+        return re.match(cls.pattern, s, re.I)
 
     @classmethod
     def getSourceName(cls, s, **kwargs):

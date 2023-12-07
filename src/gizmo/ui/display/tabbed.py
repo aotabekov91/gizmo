@@ -11,7 +11,8 @@ class TabbedTileDisplay(view.Tabber):
             self, 
             app=None,
             window=None, 
-            **kwargs):
+            **kwargs
+            ):
 
         super().__init__(
                 app=app, 
@@ -92,32 +93,32 @@ class TabbedTileDisplay(view.Tabber):
         c=self.current_tab
         if c: return c.currentView()
 
-    def toggleFullscreen(self, view=None):
+    # def toggleFullscreen(self, view=None):
 
-        t=self.current_tab
-        v = view or self.currentView()
-        if not v: return
-        c=getattr(v, 'm_fullscreen', False)
-        if c: 
-            if t.count()!=1: return 
-            v.m_fullscreen=False
-            p=v.m_prev_tab
-            digit=p.m_tab_idx+1
-            self.tabMove(
-                    digit=digit,
-                    kind='moveTo')
-            # p.move(leaf=v.m_prev_leaf)
-        else: 
-            if t.count()<=1: return
-            v.m_prev_tab=t
-            v.m_fullscreen=True
-            prev=t.m_layout.findSibling(v, kind='prev')
-            v.m_prev_leaf=t.m_layout.getLeaf(prev)
-            ttab=self.tabAddNew()
-            digit=ttab.m_tab_idx+1
-            self.tabMove(
-                    ftab=t,
-                    view=v,
-                    digit=digit,
-                    kind='moveTo',
-                    )
+    #     t=self.current_tab
+    #     v = view or self.currentView()
+    #     if not v: return
+    #     c=getattr(v, 'm_fullscreen', False)
+    #     if c: 
+    #         if t.count()!=1: return 
+    #         v.m_fullscreen=False
+    #         p=v.m_prev_tab
+    #         digit=p.m_tab_idx+1
+    #         self.tabMove(
+    #                 digit=digit,
+    #                 kind='moveTo')
+    #         # p.move(leaf=v.m_prev_leaf)
+    #     else: 
+    #         if t.count()<=1: return
+    #         v.m_prev_tab=t
+    #         v.m_fullscreen=True
+    #         prev=t.m_layout.findSibling(v, kind='prev')
+    #         v.m_prev_leaf=t.m_layout.getLeaf(prev)
+    #         ttab=self.tabAddNew()
+    #         digit=ttab.m_tab_idx+1
+    #         self.tabMove(
+    #                 ftab=t,
+    #                 view=v,
+    #                 digit=digit,
+    #                 kind='moveTo',
+    #                 )

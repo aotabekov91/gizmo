@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtCore
 
 class Dock(QtWidgets.QDockWidget):
 
+    isDock=True
     focusGained=QtCore.pyqtSignal(object)
 
     def __init__(
@@ -61,20 +62,24 @@ class Dock(QtWidgets.QDockWidget):
     def toggleFullscreen(self, w=None):
 
         w = w or self.current
-        if not self.fullscreen:
-            ws = w.size()
-            self.fullscreen=w.size()
-            s = self.m_window.stack.size()
-            if self.loc in ['left', 'right']:
-                w_=s.width()+ws.width()
-                s.setWidth(w_)
-            else:
-                h_=s.height()+ws.height()
-                s.setHeight(h_)
-            w.setFixedSize(s)
-        else:
-            w.setFixedSize(self.fullscreen)
-            self.fullscreen=None
+        if hasattr(w, 'canFullscreen'):
+            w.toggleFullscreen()
+        # if not self.fullscreen:
+        #     ws = w.size()
+        #     self.fullscreen=w.size()
+        #     s = self.m_window.stack.size()
+        #     if self.loc in ['left', 'right']:
+        #         w_=s.width()+ws.width()
+        #         s.setWidth(w_)
+        #     else:
+        #         h_=s.height()+ws.height()
+        #         s.setHeight(h_)
+        #     # w.setFixedSize(s)
+        #     # w.setMinimumSize(s)
+        # else:
+        #     # w.resize(self.fullscreen)
+        #     w.setFixedSize(self.fullscreen)
+        #     self.fullscreen=None
 
     def scale(self, kind, digit=1):
 
@@ -94,10 +99,16 @@ class Dock(QtWidgets.QDockWidget):
         c=self.current.size()
         if self.loc in ['left', 'right']:
             w=int(c.width()*zf)
-            self.current.setFixedWidth(w)
+            s.setWidth(w)
+            self.current.resize(s)
+            # self.current.setFixedWidth(w)
+            # self.setFixedWidth(w)
         else:
             h=int(c.height()*zf)
-            self.current.setFixedHeight(h)
+            s.setHeight(h)
+            self.current.resize(s)
+            # self.current.setFixedHeight(h)
+            # self.setFixedHeight(h)
 
     def activate(self, w):
 

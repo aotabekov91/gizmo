@@ -25,6 +25,7 @@ class View:
     modelIsToBeChanged=QtCore.pyqtSignal(
             object, object)
     closeWanted=QtCore.pyqtSignal(object)
+    resized=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
@@ -168,3 +169,10 @@ class View:
 
         self.octivate()
         self.closeWanted.emit(self)
+
+    def event(self, e):
+
+        r=super().event(e)
+        if e.type()==QtCore.QEvent.Resize:
+            self.resized.emit(self)
+        return r

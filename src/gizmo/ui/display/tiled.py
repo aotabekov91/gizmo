@@ -28,9 +28,8 @@ class TileDisplay(BaseDisplay):
 
     def closeView(self, view=None):
 
-        prev=None
-        found=None
         l=self.m_layout
+        prev, found=None, None
         view = view or self.m_curr
         for w in l.root.widgets():
             if w!=view: continue
@@ -45,9 +44,8 @@ class TileDisplay(BaseDisplay):
                 self.app.handler.setView(None)
                 self.app.handler.setType(None)
         self.setCurrentView(prev)
-        if found: 
-            self.disconnectView(found)
-        return found
+        if found: self.disconnectView(found)
+        return found, prev
 
     def setView(
             self, 

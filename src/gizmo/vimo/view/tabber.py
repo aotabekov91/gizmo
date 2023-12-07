@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets, QtCore
 
-from .base import View
+from . import mixin, base
 
 class Tabber(
-        View,
+        base.View,
         QtWidgets.QStackedWidget,
         ):
 
@@ -32,15 +32,17 @@ class Tabber(
 
     def tabAddNew(self, copy=False):
 
-        ntab=None
-        if copy: 
-            ntab=self.tabCopy()
-        if not ntab: 
-            ntab=self.tabGet()
-        self.tabAdd(ntab)
-        self.tabSet(ntab)
+        c=self.current_tab
+        if copy and self.check('canCopy', c):
+            n=c.copy()
+        else:
+            n=self.tabGet()
+        h=getattr(self.app, 'handler', None)
+        if h: h.connectView(n)
+        self.tabAdd(n)
+        self.tabSet(n)
         self.setFocus()
-        return ntab
+        return n
 
     def tabMove(self, kind=None, digit=None):
 
@@ -74,9 +76,8 @@ class Tabber(
         else:
             return
         ntab=self.widget(digit)
-        if ntab:
-            self.tabSet(ntab)
-            self.setFocus()
+        if ntab: self.tabSet(ntab)
+        self.setFocus()
 
     def tabGoToNext(self):
 
@@ -117,6 +118,7 @@ class Tabber(
 
         super().removeWidget(w)
         self.tabReindex()
+        return w
 
     def tabReindex(self):
 
@@ -124,8 +126,9 @@ class Tabber(
             w=self.widget(i)
             w.m_tab_idx=i
 
-    def tabClose(self, tab=None):
+    def tabClose(self, tab=None, limit=1):
 
+        if self.count()<=limit: return
         tab = tab or self.current_tab
         if tab:
             idx=tab.m_tab_idx
@@ -151,3 +154,11 @@ class Tabber(
             self.current_tab.setFocus()
             self.focusGained.emit(
                     self.current_tab)
+
+    def setModel(self, model, **kwargs):
+
+        if model:
+            if not self.current_tab:
+                self.tabAddNew()
+            self.m_model=model
+            self.current_tab.setModel(model)

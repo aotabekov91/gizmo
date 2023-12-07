@@ -9,38 +9,43 @@ class TableWidget(QtWidgets.QWidget):
     wmap={
         'Label': Label,
         'TextEdit':TextEdit,
-        'LineEdit': LineEdit
+        'LineEdit': LineEdit,
         }
     hasWidgets=True
     widgetDataChanged=QtCore.pyqtSignal(object)
 
     def __init__(
             self, 
-            element, 
-            item=None,
             wmap={},
+            item=None,
+            view=None,
+            element=None, 
+            objectName='GridWidget',
             **kwargs
             ):
 
+        self.m_view=view
         self.m_wmap=wmap
         self.m_item=item
         self.m_widgets={}
         self.m_element=element
-        super().__init__(**kwargs)
+        super().__init__(
+                objectName=objectName, **kwargs)
         self.setup()
+        self.setData()
 
     def setListItem(self, item):
-
         self.m_item=item
-        self.adjustSize()
 
     def setup(self):
         
-        self.m_layout=QtWidgets.QGridLayout(self)
-        self.setLayout(self.m_layout)
         self.m_element.dataUpdated.connect(
                 self.updateData)
-        self.setData()
+        l=QtWidgets.QGridLayout(self)
+        l.setContentsMargins(10, 10, 10, 10)
+        l.setSpacing(0)
+        self.setLayout(l)
+        self.m_layout=l
 
     def setData(self):
 
@@ -67,18 +72,35 @@ class TableWidget(QtWidgets.QWidget):
         for n in self.m_widgets.keys():
             self.set(n, str(d[n]))
 
+    # def setView(self, v):
+
+    #     self.reconnect('disconnect')
+    #     self.m_view=v
+    #     self.reconnect()
+
+    # def reconnect(self, kind='connect'):
+
+    #     v=self.m_view
+    #     if not v: return
+    #     s=getattr(v, 'resized', None)
+    #     if not s: return
+    #     f=getattr(s, kind, None)
+    #     if f: f(self.adjustSizeHint)
+
     def set(self, n, t):
 
         w = self.m_widgets[n]
         w.m_reporting=False
         w.setText(str(t))
-        w.adjustSize()
-        self.adjustSize()
         w.m_reporting=True
 
-    def adjustSize(self):
+    def adjustSizeHint(self):
 
-        super().adjustSize()
-        h=self.sizeHint()
         if self.m_item:
+            self.adjustSize()
+            p=self.parent()
+            for i in self.m_widgets.values():
+                i.adjustSize()
+            h=self.sizeHint()
+            h.setWidth(h.width())
             self.m_item.setSizeHint(h)

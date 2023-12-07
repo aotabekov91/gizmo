@@ -39,7 +39,9 @@ class WTableModel(STableModel):
 
         w=self.widget_class(
                 element=e, 
-                wmap=self.widget_map)
+                wmap=self.widget_map,
+                objectName='GridWidget',
+                )
         e.setWidget(w)
 
     def createListItem(self, e):

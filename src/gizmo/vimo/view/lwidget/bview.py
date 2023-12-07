@@ -1,7 +1,7 @@
 from gizmo.vimo.view import mixin
 from gizmo.widget import ListWidget
 
-from .base import View
+from ..base import View
 
 class ListWidgetView(
         mixin.Input,
@@ -31,11 +31,13 @@ class ListWidgetView(
 
     def addElement(self, e):
 
+        w=e.widget()
         i=e.listItem()
         self.addItem(i)
+        w.setView(self)
         i.setHidden(False)
         ci=getattr(i, 'm_current_idx', False)
-        self.setItemWidget(i, e.widget())
+        self.setItemWidget(i, w) 
         if ci: 
             self.setCurrentItem(i)
             return True
