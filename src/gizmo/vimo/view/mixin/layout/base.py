@@ -26,7 +26,7 @@ class Layout:
 
         self.m_layout=layout
         self.layoutChanged.emit(
-                self, layout)
+                self, self.m_layout)
 
     def prevItem(self, digit=1):
 

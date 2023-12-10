@@ -1,3 +1,5 @@
+from PyQt5 import QtCore
+
 class SinglePage:
 
     def __init__(
@@ -48,24 +50,41 @@ class SinglePage:
     def height(self, height):
         return height-2.0*self.pageSpacing
 
+    def itemsAt(
+            self, 
+            rect, 
+            items,
+            ):
+
+        for i in items.values():
+            if i.m_rect.intersects(rect):
+                yield i
+
     def load(
             self, 
             items, 
-            left, 
+            x, 
             right, 
             height,
-            rightToLeft, 
+            *args, 
+            **kwargs,
             ):
 
         ph=0.
         ps=self.pageSpacing
-        for i in items:
+        for i in items.values():
             br=i.boundingRect()
-            left=-br.left()-0.5*br.width()
-            t=height-br.top()
-            i.setPos(left, t)
+            x=-br.left()-0.5*br.width()
+            y=height-br.top()
+            w, h = br.width(), br.height() 
+            i.setPos(x, y)
+            if hasattr(i, 'm_rect'):
+                i.m_rect.setX(x)
+                i.m_rect.setY(y)
+                i.m_rect.setWidth(w)
+                i.m_rect.setHeight(h)
             ph=br.height()
-            left=min(left, -0.5*br.width())#-pageSpacing)
-            right=max(right, 0.5*br.width())#+pageSpacing)
+            x=min(x, -0.5*br.width())
+            right=max(right, 0.5*br.width())
             height+=ps+ph
-        return left, right, height
+        return x, right, height

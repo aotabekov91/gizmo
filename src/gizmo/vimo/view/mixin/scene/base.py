@@ -1,10 +1,12 @@
 from PyQt5 import QtGui
 from .utils import BaseScene
 
-class Scene:
+from ..layout import Layout
+
+class Scene(Layout):
 
     hasScene=True
-    sceneColor='black'
+    scene_color='black'
     scene_class=BaseScene
 
     def setup(self):
@@ -19,11 +21,16 @@ class Scene:
             s=self.scene_class()
             self.m_scene=s
             self.setScene(s)
-            if self.sceneColor:
-                s.setBackgroundBrush(
-                        QtGui.QColor(self.sceneColor))
+            if self.scene_color:
+                c=QtGui.QColor(self.scene_color)
+                s.setBackgroundBrush(c)
 
     def clearScene(self):
+        self.m_scene.clear()
 
-        if self.m_scene:
-            self.m_scene.clear()
+    def redrawScene(self):
+
+        l, r, h = self.m_layout.load(
+                self.m_items)
+        self.m_scene.setSceneRect(
+                l, 0.0, r-l, h)

@@ -19,60 +19,35 @@ class XYPos:
             return self.m_curr, x, y
         return 1, 0, 0
 
-    def comparePosition(
-            self, digit=None, x=0, y=0):
-
-        c = self.count() 
-        cx, cy, ci = self.getPosition()
-        p = digit or c 
-        if 0 < p <= c:
-            cp=self.m_layout.current(p)
-            cc = self.m_curr != cp 
-            cc = any([cc, abs(x-cx) > 0.001])
-            cc = any([cc, abs(y-cy) > 0.001])
-            return cc
-
     def goTo(self, digit=1, x=0, y=0):
 
         if digit is None:
             self.goToLast()
         else:
-            self.redrawView(digit, x, y)
-            self.setVisibleItem()
+            self.jumpToPos(digit, x, y)
             self.positionJumped.emit()
             self.positionChanged.emit()
 
-    def redraw(self):
+    def redraw(self, pos=None):
 
-        pos = self.getPosition()
+        pos = pos or self.getPosition()
         self.redrawScene()
-        self.redrawView(*pos)
+        self.jumpToPos(*pos)
+
+    def jumpToPos(self, *pos):
+
+        self.updatePosition(*pos)
         self.setVisibleItem()
-
-    def redrawView(self, digit=1, x=0, y=0):
-
-        vv, hv = 0, 0
-        s = self.scene()
-        r = s.sceneRect()
-        l, t = r.left(), r.top()
-        w, h = r.width(), r.height()
-        for j, i in self.m_items.items():
-            pbr = i.boundingRect()
-            pos = pbr.translated(i.pos())
-            if self.continuousMode:
-                i.setVisible(True)
-            else:
-                if self.m_layout.left(j) == self.m_curr:
-                    i.setVisible(True)
-                    t = pos.top()
-                    h = pos.height()
-                else:
-                    i.setVisible(False)
-                    i.cancelRender()
-            if j == digit:
-                hv = int(pos.left()+x*pos.width())
-                vv = int(pos.top()+y*pos.height())
-        self.setSceneRect(l, t, w, h)
-        self.horizontalScrollBar().setValue(hv)
-        self.verticalScrollBar().setValue(vv)
         self.viewport().update()
+
+    def updatePosition(self, digit=1, x=0, y=0):
+
+        v, h = 0, 0
+        i=self.m_items.get(digit, None)
+        if i:
+            r = i.boundingRect()
+            p = r.translated(i.pos())
+            h = int(p.left()+x*p.width())
+            v = int(p.top()+y*p.height())
+            self.horizontalScrollBar().setValue(h)
+            self.verticalScrollBar().setValue(v)

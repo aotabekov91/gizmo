@@ -30,9 +30,51 @@ class Items(Scene, Layout):
     def setup(self):
 
         self.m_curr=1
-        self.m_prev=None
         self.m_items={}
+        self.m_prev=None
+        self.m_fetched=0
+        self.connectSlider()
         super().setup()
+
+    def connectSlider(self):
+
+        hbar=self.verticalScrollBar()
+        hbar.valueChanged.connect(self.test)
+
+    def canFetch(self):
+        return self.m_fetched<self.count()
+
+    def test(self, value):
+
+        # if not self.canFetch(): 
+        #     return
+        # ii=self.m_items[1]
+        # v=ii.boundingRect().height()
+        # v=value/float(v*self.count())
+        # v=int(v)+1
+        # print(v)
+        # for i in range(v-1, v+2):
+        #     item=self.m_items.get(i)
+        #     if not item: continue
+        #     if not item.scene():
+        #         self.m_fetched+=1
+        #         self.m_scene.addItem(item)
+
+        # print(v)
+
+        v=0
+        for i in self.m_items.values():
+            pbr = i.boundingRect()
+            pos = pbr.translated(i.pos())
+            if value<=v or v==0:
+                if not i.scene():
+                    self.m_fetched+=1
+                    self.m_scene.addItem(i)
+            else:
+                v+=pos.height()
+
+        # if not i.scene():
+        #     self.m_scene.addItem(i)
 
     def setModel(self, model):
 
@@ -58,6 +100,7 @@ class Items(Scene, Layout):
                         element=e,
                         )
                 self.setupItem(i)
+                if j>2: break
         self.modelChanged.emit(model)
         self.modelLoaded.emit(self, model)
 
@@ -69,7 +112,7 @@ class Items(Scene, Layout):
         x=self.logicalDpiX()
         y=self.logicalDpiY()
         i.setResol(x, y)
-        self.m_scene.addItem(i)
+        # self.m_scene.addItem(i)
 
     def redraw(self):
 
@@ -86,7 +129,7 @@ class Items(Scene, Layout):
         self.m_scene.setSceneRect(
                 l, 0.0, r-l, h)
 
-    def redrawView(self):
+    def redrawView(self, *args, **kwargs):
 
         vv, hv = 0, 0
         s = self.m_scene

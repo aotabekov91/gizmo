@@ -43,6 +43,15 @@ class BaseLayout:
     def current(self, idx, count=None):
         return self.m_mode.current(idx, count)
 
+    def itemsAt(
+            self,
+            rect,
+            items,
+            ):
+
+        return self.m_mode.itemsAt(
+                rect, items)
+
     def load(
             self, 
             items, 
@@ -52,6 +61,7 @@ class BaseLayout:
             rightToLeft=False, 
             ):
 
+        height = height or self.m_mode.pageSpacing
         return self.m_mode.load(
                 items, 
                 left, 
